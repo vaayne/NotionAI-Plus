@@ -1,0 +1,2 @@
+# NotionAI
+Unofficial NotionAI API
