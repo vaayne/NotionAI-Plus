@@ -25,7 +25,7 @@ pip install --upgrade notionai-py
 
 ### Example
 
-#### Basic 
+#### Basic
 
 ```python
 import os
