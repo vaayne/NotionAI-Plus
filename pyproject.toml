@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "notionai-py"
+description = "Unoffical Notion AI API"
+version="0.0.1"
+authors = [
+  { name="Vaayne", email="liu.vaayne@gmail.com" },
+]
+readme = "README.md"
+requires-python = ">=3"
+license = {text = "MIT License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "requests",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Vaayne/NotionAI"
+"Bug Tracker" = "https://github.com/Vaayne/NotionAI/issues"
