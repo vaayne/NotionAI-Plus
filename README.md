@@ -8,6 +8,26 @@ https://github.com/Vaayne/NotionAI
 - Full APIs from Notion AI
 - Support stream response
 
+## API
+
+We support all NotionAI's functionalites. You can find all the APIs in [NotionAI.py](./notionai/NotionAI.py)
+
+### Basic API Shortcuts
+
+APIs like blog_post, help_me_write, help_me_edit, summarize ... are shortcuts for the basic APIs.
+
+### Advanced APIs
+
+Some times we don't want to call apis one by one, we want to dispatch by parameters, these are advanced APIs.
+
+We support these advanced APIs:
+
+
+1. `writing_with_topic`
+2. `writing_with_prompt`
+
+
+
 ## Usage
 
 ### Install

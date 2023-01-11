@@ -7,23 +7,23 @@ class ExtendedEnum(Enum):
         return list(map(lambda c: c.value, cls))
 
     @classmethod
-    def set(cls):
-        return set(cls.list())
+    def list_name(cls):
+        return list(map(lambda c: c.name, cls))
 
 
 class TopicEnum(ExtendedEnum):
     brainsteam = "brainsteam"
-    blogPost = "blogPost"
+    blog_post = "blogPost"
     outline = "outline"
-    socialMediaPost = "socialMediaPost"
-    creativeStory = "creativeStory"
+    social_media_post = "socialMediaPost"
+    creative_story = "creativeStory"
     poem = "poem"
     essay = "essay"
-    meetingAgenda = "meetingAgenda"
-    pressRelease = "pressRelease"
-    jobDescription = "jobDescription"
-    salesEmail = "salesEmail"
-    recruitingEmail = "recruitingEmail"
+    meeting_agenda = "meetingAgenda"
+    press_release = "pressRelease"
+    job_description = "jobDescription"
+    sales_email = "salesEmail"
+    recruiting_email = "recruitingEmail"
 
 
 class TranslateLanguageEnum(ExtendedEnum):
@@ -43,16 +43,16 @@ class TranslateLanguageEnum(ExtendedEnum):
     vietnamese = "vietnamese"
 
 
-class ActionTypeEnum(ExtendedEnum):
-    helpMeWrite = "helpMeWrite"
-    continueWriting = "continueWriting"
+class PromptTypeEnum(ExtendedEnum):
+    help_me_write = "helpMeWrite"
+    continue_writing = "continueWriting"
     summarize = "summarize"
-    improveWriting = "improveWriting"
-    fixSpellingGrammar = "fixSpellingGrammar"
+    improve_writing = "improveWriting"
+    fix_spelling_grammar = "fixSpellingGrammar"
     translate = "translate"
-    explainThis = "explainThis"
-    makeLonger = "makeLonger"
-    makeShorter = "makeShorter"
-    findActionItems = "findActionItems"
-    simplifyLanguage = "simplifyLanguage"
-    helpMeEdit = "helpMeEdit"
+    explain_this = "explainThis"
+    make_longer = "makeLonger"
+    make_shorter = "makeShorter"
+    find_action_items = "findActionItems"
+    simplify_language = "simplifyLanguage"
+    help_me_edit = "helpMeEdit"

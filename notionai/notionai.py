@@ -3,21 +3,19 @@ import uuid
 
 import requests
 
-from notionai.enums import ActionTypeEnum, TopicEnum, TranslateLanguageEnum
+from notionai.enums import PromptTypeEnum, TopicEnum, TranslateLanguageEnum
 
 MODEL = "openai-1.1"
 URL = "https://www.notion.so/api/v3/getCompletion"
-PAGE_TITLE = "NotionAI Page"
 
 
-class NotionAI(object):
+class NotionAIBase(object):
     stream = False
 
     def __init__(
         self,
         token: str,
         model: str = MODEL,
-        page_title: str = PAGE_TITLE,
     ) -> None:
         """Init NotionAI
         Args:
@@ -30,19 +28,6 @@ class NotionAI(object):
         self.model = model
         self.is_space_permission = False
         self.url = URL
-        self.page_title = page_title
-
-    def _write_topic(self, topic: TopicEnum, prompt: str) -> str:
-        content = {"type": topic.value, "topic": prompt}
-        return self._post(content)
-
-    def _common_writing(self, action_type: ActionTypeEnum, context: str) -> str:
-        content = {
-            "type": action_type.value,
-            "pageTitle": self.page_title,
-            "selectedText": context,
-        }
-        return self._post(content)
 
     def _request(self, content: dict) -> str:
         payload = {
@@ -86,104 +71,205 @@ class NotionAI(object):
     def _get_id(self) -> str:
         return str(uuid.uuid4())
 
-    def set_stream(self, stream: bool):
-        self.stream = stream
 
-    def help_me_write(self, prompt: str, context: str) -> str:
+class NotionAI(NotionAIBase):
+    def writing_with_topic(self, topic: TopicEnum, prompt: str) -> str:
+        """Writing for special topic
+
+        Args:
+            topic (TopicEnum): the special topic
+            prompt (str): prompt for writing
+
+        Returns:
+            str: Response from NotionAI
+        """
+        content = {"type": topic.value, "topic": prompt}
+        return self._post(content)
+
+    def writing_with_prompt(
+        self,
+        prompt_type: PromptTypeEnum,
+        context: str,
+        page_title: str = "",
+    ) -> str:
+        """Writing with special prompt, like summarize, explain_this, improve_writing
+
+        Args:
+            prompt_type (PromptTypeEnum): special prompt
+            context (str): the context for your writing
+            page_title (str, optional): I am not sure about this. Defaults to ""
+
+        Returns:
+            str: Response from NotionAI
+        """
+        if prompt_type in {
+            PromptTypeEnum.help_me_write,
+            PromptTypeEnum.help_me_edit,
+            PromptTypeEnum.continue_writing,
+            PromptTypeEnum.translate,
+        }:
+            raise ValueError("Please use the specific method for this prompt type")
         content = {
-            "type": ActionTypeEnum.helpMeWrite.value,
+            "type": prompt_type.value,
+            "pageTitle": page_title,
+            "selectedText": context,
+        }
+        return self._post(content)
+
+    def help_me_write(
+        self, prompt: str, context: str, page_title: str = "", rest_content: str = ""
+    ) -> str:
+        """Help me write, generating more
+
+        Args:
+            prompt (str): your prompt, could be anything
+            context (str): context for your writing
+            page_title (str, optional): not sure. Defaults to "".
+            rest_content (str, optional): more context. Defaults to "".
+
+        Returns:
+            str: Response from NotionAI
+        """
+        content = {
+            "type": PromptTypeEnum.help_me_write.value,
             "prompt": prompt,
-            "pageTitle": self.page_title,
+            "pageTitle": page_title,
             "previousContent": context,
-            "restContent": "",
+            "restContent": rest_content,
         }
         return self._post(content)
 
-    def continue_write(self, context: str) -> str:
+    def continue_write(
+        self, context: str, page_title: str = "", rest_content: str = ""
+    ) -> str:
+        """Continue writing, generating more
+
+        Args:
+            context (str): context for continue
+            page_title (str, optional): not sure. Defaults to "".
+            rest_content (str, optional): more context. Defaults to "".
+
+        Returns:
+            str: Response from NotionAI
+        """
         content = {
-            "type": ActionTypeEnum.continueWriting.value,
-            "pageTitle": self.page_title,
+            "type": PromptTypeEnum.continue_writing.value,
+            "pageTitle": page_title,
             "previousContent": context,
-            "restContent": "",
+            "restContent": rest_content,
         }
         return self._post(content)
 
-    def help_me_edit(self, prompt: str, context: str) -> str:
+    def help_me_edit(self, prompt: str, context: str, page_title: str = "") -> str:
+        """Help me edit somethings, it will change the current context
+
+        Args:
+            prompt (str): your prompt, could be anything
+            context (str): context to edit
+            page_title (str, optional): not sure. Defaults to "".
+
+        Returns:
+            str: Response from NotionAI
+        """
+
         content = {
-            "type": ActionTypeEnum.helpMeEdit.value,
-            "pageTitle": self.page_title,
+            "type": PromptTypeEnum.help_me_edit.value,
+            "pageTitle": page_title,
             "prompt": prompt,
             "selectedText": context,
         }
         return self._post(content)
 
     def translate(self, language: TranslateLanguageEnum, context: str) -> str:
+        """Use NotionAI to translate your context
+
+        Args:
+            language (TranslateLanguageEnum): target language
+            context (str): context to translate
+
+        Returns:
+            str: translate result
+        """
         content = {
-            "type": ActionTypeEnum.translate.value,
+            "type": PromptTypeEnum.translate.value,
             "text": context,
             "language": language.value,
         }
         return self._post(content)
 
-    def summarize(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.summarize, context)
+    def summarize(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(PromptTypeEnum.summarize, context)
 
-    def improve_writing(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.improveWriting, context)
+    def improve_writing(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(PromptTypeEnum.improve_writing, context)
 
-    def fix_spelling_grammar(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.fixSpellingGrammar, context)
+    def fix_spelling_grammar(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(
+            PromptTypeEnum.fix_spelling_grammar,
+            context,
+            page_title=page_title,
+        )
 
-    def explain_this(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.explainThis, context)
+    def explain_this(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(
+            PromptTypeEnum.explain_this, context, page_title=page_title
+        )
 
-    def make_longer(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.makeLonger, context)
+    def make_longer(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(
+            PromptTypeEnum.make_longer, context, page_title=page_title
+        )
 
-    def make_shorter(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.makeShorter, context)
+    def make_shorter(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(
+            PromptTypeEnum.make_shorter, context, page_title=page_title
+        )
 
-    def find_action_items(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.findActionItems, context)
+    def find_action_items(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(
+            PromptTypeEnum.find_action_items, context, page_title=page_title
+        )
 
-    def simplify_language(self, context: str) -> str:
-        return self._common_writing(ActionTypeEnum.simplifyLanguage, context)
+    def simplify_language(self, context: str, page_title: str = "") -> str:
+        return self.writing_with_prompt(
+            PromptTypeEnum.simplify_language, context, page_title=page_title
+        )
 
     def blog_post(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.blogPost, prompt)
+        return self.write_with_topic(TopicEnum.blog_ost, prompt)
 
     def brainsteam(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.brainsteam, prompt)
+        return self.write_with_topic(TopicEnum.brainsteam, prompt)
 
     def outline(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.outline, prompt)
+        return self.write_with_topic(TopicEnum.outline, prompt)
 
-    def socialMediaPost(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.socialMediaPost, prompt)
+    def social_media_post(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.social_media_post, prompt)
 
-    def creativeStory(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.creativeStory, prompt)
+    def creative_story(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.creative_story, prompt)
 
     def poem(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.poem, prompt)
+        return self.write_with_topic(TopicEnum.poem, prompt)
 
     def essay(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.essay, prompt)
+        return self.write_with_topic(TopicEnum.essay, prompt)
 
-    def meetingAgenda(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.meetingAgenda, prompt)
+    def meeting_agenda(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.meeting_agenda, prompt)
 
-    def pressRelease(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.pressRelease, prompt)
+    def press_release(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.press_release, prompt)
 
-    def jobDescription(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.jobDescription, prompt)
+    def job_description(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.job_description, prompt)
 
-    def salesEmail(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.salesEmail, prompt)
+    def sales_email(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.sales_email, prompt)
 
-    def recruitingEmail(self, prompt: str) -> str:
-        return self._write_topic(TopicEnum.recruitingEmail, prompt)
+    def recruiting_email(self, prompt: str) -> str:
+        return self.write_with_topic(TopicEnum.recruiting_email, prompt)
 
 
 class NotionAIStream(NotionAI):

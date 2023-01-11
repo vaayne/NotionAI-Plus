@@ -1,3 +1,3 @@
 # ruff: noqa
 from .notionai import NotionAI, NotionAIStream
-from .enums import TopicEnum, TranslateLanguageEnum
+from .enums import TopicEnum, TranslateLanguageEnum, PromptTypeEnum
