@@ -45,6 +45,8 @@ pip install --upgrade notionai-py
 
 ### Example
 
+Please checkout [examples](./examples/)
+
 #### Basic
 
 ```python
@@ -82,3 +84,8 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+
+#### WebUI
+
+[webui](./examples/webui/README.md)

@@ -46,7 +46,6 @@ class NotionAIBase(object):
             "Cookie": "; ".join(cookies),
             "Content-Type": "application/json",
         }
-        print(f"is stream: {self.stream}")
 
         return requests.post(
             self.url, json=payload, headers=headers, stream=self.stream
