@@ -101,10 +101,12 @@ class NotionAI(NotionAIBase):
         Returns:
             str: Response from NotionAI
         """
+        if prompt_type == PromptTypeEnum.continue_writing:
+            return self.continue_write(context, page_title)
+
         if prompt_type in {
             PromptTypeEnum.help_me_write,
             PromptTypeEnum.help_me_edit,
-            PromptTypeEnum.continue_writing,
             PromptTypeEnum.translate,
         }:
             raise ValueError("Please use the specific method for this prompt type")
@@ -235,40 +237,40 @@ class NotionAI(NotionAIBase):
         )
 
     def blog_post(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.blog_ost, prompt)
+        return self.writing_with_topic(TopicEnum.blog_post, prompt)
 
     def brainsteam(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.brainsteam, prompt)
+        return self.writing_with_topic(TopicEnum.brainsteam, prompt)
 
     def outline(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.outline, prompt)
+        return self.writing_with_topic(TopicEnum.outline, prompt)
 
     def social_media_post(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.social_media_post, prompt)
+        return self.writing_with_topic(TopicEnum.social_media_post, prompt)
 
     def creative_story(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.creative_story, prompt)
+        return self.writing_with_topic(TopicEnum.creative_story, prompt)
 
     def poem(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.poem, prompt)
+        return self.writing_with_topic(TopicEnum.poem, prompt)
 
     def essay(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.essay, prompt)
+        return self.writing_with_topic(TopicEnum.essay, prompt)
 
     def meeting_agenda(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.meeting_agenda, prompt)
+        return self.writing_with_topic(TopicEnum.meeting_agenda, prompt)
 
     def press_release(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.press_release, prompt)
+        return self.writing_with_topic(TopicEnum.press_release, prompt)
 
     def job_description(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.job_description, prompt)
+        return self.writing_with_topic(TopicEnum.job_description, prompt)
 
     def sales_email(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.sales_email, prompt)
+        return self.writing_with_topic(TopicEnum.sales_email, prompt)
 
     def recruiting_email(self, prompt: str) -> str:
-        return self.write_with_topic(TopicEnum.recruiting_email, prompt)
+        return self.writing_with_topic(TopicEnum.recruiting_email, prompt)
 
 
 class NotionAIStream(NotionAI):

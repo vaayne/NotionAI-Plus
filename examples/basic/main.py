@@ -1,4 +1,4 @@
-from notionai.notionai import NotionAI, NotionAIStream
+from notionai import NotionAI, NotionAIStream
 import sys
 import os
 

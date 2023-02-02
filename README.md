@@ -24,8 +24,38 @@ We support these advanced APIs:
 
 
 1. `writing_with_topic`
+    ```
+    Writing for special topic
+    Args:
+        topic (TopicEnum): the special topic
+        prompt (str): prompt for writing
+    Example:
+        ao = NotionAI(token)
+        ai.writing_with_topic(TopicEnum.blog_post, "Please help to introduce Notion")
+    ```
 2. `writing_with_prompt`
+    ```
+    Writing with special prompt, like summarize, explain_this, improve_writing
 
+    Args:
+        prompt_type (PromptTypeEnum): special prompt
+        context (str): the context for your writing
+
+    Example:
+        ai = NotionAI(token)
+        ai.writing_with_prompt(PromptTypeEnum.summarize, "I am a student")
+    ```
+3. `translate`
+    ```
+    Translate the text
+    Args:
+        language (TranslateLanguageEnum): target language
+        context (str): context to translate
+
+    Example:
+        ai = NotionAI(token)
+        ai.translate(TranslateLanguageEnum.Chinese, "I am a student")
+    ```
 
 
 ## Usage
