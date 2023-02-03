@@ -1,0 +1,31 @@
+name: Package and Publish to Chrome Store
+# https://jam.dev/blog/automating-chrome-extension-publishing/
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - chrome-v*.*.*
+
+jobs:
+  build-chrome-extension:
+    name: Build Chrome extension artifact
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: notionai-chrome
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |-
+          # fill in your build steps here...
+          # we archive the dist folder and include SHA commit as the last step
+          zip -r notionai-chrome-${{ github.event.pull_request.head.sha }}.zip notionai-chrome
+
+      - name: Archive chrome-extension artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: notionai-chrome-${{ github.sha }}
+          path: notionai-chrome-${{ github.event.pull_request.head.sha }}.zip

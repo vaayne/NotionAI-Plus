@@ -3,20 +3,32 @@ Unofficial NotionAI API
 
 https://github.com/Vaayne/NotionAI
 
-## Feature
+## NotionAI Chrome Extension
+
+ [notionai-chrome](./notionai-chrome)
+
+The NotionAI Chrome Extension is an open-source tool that provides a simple way to access the NotionAI API. It allows you to use NotionAI in any input field in Chrome with ease.
+
+
+## NotionAI Python SDK
+
+NotionAI Python SDK, a wrapper for the NotionAI APIs with Python bindings. It simplifies integrating NotionAI solutions into your projects.
+
+
+### Feature
 
 - Full APIs from Notion AI
 - Support stream response
 
-## API
+### API
 
 We support all NotionAI's functionalites. You can find all the APIs in [NotionAI.py](./notionai/NotionAI.py)
 
-### Basic API Shortcuts
+#### Basic API Shortcuts
 
 APIs like blog_post, help_me_write, help_me_edit, summarize ... are shortcuts for the basic APIs.
 
-### Advanced APIs
+#### Advanced APIs
 
 Some times we don't want to call apis one by one, we want to dispatch by parameters, these are advanced APIs.
 
@@ -58,26 +70,26 @@ We support these advanced APIs:
     ```
 
 
-## Usage
+### Usage
 
-### Install
+#### Install
 
 ```
 pip install --upgrade notionai-py
 ```
 
-### Get Notion Token
+#### Get Notion Token
 
 1. Open Chrome / Firefix DevTools
 2. Find Cookies and copy value for `token_v2`
 
 ![](./docs/images/get_notion_token.png)
 
-### Example
+#### Example
 
 Please checkout [examples](./examples/)
 
-#### Basic
+1. Basic
 
 ```python
 import os
@@ -95,7 +107,7 @@ if __name__ == "__main__":
 
 ```
 
-#### Stream API
+2. Stream API
 
 ```python
 import os
@@ -116,6 +128,6 @@ if __name__ == "__main__":
 ```
 
 
-#### WebUI
+3. WebUI
 
 [webui](./examples/webui/README.md)
