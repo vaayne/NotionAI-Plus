@@ -3,7 +3,7 @@ name: Publish package
 on:
     push:
         tags:
-            - "*"
+            - "py-*.*.*"
 
 jobs:
     publish:
