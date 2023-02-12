@@ -2,18 +2,18 @@ import os
 
 import gradio as gr
 from notionai import NotionAI
-from notionai.enums import ActionTypeEnum, TopicEnum, TranslateLanguageEnum
+from notionai.enums import PromptTypeEnum, TopicEnum, TranslateLanguageEnum
 
 TOKEN = os.getenv("NOTION_TOKEN")
 ai = NotionAI(TOKEN)
 
 TOPIC_MAPPING = {item.name: item for item in TopicEnum}
 LANGUAGE_MAPPING = {item.name: item for item in TranslateLanguageEnum}
-ACTION_TYPE_MAPPING = {item.name: item for item in ActionTypeEnum}
+ACTION_TYPE_MAPPING = {item.name: item for item in PromptTypeEnum}
 
 
 def write_by_topic(topic, prompt):
-    res = ai._write_topic(TOPIC_MAPPING[topic], prompt)
+    res = ai.writing_with_topic(TOPIC_MAPPING[topic], prompt)
     return res
 
 
@@ -22,7 +22,7 @@ def translate(language, text):
 
 
 def summarize(action_type, context, prompt):
-    return ai._summarize(ACTION_TYPE_MAPPING[action_type], context, prompt)
+    return ai.writing_with_prompt(ACTION_TYPE_MAPPING[action_type], context, prompt)
 
 
 app = gr.Blocks()
@@ -63,8 +63,8 @@ with app:
                 summary_type = gr.Dropdown(
                     choices=[
                         item.name
-                        for item in ActionTypeEnum
-                        if item != ActionTypeEnum.translate
+                        for item in PromptTypeEnum
+                        if item != PromptTypeEnum.translate
                     ],
                     label="Summary Type",
                     value="summarize",
