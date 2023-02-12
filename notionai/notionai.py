@@ -3,7 +3,7 @@ import uuid
 
 import requests
 
-from notionai.enums import PromptTypeEnum, TopicEnum, TranslateLanguageEnum
+from notionai.enums import PromptTypeEnum, ToneEnum, TopicEnum, TranslateLanguageEnum
 
 MODEL = "openai-1.1"
 URL = "https://www.notion.so/api/v3/getCompletion"
@@ -120,7 +120,7 @@ class NotionAI(NotionAIBase):
     def help_me_write(
         self, prompt: str, context: str, page_title: str = "", rest_content: str = ""
     ) -> str:
-        """Help me write, generating more
+        """Help me write, ask AI to write for you
 
         Args:
             prompt (str): your prompt, could be anything
@@ -198,6 +198,23 @@ class NotionAI(NotionAIBase):
         }
         return self._post(content)
 
+    def change_tone(self, context: str, tone: ToneEnum) -> str:
+        """Change the tone of your context
+
+        Args:
+            context (str): context to change
+            tone (ToneEnum): target tone
+
+        Returns:
+            str: Response from NotionAI
+        """
+        content = {
+            "type": "changeTone",
+            "tone": tone.value,
+            "text": context,
+        }
+        return self._post(content)
+
     def summarize(self, context: str, page_title: str = "") -> str:
         return self.writing_with_prompt(PromptTypeEnum.summarize, context)
 
@@ -271,6 +288,9 @@ class NotionAI(NotionAIBase):
 
     def recruiting_email(self, prompt: str) -> str:
         return self.writing_with_topic(TopicEnum.recruiting_email, prompt)
+
+    def pros_cons_list(self, prompt: str) -> str:
+        self.writing_with_topic(TopicEnum.pros_cons_list, prompt)
 
 
 class NotionAIStream(NotionAI):

@@ -12,15 +12,16 @@ class ExtendedEnum(Enum):
 
 
 class TopicEnum(ExtendedEnum):
-    brainsteam = "brainsteam"
+    brainstorm_ideas = "brainstormIdeas"
     blog_post = "blogPost"
     outline = "outline"
     social_media_post = "socialMediaPost"
-    creative_story = "creativeStory"
-    poem = "poem"
-    essay = "essay"
-    meeting_agenda = "meetingAgenda"
     press_release = "pressRelease"
+    creative_story = "creativeStory"
+    essay = "essay"
+    poem = "poem"
+    meeting_agenda = "meetingAgenda"
+    pros_cons_list = "prosConsList"
     job_description = "jobDescription"
     sales_email = "salesEmail"
     recruiting_email = "recruitingEmail"
@@ -56,3 +57,11 @@ class PromptTypeEnum(ExtendedEnum):
     find_action_items = "findActionItems"
     simplify_language = "simplifyLanguage"
     help_me_edit = "helpMeEdit"
+
+
+class ToneEnum(ExtendedEnum):
+    professional = "Professional"
+    casual = "Casual"
+    straight_forward = "straightForward"
+    confident = "Confident"
+    friendly = "Friendly"
