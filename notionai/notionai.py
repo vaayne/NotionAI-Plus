@@ -256,8 +256,8 @@ class NotionAI(NotionAIBase):
     def blog_post(self, prompt: str) -> str:
         return self.writing_with_topic(TopicEnum.blog_post, prompt)
 
-    def brainsteam(self, prompt: str) -> str:
-        return self.writing_with_topic(TopicEnum.brainsteam, prompt)
+    def brainstorm_ideas(self, prompt: str) -> str:
+        return self.writing_with_topic(TopicEnum.brainstorm_ideas, prompt)
 
     def outline(self, prompt: str) -> str:
         return self.writing_with_topic(TopicEnum.outline, prompt)
