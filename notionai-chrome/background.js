@@ -20,6 +20,13 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
+	id: "notionai-changeTone",
+	parentId: "notionai",
+	title: "changeTone",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
 	id: "notionai-helpMeWrite",
 	parentId: "notionai",
 	title: "helpMeWrite",
@@ -27,9 +34,9 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-brainsteam",
+	id: "notionai-helpMeWrite-brainsteamIdeas",
 	parentId: "notionai-helpMeWrite",
-	title: "brainsteam",
+	title: "brainsteamIdeas",
 	contexts: ["all"],
 });
 
@@ -55,16 +62,16 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-creativeStory",
+	id: "notionai-helpMeWrite-pressRelease",
 	parentId: "notionai-helpMeWrite",
-	title: "creativeStory",
+	title: "pressRelease",
 	contexts: ["all"],
 });
 
 chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-poem",
+	id: "notionai-helpMeWrite-creativeStory",
 	parentId: "notionai-helpMeWrite",
-	title: "poem",
+	title: "creativeStory",
 	contexts: ["all"],
 });
 
@@ -76,6 +83,13 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
+	id: "notionai-helpMeWrite-poem",
+	parentId: "notionai-helpMeWrite",
+	title: "poem",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
 	id: "notionai-helpMeWrite-meetingAgenda",
 	parentId: "notionai-helpMeWrite",
 	title: "meetingAgenda",
@@ -83,9 +97,9 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-pressRelease",
+	id: "notionai-helpMeWrite-prosConsList",
 	parentId: "notionai-helpMeWrite",
-	title: "pressRelease",
+	title: "prosConsList",
 	contexts: ["all"],
 });
 
@@ -253,10 +267,46 @@ chrome.contextMenus.create({
 	title: "tagalog",
 	contexts: ["all"],
 });
+
 chrome.contextMenus.create({
 	id: "notionai-translate-vietnamese",
 	parentId: "notionai-translate",
 	title: "vietnamese",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
+	id: "notionai-changeTone-professional",
+	parentId: "notionai-changeTone",
+	title: "professional",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
+	id: "notionai-changeTone-casual",
+	parentId: "notionai-changeTone",
+	title: "casual",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
+	id: "notionai-changeTone-straightForward",
+	parentId: "notionai-changeTone",
+	title: "straightForward",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
+	id: "notionai-changeTone-confident",
+	parentId: "notionai-changeTone",
+	title: "confident",
+	contexts: ["all"],
+});
+
+chrome.contextMenus.create({
+	id: "notionai-changeTone-friendly",
+	parentId: "notionai-changeTone",
+	title: "friendly",
 	contexts: ["all"],
 });
 
@@ -291,15 +341,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			let context = request.context;
 			let prompt = "";
 			let lang = "";
+			let tone = "";
 
 			if (infos[1] === "translate") {
 				lang = infos[2];
-			}
-			if (infos[1] === "helpMeWrite") {
+			} else if (infos[1] === "helpMeWrite") {
 				prompt = infos[2];
+			} else if (infos[1] === "changeTone") {
+				tone = infos[2];
 			}
 
-			const resp = postToNotion(prompt_type, context, prompt, lang);
+			const resp = postToNotion(prompt_type, context, prompt, lang, tone);
 			(async () => {
 				const [tab] = await chrome.tabs.query({
 					active: true,
@@ -336,7 +388,13 @@ function getCache(key) {
 	return val[0];
 }
 
-async function postToNotion(prompt_type, context, prompt = "", lang = "") {
+async function postToNotion(
+	prompt_type,
+	context,
+	prompt = "",
+	lang = "",
+	tone = ""
+) {
 	const url = "https://www.notion.so/api/v3/getCompletion";
 	const data = {
 		id: UUIDv4.generate(),
@@ -356,6 +414,12 @@ async function postToNotion(prompt_type, context, prompt = "", lang = "") {
 			type: "helpMeWrite",
 			prompt: prompt,
 			previousContent: context,
+		};
+	} else if (prompt_type === "changeTone") {
+		data.context = {
+			type: "changeTone",
+			text: context,
+			tone: tone,
 		};
 	} else {
 		data.context = {

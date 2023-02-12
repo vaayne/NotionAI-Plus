@@ -60,8 +60,8 @@ class PromptTypeEnum(ExtendedEnum):
 
 
 class ToneEnum(ExtendedEnum):
-    professional = "Professional"
-    casual = "Casual"
+    professional = "professional"
+    casual = "casual"
     straight_forward = "straightForward"
-    confident = "Confident"
-    friendly = "Friendly"
+    confident = "confident"
+    friendly = "friendly"
