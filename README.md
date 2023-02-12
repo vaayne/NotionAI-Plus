@@ -22,7 +22,7 @@ NotionAI Python SDK, a wrapper for the NotionAI APIs with Python bindings. It si
 
 ### API
 
-We support all NotionAI's functionalites. You can find all the APIs in [NotionAI.py](./notionai/NotionAI.py)
+We support all NotionAI's functionalites. You can find all the APIs in [NotionAI.py](./notionai/notionai.py)
 
 #### Basic API Shortcuts
 
