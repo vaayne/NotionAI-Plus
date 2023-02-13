@@ -7,22 +7,35 @@ on:
     tags:
       - chrome-v*.*.*
 
+permissions:
+  contents: write
+  discussions: write
+
 jobs:
   build-chrome-extension:
     name: Build Chrome extension artifact
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build
         run: |-
           # fill in your build steps here...
           # we archive the dist folder and include SHA commit as the last step
-          zip -r notionai-chrome-${{ github.event.pull_request.head.sha }}.zip notionai-chrome
+          zip -r notionai-chrome-${{ github.sha }}.zip notionai-chrome
 
       - name: Archive chrome-extension artifact
         uses: actions/upload-artifact@v2
         with:
           name: notionai-chrome-${{ github.sha }}
-          path: notionai-chrome-${{ github.event.pull_request.head.sha }}.zip
+          path: notionai-chrome-${{ github.sha }}.zip
+
+      - name: Release assert to github release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            notionai-chrome-${{ github.sha }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
