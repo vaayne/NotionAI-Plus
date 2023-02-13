@@ -11,7 +11,9 @@ To use the extension, your Chrome cookie must send requests to Notion. Therefore
 
 I haven't uploaded it to the Chrome Store yet, so please download the repository and load it in developer mode.
 
-1. Clone the repository: `git clone <https://github.com/Vaayne/NotionAI.git>`
-2. Go to `chrome://extensions/` and enable Developer mode
-3. Load the unpacked folder `notionai-chrome`
-4. Refresh any web page and select any text in an input box, then right-click to use NotionAI!
+1. Go to [release page](https://github.com/Vaayne/NotionAI/releases?q=chrome&expanded=true), download latest asset like `notionai-chrome-f5b65759f51486a9e280f4fd3622c9af7f466287.zip
+`
+2. unzip it and there will be a folder named `notionai-chrome`
+3. Go to `chrome://extensions/` and enable Developer mode
+4. Load the unpacked folder `notionai-chrome`
+5. Refresh any web page and select any text in an input box, then right-click to use NotionAI!
