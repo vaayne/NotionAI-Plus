@@ -1,314 +1,97 @@
 // Create a context menu item
+
+promptTypes = [
+	"ChatGPT",
+	"translate",
+	"changeTone",
+	"helpMeWrite",
+	"continueWriting",
+	"summarize",
+	"improveWriting",
+	"fixSpellingGrammar",
+	"explainThis",
+	"makeLonger",
+	"makeShorter",
+	"findActionItems",
+	"simplifyLanguage",
+];
+
+topics = [
+	"brainsteamIdeas",
+	"blogPost",
+	"outline",
+	"socialMediaPost",
+	"pressRelease",
+	"creativeStory",
+	"essay",
+	"poem",
+	"meetingAgenda",
+	"prosConsList",
+	"jobDescription",
+	"salesEmail",
+	"recruitingEmail",
+];
+
+languages = [
+	"english",
+	"korean",
+	"chinese",
+	"japanese",
+	"spanish",
+	"russian",
+	"french",
+	"german",
+	"italian",
+	"portuguese",
+	"dutch",
+	"indonesia",
+	"tagalog",
+	"vietnamese",
+];
+
+tones = ["professional", "casual", "straightForward", "confident", "friendly"];
+
 chrome.contextMenus.create({
 	id: "notionai",
 	title: "NotionAI",
 	contexts: ["all"],
 });
 
-chrome.contextMenus.create({
-	id: "chatGPT",
-	parentId: "notionai",
-	title: "chatGPT",
-	contexts: ["all"],
-});
+for (promptType of promptTypes) {
+	chrome.contextMenus.create({
+		id: `notionai-${promptType}`,
+		parentId: "notionai",
+		title: promptType,
+		contexts: ["all"],
+	});
+}
 
-chrome.contextMenus.create({
-	id: "notionai-translate",
-	parentId: "notionai",
-	title: "translate",
-	contexts: ["all"],
-});
+for (topic of topics) {
+	chrome.contextMenus.create({
+		id: `notionai-helpMeWrite-${topic}`,
+		parentId: "notionai-helpMeWrite",
+		title: topic,
+		contexts: ["all"],
+	});
+}
 
-chrome.contextMenus.create({
-	id: "notionai-changeTone",
-	parentId: "notionai",
-	title: "changeTone",
-	contexts: ["all"],
-});
+for (language of languages) {
+	chrome.contextMenus.create({
+		id: `notionai-translate-${language}`,
+		parentId: "notionai-translate",
+		title: language,
+		contexts: ["all"],
+	});
+}
 
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite",
-	parentId: "notionai",
-	title: "helpMeWrite",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-brainsteamIdeas",
-	parentId: "notionai-helpMeWrite",
-	title: "brainsteamIdeas",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-blogPost",
-	parentId: "notionai-helpMeWrite",
-	title: "blogPost",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-outline",
-	parentId: "notionai-helpMeWrite",
-	title: "outline",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-socialMediaPost",
-	parentId: "notionai-helpMeWrite",
-	title: "socialMediaPost",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-pressRelease",
-	parentId: "notionai-helpMeWrite",
-	title: "pressRelease",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-creativeStory",
-	parentId: "notionai-helpMeWrite",
-	title: "creativeStory",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-essay",
-	parentId: "notionai-helpMeWrite",
-	title: "essay",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-poem",
-	parentId: "notionai-helpMeWrite",
-	title: "poem",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-meetingAgenda",
-	parentId: "notionai-helpMeWrite",
-	title: "meetingAgenda",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-prosConsList",
-	parentId: "notionai-helpMeWrite",
-	title: "prosConsList",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-jobDescription",
-	parentId: "notionai-helpMeWrite",
-	title: "jobDescription",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-salesEmail",
-	parentId: "notionai-helpMeWrite",
-	title: "salesEmail",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-helpMeWrite-recruitingEmail",
-	parentId: "notionai-helpMeWrite",
-	title: "recruitingEmail",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-continueWriting",
-	parentId: "notionai",
-	title: "continueWriting",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-summarize",
-	parentId: "notionai",
-	title: "summarize",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-improveWriting",
-	parentId: "notionai",
-	title: "improveWriting",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-fixSpellingGrammar",
-	parentId: "notionai",
-	title: "fixSpellingGrammar",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-explainThis",
-	parentId: "notionai",
-	title: "explainThis",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-makeLonger",
-	parentId: "notionai",
-	title: "makeLonger",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-makeShorter",
-	parentId: "notionai",
-	title: "makeShorter",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-findActionItems",
-	parentId: "notionai",
-	title: "findActionItems",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-simplifyLanguage",
-	parentId: "notionai",
-	title: "simplifyLanguage",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-translate-english",
-	parentId: "notionai-translate",
-	title: "english",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-korean",
-	parentId: "notionai-translate",
-	title: "korean",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-translate-chinese",
-	parentId: "notionai-translate",
-	title: "chinese",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-japanese",
-	parentId: "notionai-translate",
-	title: "japanese",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-spanish",
-	parentId: "notionai-translate",
-	title: "spanish",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-russia",
-	parentId: "notionai-translate",
-	title: "russia",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-translate-frence",
-	parentId: "notionai-translate",
-	title: "frence",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-german",
-	parentId: "notionai-translate",
-	title: "german",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-italian",
-	parentId: "notionai-translate",
-	title: "italian",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-portuguese",
-	parentId: "notionai-translate",
-	title: "portuguese",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-dutch",
-	parentId: "notionai-translate",
-	title: "dutch",
-	contexts: ["all"],
-});
-chrome.contextMenus.create({
-	id: "notionai-translate-indonesia",
-	parentId: "notionai-translate",
-	title: "indonesia",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-translate-tagalog",
-	parentId: "notionai-translate",
-	title: "tagalog",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-translate-vietnamese",
-	parentId: "notionai-translate",
-	title: "vietnamese",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-changeTone-professional",
-	parentId: "notionai-changeTone",
-	title: "professional",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-changeTone-casual",
-	parentId: "notionai-changeTone",
-	title: "casual",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-changeTone-straightForward",
-	parentId: "notionai-changeTone",
-	title: "straightForward",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-changeTone-confident",
-	parentId: "notionai-changeTone",
-	title: "confident",
-	contexts: ["all"],
-});
-
-chrome.contextMenus.create({
-	id: "notionai-changeTone-friendly",
-	parentId: "notionai-changeTone",
-	title: "friendly",
-	contexts: ["all"],
-});
+for (tone of tones) {
+	chrome.contextMenus.create({
+		id: `notionai-changeTone-${tone}`,
+		parentId: "notionai-changeTone",
+		title: tone,
+		contexts: ["all"],
+	});
+}
 
 // Listen for when the user clicks on the context menu item
 chrome.contextMenus.onClicked.addListener((info, tab) => {
