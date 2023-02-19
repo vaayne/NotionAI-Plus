@@ -44,7 +44,7 @@ with app:
             with gr.Column():
                 topic_type = gr.Dropdown(
                     choices=[item.name for item in TopicEnum],
-                    value=TopicEnum.blog_post.value,
+                    value=TopicEnum.blog_post.name,
                     label="Topic",
                 )
                 topic_prompt = gr.Textbox(
@@ -92,7 +92,7 @@ with app:
                         and item != PromptTypeEnum.change_tone
                     ],
                     label="Action Type",
-                    value=PromptTypeEnum.summarize.value,
+                    value=PromptTypeEnum.improve_writing.value,
                 )
                 summarize_text = gr.Textbox(
                     lines=2, placeholder="How to process your text?", label="Texts"

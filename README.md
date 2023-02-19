@@ -68,7 +68,19 @@ We support these advanced APIs:
         ai = NotionAI(token)
         ai.translate(TranslateLanguageEnum.Chinese, "I am a student")
     ```
+4. `change_tone`
+   ```
+    Change the tone of your context
+    Args:
+        context (str): context to change
+        tone (ToneEnum): target tone
 
+    Returns:
+        str: Response from NotionAI
+    Example:
+        ai = NotionAI(token)
+        ai.change_tone("I am a student", ToneEnum.professional)
+   ```
 
 ### Usage
 
