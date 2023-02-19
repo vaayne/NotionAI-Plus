@@ -10,6 +10,11 @@ https://github.com/Vaayne/NotionAI
 The NotionAI Chrome Extension is an open-source tool that provides a simple way to access the NotionAI API. It allows you to use NotionAI in any input field in Chrome with ease.
 
 
+https://user-images.githubusercontent.com/10231735/219955866-a14c7b3a-c7c0-4e13-8241-d59963b8396a.mp4
+
+
+
+
 ## NotionAI Python SDK
 
 NotionAI Python SDK, a wrapper for the NotionAI APIs with Python bindings. It simplifies integrating NotionAI solutions into your projects.
