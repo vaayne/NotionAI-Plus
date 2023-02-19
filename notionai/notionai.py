@@ -108,6 +108,7 @@ class NotionAI(NotionAIBase):
             PromptTypeEnum.help_me_write,
             PromptTypeEnum.help_me_edit,
             PromptTypeEnum.translate,
+            PromptTypeEnum.change_tone,
         }:
             raise ValueError("Please use the specific method for this prompt type")
         content = {

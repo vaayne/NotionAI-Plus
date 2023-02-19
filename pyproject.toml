@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "notionai-py"
 description = "Unoffical Notion AI API"
-version="0.0.7"
+version="0.0.8"
 authors = [
   { name="Vaayne", email="liu.vaayne@gmail.com" },
 ]
@@ -22,3 +22,10 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/Vaayne/NotionAI"
 "Bug Tracker" = "https://github.com/Vaayne/NotionAI/issues"
+
+
+[pytest]
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli = true
+log_level = "INFO"

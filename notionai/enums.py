@@ -33,8 +33,8 @@ class TranslateLanguageEnum(ExtendedEnum):
     chinese = "chinese"
     japanese = "japanese"
     spanish = "spanish"
-    russiab = "russia"
-    french = "frence"
+    russiab = "russiab"
+    french = "french"
     german = "german"
     italian = "italian"
     portuguese = "portuguese"
@@ -47,6 +47,7 @@ class TranslateLanguageEnum(ExtendedEnum):
 class PromptTypeEnum(ExtendedEnum):
     help_me_write = "helpMeWrite"
     continue_writing = "continueWriting"
+    change_tone = "changeTone"
     summarize = "summarize"
     improve_writing = "improveWriting"
     fix_spelling_grammar = "fixSpellingGrammar"

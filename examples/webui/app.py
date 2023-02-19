@@ -1,8 +1,13 @@
 import os
 
 import gradio as gr
-from notionai import NotionAI
-from notionai.enums import PromptTypeEnum, TopicEnum, TranslateLanguageEnum
+from notionai import (
+    NotionAI,
+    PromptTypeEnum,
+    TopicEnum,
+    TranslateLanguageEnum,
+    ToneEnum,
+)
 
 TOKEN = os.getenv("NOTION_TOKEN")
 ai = NotionAI(TOKEN)
@@ -10,6 +15,7 @@ ai = NotionAI(TOKEN)
 TOPIC_MAPPING = {item.name: item for item in TopicEnum}
 LANGUAGE_MAPPING = {item.name: item for item in TranslateLanguageEnum}
 ACTION_TYPE_MAPPING = {item.name: item for item in PromptTypeEnum}
+TONE_MAPPING = {item.name: item for item in ToneEnum}
 
 
 def write_by_topic(topic, prompt):
@@ -25,6 +31,10 @@ def summarize(action_type, context, prompt):
     return ai.writing_with_prompt(ACTION_TYPE_MAPPING[action_type], context, prompt)
 
 
+def change_tone(tone, text):
+    return ai.change_tone(text, TONE_MAPPING[tone])
+
+
 app = gr.Blocks()
 
 with app:
@@ -34,11 +44,13 @@ with app:
             with gr.Column():
                 topic_type = gr.Dropdown(
                     choices=[item.name for item in TopicEnum],
-                    value=TopicEnum.brainsteam.value,
+                    value=TopicEnum.blog_post.value,
                     label="Topic",
                 )
                 topic_prompt = gr.Textbox(
-                    lines=2, placeholder="What do you want ?", label="Prompt"
+                    lines=3,
+                    placeholder="Let me help you write on the topic.",
+                    label="Prompt",
                 )
                 topic_output = gr.Markdown(
                     label="AI response", visible=True, value="Notion AI Says..."
@@ -49,7 +61,7 @@ with app:
                 translate_language = gr.Dropdown(
                     choices=[item.value for item in TranslateLanguageEnum],
                     label="Target Language",
-                    value=TranslateLanguageEnum.english.value,
+                    value=TranslateLanguageEnum.japanese.value,
                 )
                 translate_text = gr.Textbox(
                     lines=2, placeholder="Translate texts", label="Text"
@@ -58,19 +70,32 @@ with app:
                     label="Translate response", visible=True, value="Translating..."
                 )
             translate_button = gr.Button("Translate", label="Translate")
-        with gr.TabItem("Summarize"):
+        with gr.TabItem("ChangeTone"):
+            with gr.Column():
+                tone = gr.Dropdown(
+                    choices=[item.value for item in ToneEnum],
+                    label="Which tone do you want to change to?",
+                    value=ToneEnum.professional.value,
+                )
+                tone_text = gr.Textbox(lines=2, placeholder="Your texts", label="Text")
+                tone_output = gr.Markdown(
+                    label="Tone Response", visible=True, value="processing..."
+                )
+            change_tone_button = gr.Button("ChangeTone", label="change_tone")
+        with gr.TabItem("More..."):
             with gr.Column():
                 summary_type = gr.Dropdown(
                     choices=[
                         item.name
                         for item in PromptTypeEnum
                         if item != PromptTypeEnum.translate
+                        and item != PromptTypeEnum.change_tone
                     ],
-                    label="Summary Type",
-                    value="summarize",
+                    label="Action Type",
+                    value=PromptTypeEnum.summarize.value,
                 )
                 summarize_text = gr.Textbox(
-                    lines=2, placeholder="Summarize texts", label="Summary Text"
+                    lines=2, placeholder="How to process your text?", label="Texts"
                 )
                 summarize_rompt = gr.Textbox(
                     lines=2,
@@ -80,7 +105,7 @@ with app:
                 )
 
                 summarize_output = gr.Markdown(
-                    label="Summarize response", visible=True, value="Summarizing..."
+                    label="Summarize response", visible=True, value="Processing..."
                 )
             summarize_button = gr.Button("Summarize", label="Summarize")
 
@@ -90,6 +115,7 @@ with app:
     translate_button.click(
         translate, inputs=[translate_language, translate_text], outputs=translate_output
     )
+    change_tone_button.click(change_tone, inputs=[tone, tone_text], outputs=tone_output)
     summarize_button.click(
         summarize,
         inputs=[summary_type, summarize_text, summarize_rompt],
