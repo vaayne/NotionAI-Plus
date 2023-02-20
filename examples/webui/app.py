@@ -14,7 +14,7 @@ ai = NotionAI(TOKEN)
 
 TOPIC_MAPPING = {item.name: item for item in TopicEnum}
 LANGUAGE_MAPPING = {item.name: item for item in TranslateLanguageEnum}
-ACTION_TYPE_MAPPING = {item.name: item for item in PromptTypeEnum}
+PROMPT_TYPE_MAPPING = {item.name: item for item in PromptTypeEnum}
 TONE_MAPPING = {item.name: item for item in ToneEnum}
 
 
@@ -24,11 +24,11 @@ def write_by_topic(topic, prompt):
 
 
 def translate(language, text):
-    return ai.translate(TranslateLanguageEnum[language], text)
+    return ai.translate(LANGUAGE_MAPPING[language], text)
 
 
-def summarize(action_type, context, prompt):
-    return ai.writing_with_prompt(ACTION_TYPE_MAPPING[action_type], context, prompt)
+def summarize(prompt_type, context):
+    return ai.writing_with_prompt(PROMPT_TYPE_MAPPING[prompt_type], context)
 
 
 def change_tone(tone, text):
@@ -63,7 +63,7 @@ with app:
         with gr.TabItem("Write with Tpoics"):
             with gr.Column():
                 topic_type = gr.Dropdown(
-                    choices=[item.name for item in TopicEnum],
+                    choices=list(TOPIC_MAPPING.keys()),
                     value=TopicEnum.blog_post.name,
                     label="Topic",
                 )
@@ -79,9 +79,9 @@ with app:
         with gr.TabItem("Translate"):
             with gr.Column():
                 translate_language = gr.Dropdown(
-                    choices=[item.value for item in TranslateLanguageEnum],
+                    choices=list(LANGUAGE_MAPPING.keys()),
                     label="Target Language",
-                    value=TranslateLanguageEnum.japanese.value,
+                    value=TranslateLanguageEnum.japanese.name,
                 )
                 translate_text = gr.Textbox(
                     lines=2, placeholder="Translate texts", label="Text"
@@ -93,9 +93,9 @@ with app:
         with gr.TabItem("ChangeTone"):
             with gr.Column():
                 tone = gr.Dropdown(
-                    choices=[item.value for item in ToneEnum],
+                    choices=list(TONE_MAPPING.keys()),
                     label="Which tone do you want to change to?",
-                    value=ToneEnum.professional.value,
+                    value=ToneEnum.professional.name,
                 )
                 tone_text = gr.Textbox(lines=2, placeholder="Your texts", label="Text")
                 tone_output = gr.Markdown(
@@ -106,26 +106,19 @@ with app:
             with gr.Column():
                 summary_type = gr.Dropdown(
                     choices=[
-                        item.name
-                        for item in PromptTypeEnum
-                        if item != PromptTypeEnum.translate
-                        and item != PromptTypeEnum.change_tone
-                        and item != PromptTypeEnum.help_me_edit
-                        and item != PromptTypeEnum.help_me_write
+                        item
+                        for item in PROMPT_TYPE_MAPPING.keys()
+                        if item != PromptTypeEnum.translate.name
+                        and item != PromptTypeEnum.change_tone.name
+                        and item != PromptTypeEnum.help_me_edit.name
+                        and item != PromptTypeEnum.help_me_write.name
                     ],
-                    label="Action Type",
-                    value=PromptTypeEnum.improve_writing.value,
+                    label="Prompt Type",
+                    value=PromptTypeEnum.improve_writing.name,
                 )
                 summarize_text = gr.Textbox(
                     lines=2, placeholder="How to process your text?", label="Texts"
                 )
-                summarize_rompt = gr.Textbox(
-                    lines=2,
-                    placeholder="Only for help_me_write and help_me_edit",
-                    label="Prompt",
-                    value="",
-                )
-
                 summarize_output = gr.Markdown(
                     label="Summarize response", visible=True, value="Processing..."
                 )
@@ -145,7 +138,7 @@ with app:
     change_tone_button.click(change_tone, inputs=[tone, tone_text], outputs=tone_output)
     summarize_button.click(
         summarize,
-        inputs=[summary_type, summarize_text, summarize_rompt],
+        inputs=[summary_type, summarize_text],
         outputs=summarize_output,
     )
 

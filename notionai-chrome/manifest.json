@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "NotionAI",
 	"description": "An extension that sends selected text to an API",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"permissions": ["contextMenus"],
 	"icons": {
 		"16": "icon.png",

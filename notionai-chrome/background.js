@@ -49,7 +49,7 @@ languages = [
 	"vietnamese",
 ];
 
-tones = ["professional", "casual", "straightForward", "confident", "friendly"];
+tones = ["professional", "casual", "straightforward", "confident", "friendly"];
 
 chrome.contextMenus.create({
 	id: "notionai",
