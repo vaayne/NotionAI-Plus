@@ -35,11 +35,31 @@ def change_tone(tone, text):
     return ai.change_tone(text, TONE_MAPPING[tone])
 
 
+def help_me_write(prompt, context):
+    return ai.help_me_write(prompt, context)
+
+
 app = gr.Blocks()
 
 with app:
     gr.Markdown("Notion AI is here to serve your every need and make your life easier.")
     with gr.Tabs():
+        with gr.TabItem("Help me Write"):
+            with gr.Column():
+                help_me_write_context = gr.Textbox(
+                    lines=3,
+                    placeholder="Let me help you write on the context.",
+                    label="Context",
+                )
+                help_me_write_prompt = gr.Textbox(
+                    lines=3,
+                    placeholder="Please inpout your prompt here",
+                    label="Prompt",
+                )
+                help_me_write_output = gr.Markdown(
+                    label="AI response", visible=True, value="Notion AI Says..."
+                )
+            help_me_write_button = gr.Button("Help me Write", label="Help me Write")
         with gr.TabItem("Write with Tpoics"):
             with gr.Column():
                 topic_type = gr.Dropdown(
@@ -90,6 +110,8 @@ with app:
                         for item in PromptTypeEnum
                         if item != PromptTypeEnum.translate
                         and item != PromptTypeEnum.change_tone
+                        and item != PromptTypeEnum.help_me_edit
+                        and item != PromptTypeEnum.help_me_write
                     ],
                     label="Action Type",
                     value=PromptTypeEnum.improve_writing.value,
@@ -109,6 +131,11 @@ with app:
                 )
             summarize_button = gr.Button("Summarize", label="Summarize")
 
+    help_me_write_button.click(
+        help_me_write,
+        inputs=[help_me_write_prompt, help_me_write_context],
+        outputs=help_me_write_output,
+    )
     topic_button.click(
         write_by_topic, inputs=[topic_type, topic_prompt], outputs=topic_output
     )
