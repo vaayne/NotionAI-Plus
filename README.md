@@ -1,44 +1,35 @@
 # NotionAI
-Unofficial NotionAI API
 
-https://github.com/Vaayne/NotionAI
+NotionAI is an unofficial NotionAI API that provides a Python SDK and a Chrome extension.
 
 ## NotionAI Chrome Extension
 
- [notionai-chrome](./notionai-chrome)
+The NotionAI Chrome Extension is an open-source tool that allows you to access the NotionAI API from any input field in Chrome. You can find the source code in the [notionai-chrome](./notionai-chrome) directory, and download the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai/ilgkcoockdhdpkikaakkjacblhpmdmeo).
 
-The NotionAI Chrome Extension is an open-source tool that provides a simple way to access the NotionAI API. It allows you to use NotionAI in any input field in Chrome with ease.
+### NotionAI Chrome Extension Demo
 
-
-https://user-images.githubusercontent.com/10231735/219955866-a14c7b3a-c7c0-4e13-8241-d59963b8396a.mp4
-
-
-
+https://user-images.githubusercontent.com/10231735/110160759-9af87400-7e18-11eb-8c4d-f95d4a3ecbf3.gif
 
 ## NotionAI Python SDK
 
-NotionAI Python SDK, a wrapper for the NotionAI APIs with Python bindings. It simplifies integrating NotionAI solutions into your projects.
+The NotionAI Python SDK is a wrapper for the NotionAI APIs with Python bindings, simplifying integration of NotionAI solutions into your projects. 
 
-
-### Feature
+### Features
 
 - Full APIs from Notion AI
 - Support stream response
 
 ### API
 
-We support all NotionAI's functionalites. You can find all the APIs in [NotionAI.py](./notionai/notionai.py)
+All NotionAI functionalities are supported. Check out the [notionai.py](./notionai/notionai.py) file to see all the available APIs.
 
 #### Basic API Shortcuts
 
-APIs like blog_post, help_me_write, help_me_edit, summarize ... are shortcuts for the basic APIs.
+APIs like `blog_post`, `help_me_write`, `help_me_edit`, and `summarize` are shortcuts for the basic APIs.
 
 #### Advanced APIs
 
-Some times we don't want to call apis one by one, we want to dispatch by parameters, these are advanced APIs.
-
-We support these advanced APIs:
-
+We also support advanced APIs that allow you to dispatch by parameters:
 
 1. `writing_with_topic`
     ```
@@ -91,20 +82,21 @@ We support these advanced APIs:
 
 #### Install
 
-```
-pip install --upgrade notionai-py
-```
+`pip install --upgrade notionai-py`
+
 
 #### Get Notion Token
 
-1. Open Chrome / Firefix DevTools
-2. Find Cookies and copy value for `token_v2`
+To use the NotionAI Python SDK, you need to obtain a Notion token. You can do this by following these steps:
 
-![](./docs/images/get_notion_token.png)
+1. Open Chrome or Firefox DevTools
+2. Find Cookies and copy the value for `token_v2`
 
-#### Example
+![Get Notion Token](./docs/images/get_notion_token.png)
 
-Please checkout [examples](./examples/)
+#### Examples
+
+Check out the [examples](./examples/) directory for usage examples.
 
 1. Basic
 
@@ -147,4 +139,5 @@ if __name__ == "__main__":
 
 3. WebUI
 
-[webui](./examples/webui/README.md)
+Check out the [webui](./examples/webui/README.md) directory for instructions on how to use the NotionAI Python SDK with a web user interface.
+
