@@ -12,7 +12,7 @@ https://user-images.githubusercontent.com/10231735/110160759-9af87400-7e18-11eb-
 
 ## NotionAI Python SDK
 
-The NotionAI Python SDK is a wrapper for the NotionAI APIs with Python bindings, simplifying integration of NotionAI solutions into your projects. 
+The NotionAI Python SDK is a wrapper for the NotionAI APIs with Python bindings, simplifying integration of NotionAI solutions into your projects.
 
 ### Features
 
@@ -140,4 +140,3 @@ if __name__ == "__main__":
 3. WebUI
 
 Check out the [webui](./examples/webui/README.md) directory for instructions on how to use the NotionAI Python SDK with a web user interface.
-

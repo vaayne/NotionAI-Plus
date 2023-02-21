@@ -49,4 +49,4 @@ If you have any suggestions or feedback, please don't hesitate to [open an issue
 
 ## Contributing
 
-Contributions are welcome! 
+Contributions are welcome!
