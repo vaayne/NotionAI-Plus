@@ -8,7 +8,7 @@ The NotionAI Chrome Extension is an open-source tool that allows you to access t
 
 ### NotionAI Chrome Extension Demo
 
-https://user-images.githubusercontent.com/10231735/110160759-9af87400-7e18-11eb-8c4d-f95d4a3ecbf3.gif
+https://user-images.githubusercontent.com/10231735/219955866-a14c7b3a-c7c0-4e13-8241-d59963b8396a.mp4
 
 ## NotionAI Python SDK
 
