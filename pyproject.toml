@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "notionai-py"
 description = "Unoffical Notion AI API"
-version="0.0.9"
+version="0.1.0"
 authors = [
   { name="Vaayne", email="liu.vaayne@gmail.com" },
 ]

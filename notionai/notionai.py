@@ -5,7 +5,7 @@ import requests
 
 from notionai.enums import PromptTypeEnum, ToneEnum, TopicEnum, TranslateLanguageEnum
 
-MODEL = "openai-1.1"
+MODEL = "openai-3"
 URL = "https://www.notion.so/api/v3/getCompletion"
 
 
@@ -15,16 +15,19 @@ class NotionAIBase(object):
     def __init__(
         self,
         token: str,
+        space_id: str,
         model: str = MODEL,
     ) -> None:
         """Init NotionAI
         Args:
             token (str): Notion token_v2
+            space_id (str): Notion workspace id
             model (str, optional): AI model. Default to openai-1.1
             stream (bool, optional): use stream result. Defaults to False.
             pageTitle (str, optional): Title for your content. Defaults to PAGE_TITLE.
         """
         self.token = token
+        self.space_id = space_id
         self.model = model
         self.is_space_permission = False
         self.url = URL
@@ -33,7 +36,7 @@ class NotionAIBase(object):
         payload = {
             "id": self._get_id(),
             "model": self.model,
-            "spaceId": str(uuid.uuid4()),
+            "spaceId": self.space_id,
             "isSpacePermission": self.is_space_permission,
             "context": content,
         }
@@ -43,6 +46,7 @@ class NotionAIBase(object):
         ]
 
         headers = {
+            "accept": "application/json",
             "Cookie": "; ".join(cookies),
             "Content-Type": "application/json",
         }

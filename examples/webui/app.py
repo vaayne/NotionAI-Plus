@@ -10,7 +10,8 @@ from notionai import (
 )
 
 TOKEN = os.getenv("NOTION_TOKEN")
-ai = NotionAI(TOKEN)
+SPACE_ID = os.getenv("NOTION_SPACE_ID")
+ai = NotionAI(TOKEN, SPACE_ID)
 
 TOPIC_MAPPING = {item.name: item for item in TopicEnum}
 LANGUAGE_MAPPING = {item.name: item for item in TranslateLanguageEnum}
