@@ -85,14 +85,17 @@ We also support advanced APIs that allow you to dispatch by parameters:
 `pip install --upgrade notionai-py`
 
 
-#### Get Notion Token
+#### Get Notion Token and Workspace ID
 
 To use the NotionAI Python SDK, you need to obtain a Notion token. You can do this by following these steps:
 
 1. Open Chrome or Firefox DevTools
 2. Find Cookies and copy the value for `token_v2`
+3. Find the `spaceId` of your Notion workspace
 
 ![Get Notion Token](./docs/images/get_notion_token.png)
+
+![Get Notion Workspace ID](./docs/images/get_notion_space_id.png)
 
 #### Examples
 
@@ -105,9 +108,10 @@ import os
 from notionai import NotionAI
 
 TOKEN = os.getenv("NOTION_TOKEN")
+SPACE_ID = os.getenv("NOTION_SPACE_ID")
 
 def main():
-    ai = NotionAI(TOKEN)
+    ai = NotionAI(TOKEN, SPACE_ID)
     res = ai.blog_post("write a blog about the meaning of life")
     print(res)
 
@@ -124,9 +128,10 @@ import sys
 from notionai import NotionAI
 
 TOKEN = os.getenv("NOTION_TOKEN")
+SPACE_ID = os.getenv("NOTION_SPACE_ID")
 
 def main():
-    ai = NotionAIStream(TOKEN)
+    ai = NotionAIStream(TOKEN, SPACE_ID)
     res = ai.blog_post("write a blog about the meaning of life")
     for item in res:
         sys.stdout.write(item)
