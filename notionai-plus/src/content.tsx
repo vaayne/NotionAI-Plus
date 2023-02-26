@@ -3,20 +3,17 @@ import { marked } from "marked"
 import type { PlasmoCSConfig } from "plasmo"
 
 import { sendToBackground } from "@plasmohq/messaging"
+import { useMessage } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
-import {
-  LanguageOptions,
-  PromptTypeEnum,
-  PromptTypeOptions,
-  ToneOptions,
-  TopicOptions
-} from "~lib/enums"
+import { PromptTypeEnum } from "~lib/enums"
 import { storage } from "~lib/storage"
 
 import "~base.css"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+import { SelectComponent } from "~components/select"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -29,98 +26,85 @@ export const getStyle = () => {
   return style
 }
 
-const PlasmoOverlay = () => {
+const Index = () => {
   const [selectedPrompt, setSelectedPrompt] = useState<string>(
-    PromptTypeEnum.ChatGPT
+    PromptTypeEnum.HelpMeWrite
   )
   const [context, setContext] = useState<string>("")
-  const [language, setLanguage] = useState<string>("")
-  const [tone, setTone] = useState<string>("")
   const [prompt, setPrompt] = useState<string>("")
   const [responseMessage, setResponseMessage] = useState<string>("")
-
-  const [notionToken] = useStorage<string>({
-    key: "noiton-token",
-    instance: storage
-  })
   const [notionSpaceId] = useStorage<string>({
     key: "noiton-space-id",
     instance: storage
   })
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isShowElement, setIsShowElement] = useState(false)
 
-  const promptOptions = () => {
-    if (selectedPrompt == PromptTypeEnum.Translate) {
-      return (
-        <select
-          className="select select-primary w-full"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}>
-          {LanguageOptions.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
-      )
-    } else if (selectedPrompt == PromptTypeEnum.TopicWriting) {
-      return (
-        <select
-          className="select select-primary w-full"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}>
-          {TopicOptions.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
-      )
-    } else if (selectedPrompt == PromptTypeEnum.ChangeTone) {
-      return (
-        <select
-          className="select select-primary w-full"
-          value={tone}
-          onChange={(e) => setTone(e.target.value)}>
-          {ToneOptions.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
-      )
-    } else if (
-      selectedPrompt == PromptTypeEnum.HelpMeWrite ||
-      selectedPrompt == PromptTypeEnum.ChatGPT
-    ) {
-      return (
-        <input
-          type="text"
-          placeholder="Please type your prompt"
-          className="input input-bordered input-primary w-full box-border px-2"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-      )
+  // hidden panel using ESC
+  useEffect(() => {
+    function handleEscape(event: any) {
+      if (event.key === "Escape") {
+        setIsShowElement(false)
+      }
     }
-  }
 
-  const sendMessage = async () => {
+    document.addEventListener("keydown", handleEscape)
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape)
+    }
+  }, [])
+
+  // show panel using shortcut
+  useMessage<string, string>(async (req, res) => {
+    if (req.name === "activate") {
+      setIsShowElement(!isShowElement)
+    }
+  })
+
+  // show input for ChatGPT and hel me write
+
+  const handleLoading = () => {
+    if (isLoading) {
+      return <progress className="progress w-56"></progress>
+    }
+    const html = marked(responseMessage)
+    return (
+      <article
+        className="prose max-w-none"
+        dangerouslySetInnerHTML={{ __html: html }}></article>
+    )
+  }
+  const handleMessage = async () => {
     setIsLoading(true)
-    console.log(`
-      selectedPrompt: ${selectedPrompt},
-      prompt: ${prompt},
-      context: ${context},
-      language: ${language},
-      tone: ${tone},
-      notionToken: ${notionToken},
-      notionSpaceId: ${notionSpaceId}
-    `)
+
+    let lprompt: string = ""
+    let language: string = ""
+    let tone: string = ""
+
+    const prompts = selectedPrompt.split("-")
+    console.log("prompts: " + prompts)
+    let promptType = prompts[0]
+    if (promptType === PromptTypeEnum.Translate) {
+      language = prompts[1]
+    } else if (promptType === PromptTypeEnum.ChangeTone) {
+      tone = prompts[1]
+    } else if (promptType === PromptTypeEnum.TopicWriting) {
+      setPrompt(prompts[1])
+      lprompt = prompts[1]
+    } else if (promptType === PromptTypeEnum.HelpMeWrite) {
+      lprompt = prompt
+    }
+
     setResponseMessage("Waitting for Notion AI...")
     const response = await sendToBackground({
       name: "request",
       body: {
-        promptType: selectedPrompt,
+        promptType: promptType,
         context: context,
-        prompt: prompt,
+        prompt: lprompt,
         language: language,
         tone: tone,
-        notionToken: notionToken,
         notionSpaceId: notionSpaceId
       }
     })
@@ -129,58 +113,88 @@ const PlasmoOverlay = () => {
     setIsLoading(false)
   }
 
-  const handleLoading = () => {
-    if (isLoading) {
-      return <progress className="progress w-56"></progress>
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(responseMessage)
+    alert("Copied to clipboard")
+  }
+
+  const handleClear = () => {
+    setResponseMessage("")
+  }
+
+  const page = () => {
+    if (isShowElement) {
+      return (
+        <div className="flex flex-col h-full  bg-blue-100">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">
+                Here is your context that you want NotionAI to process
+              </span>
+            </label>
+            <textarea
+              className="textarea mx-2"
+              placeholder="Please enter your context"
+              value={context}
+              onChange={(e) => setContext(e.target.value)}></textarea>
+          </div>
+          <label className="label">
+            <span className="label-text">
+              Here is your Prompt that how you want NotionAI process the context{" "}
+            </span>
+          </label>
+          <SelectComponent
+            selectedPrompt={selectedPrompt}
+            setSelectedPrompt={setSelectedPrompt}
+            prompt={prompt}
+            setPrompt={setPrompt}
+          />
+
+          <button className="btn btn-primary m-2" onClick={handleMessage}>
+            Submit
+          </button>
+          <div className="divider m-0"></div>
+          <div className="flex flex-col h-full">
+            <div className="p-0 m-0 flex flex-row justify-between content-center items-stretch">
+              <h3 className="px-4 my-1 self-center">NotionAI Says: </h3>
+              <div className="flex flex-row">
+                <button className="btn gap-2" onClick={handleClear}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="16"
+                    height="16">
+                    <path d="M17.7,6.3c-0.6-0.6-1.6-0.6-2.2,0c-2.2,2.2-5.7,2.2-7.9,0c-0.6-0.6-1.6-0.6-2.2,0c-0.6,0.6-0.6,1.6,0,2.2c3.4,3.4,8.9,3.4,12.3,0C18.3,7.9,18.3,6.9,17.7,6.3z M13.8,11.7c-0.6,0.6-0.6,1.6,0,2.2c0.6,0.6,1.6,0.6,2.2,0c1.5-1.5,1.5-4,0-5.5c-0.6-0.6-1.6-0.6-2.2,0C13.2,10.1,13.2,11.1,13.8,11.7z M9.3,13.3c0.6-0.6,0.6-1.6,0-2.2c-0.6-0.6-1.6-0.6-2.2,0c-1.5,1.5-1.5,4,0,5.5c0.6,0.6,1.6,0.6,2.2,0C9.9,14.9,9.9,13.9,9.3,13.3z" />
+                  </svg>
+                </button>
+                <button className="btn gap-2" onClick={handleCopy}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="16"
+                    height="16">
+                    <path d="M19.4,4.6h-4.1V3c0-1.1-0.9-2-2-2s-2,0.9-2,2v1.6h-4.1c-1.1,0-2,0.9-2,2v13.8c0,1.1,0.9,2,2,2h14.1c1.1,0,2-0.9,2-2V6.6C21.4,5.5,20.5,4.6,19.4,4.6z M7.4,3c0-0.6,0.4-1,1-1s1,0.4,1,1v1.6H7.4V3z M15.3,18.4H8.7v-1.6c0-0.6-0.4-1-1-1s-1,0.4-1,1v1.6H4.7V6.6h10.6V18.4z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div className="divider m-0"></div>
+            <div className="flex-1 px-4 pb-4 w-full overflow-auto box-border ">
+              {handleLoading()}
+            </div>
+          </div>
+        </div>
+      )
     }
-    const html = marked(responseMessage)
-    return (
-      <div className="flex items-center justify-center overflow-auto">
-        <article
-          className="prose overflow-auto"
-          dangerouslySetInnerHTML={{ __html: html }}></article>
-      </div>
-    )
   }
 
   return (
-    <div>
-      <div className="flex flex-col fixed top-10 bottom-20 right-1 w-1/2 max-w-3/4 min-h-96 bg-green-100">
-        <textarea
-          className="textarea textarea-primary"
-          placeholder="Please enter your context"
-          value={context}
-          onChange={(e) => setContext(e.target.value)}></textarea>
-        <div className="flex flex-row items-center">
-          <select
-            className="select select-primary w-1/3"
-            value={selectedPrompt}
-            onChange={(e) => setSelectedPrompt(e.target.value)}>
-            {PromptTypeOptions.map((option) => {
-              return <option value={option.value}>{option.label}</option>
-            })}
-          </select>
-          <div className="flex-1">{promptOptions()}</div>
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              sendMessage()
-            }}>
-            Submit
-          </button>
-        </div>
-        <div className="divider my-0"></div>
-        <div className="flex flex-col h-full">
-          <div className="p-0 m-0">
-            <h3 className="p-0 m-0">NotionAI Says: </h3>
-          </div>
-          <div className="flex-1 px-4 py-2 overflow-auto">
-            {handleLoading()}
-          </div>
-        </div>
-      </div>
+    <div className="fixed top-1/3 right-20 w-1/3 h-1/2 overflow-hidden rounded-lg">
+      {isShowElement && page()}
     </div>
   )
 }
 
-export default PlasmoOverlay
+export default Index

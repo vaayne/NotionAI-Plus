@@ -37,6 +37,15 @@
   "manifest": {
     "host_permissions": [
       "https://*/*"
-    ]
+    ],
+    "commands": {
+      "activate-notionai": {
+        "suggested_key": {
+          "default": "Ctrl+K",
+          "mac": "Command+K"
+        },
+        "description": "Activate NotionAI on page"
+      }
+    }
   }
 }

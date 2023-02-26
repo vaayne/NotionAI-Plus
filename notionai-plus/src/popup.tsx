@@ -6,29 +6,41 @@ import { storage } from "~lib/storage"
 import "~base.css"
 import "~style.css"
 
+import { useState } from "react"
+
 function IndexPopup() {
-  const [notionToken] = useStorage<string>({
-    key: "noiton-token",
-    instance: storage
-  })
   const [notionSpaceId] = useStorage<string>({
     key: "noiton-space-id",
     instance: storage
   })
+
+  const handleIsReady = () => {
+    if (notionSpaceId) {
+      return <p>NotionAI is ready</p>
+    } else {
+      return (
+        <p>
+          NotionAI is not ready, please go to option page and set Notion Space
+          ID
+        </p>
+      )
+    }
+  }
+
   return (
-    <div className="prose container flex flex-col">
-      <div className="flex items-center justify-center h-16 w-40">
-        <CountButton />
-      </div>
-      <div>
+    <div className="prose w-64 p-4">
+      <article>
         <h1>NotionAI+</h1>
         <p>
-          NotionAI+ is a browser extension that adds a few features to Notion.
+          NotionAI plus is a browser extension that let you use NotionAI in your
+          browser
         </p>
-
-        <p>Notion Token: {notionToken}</p>
-        <p>Notion Space Id: {notionSpaceId}</p>
-      </div>
+        <p>
+          This project is Open Source, you can find the source code on{" "}
+          <a href="https://github.com/Vaayne/NotionAI">Github</a>
+        </p>
+        <div className="">{handleIsReady()}</div>
+      </article>
     </div>
   )
 }
