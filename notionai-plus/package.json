@@ -1,9 +1,8 @@
 {
   "name": "notionai-plus",
-  "displayName": "Notionai plus",
-  "version": "0.0.1",
-  "description": "Using NotionAI anywhere in browser",
-  "author": "Vaayne",
+  "displayName": "NotionAI Plus",
+  "version": "0.0.6",
+  "description": "NotionAI Plus is a browser extension that brings the power of NotionAI to any website you visit.",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",

@@ -1,33 +1,29 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+# NotionAI Plus
 
-## Getting Started
+NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
-First, run the development server:
+## Features
 
-```bash
-pnpm dev
-# or
-npm run dev
-```
+- Analyze text on any webpage with NotionAI's latest AI technology
+- Generate summaries of articles and documents with ease
+- Perform sentiment analysis to determine the tone of the text
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
+## Usage
 
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
+1. Install NotionAI Plus from the Chrome Web Store or Firefox Add-ons
+2. Open the options page and set your Notion space ID
+3. Open any webpage and use the shortcut `alt+k` to activate the extension
+4. If you select some text and then use the shortcut `alt+k` to activate the extension, it will automatically fill the text in the input box.
 
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
+## Terms
 
-## Making production build
+- The input box is where you enter the text you want to analyze.
+- The prompt is how you want to process your text, such as summarizing or improving writing.
 
-Run the following:
+## Contributing
 
-```bash
-pnpm build
-# or
-npm run build
-```
+NotionAI Plus is an open-source project and welcomes contributions from the community. Feel free to submit issues, feature requests, or pull requests on the [GitHub repository](https://github.com/Vaayne/NotionAI/notionai-plus).
 
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
+## License
 
-## Submit to the webstores
-
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
+NotionAI Plus is released under the [MIT License](https://github.com/NotionAI/notionai-plus/blob/main/LICENSE).
