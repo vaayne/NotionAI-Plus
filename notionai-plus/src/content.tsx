@@ -58,6 +58,11 @@ const Index = () => {
   // show panel using shortcut
   useMessage<string, string>(async (req, res) => {
     if (req.name === "activate") {
+      // if not select text, then get context from Webpage
+      if (!isShowElement && window.getSelection().toString() !== "") {
+        const selection = window.getSelection().toString()
+        setContext(selection)
+      }
       setIsShowElement(!isShowElement)
     }
   })
