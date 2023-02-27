@@ -1,19 +1,17 @@
+import "~base.css"
+
 import cssText from "data-text:~style.css"
 import { marked } from "marked"
 import type { PlasmoCSConfig } from "plasmo"
+import { useEffect, useState } from "react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { useMessage } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
+import { SelectComponent } from "~components/select"
 import { PromptTypeEnum } from "~lib/enums"
 import { storage } from "~lib/storage"
-
-import "~base.css"
-
-import { useEffect, useState } from "react"
-
-import { SelectComponent } from "~components/select"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -39,6 +37,7 @@ const Index = () => {
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isShowElement, setIsShowElement] = useState(false)
+  const [notification, setNotification] = useState<string>("")
 
   // hidden panel using ESC
   useEffect(() => {
@@ -54,6 +53,15 @@ const Index = () => {
       document.removeEventListener("keydown", handleEscape)
     }
   }, [])
+
+  useEffect(() => {
+    if (notification != "") {
+      const timer = setTimeout(() => {
+        setNotification("")
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [notification])
 
   // show panel using shortcut
   useMessage<string, string>(async (req, res) => {
@@ -120,17 +128,22 @@ const Index = () => {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(responseMessage)
-    alert("Copied to clipboard")
+    handleToast("Copied to clipboard")
+  }
+
+  const handleToast = (message: string) => {
+    setNotification(message)
   }
 
   const handleClear = () => {
     setResponseMessage("")
+    handleToast("Cleared")
   }
 
   const page = () => {
     if (isShowElement) {
       return (
-        <div className="fixed top-1/3 right-20 w-1/3 h-1/2 overflow-hidden rounded-lg flex flex-col bg-blue-100">
+        <div className="fixed top-1/3 right-10 w-1/3 h-1/2 overflow-hidden rounded-lg flex flex-col bg-blue-100">
           <div className="form-control">
             <label className="label">
               <span className="label-text">
@@ -195,7 +208,20 @@ const Index = () => {
     }
   }
 
-  return <div>{isShowElement && page()}</div>
+  return (
+    <div>
+      {isShowElement && page()}{" "}
+      {notification && (
+        <div className="toast toast-top toast-end mr-4">
+          <div className="alert alert-success">
+            <div>
+              <span>{notification}</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default Index
