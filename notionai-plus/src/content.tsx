@@ -125,7 +125,7 @@ const Index = () => {
   const page = () => {
     if (isShowElement) {
       return (
-        <div className="flex flex-col h-full  bg-blue-100">
+        <div className="fixed top-1/3 right-20 w-1/3 h-1/2 overflow-hidden rounded-lg flex flex-col bg-blue-100">
           <div className="form-control">
             <label className="label">
               <span className="label-text">
@@ -190,11 +190,7 @@ const Index = () => {
     }
   }
 
-  return (
-    <div className="fixed top-1/3 right-20 w-1/3 h-1/2 overflow-hidden rounded-lg">
-      {isShowElement && page()}
-    </div>
-  )
+  return <div>{isShowElement && page()}</div>
 }
 
 export default Index
