@@ -6,9 +6,16 @@ NotionAI is an unofficial NotionAI API that provides a Python SDK and a Chrome e
 
 NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
+- [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
+
+
 ### NotionAI Chrome Extension Demo
-![](./docs/images/notionai-plus-1.png)
-![](./docs/images/notionai-plus-2.png)
+
+#### Screen Capture
+
+|            Screen Capture 1            |            Screen Capture 2            |            Screen Capture 3            |            Screen Capture 4            |            Screen Capture 5            |
+| :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
+| ![](./docs/images/notionai-plus-1.png) | ![](./docs/images/notionai-plus-2.png) | ![](./docs/images/notionai-plus-3.png) | ![](./docs/images/notionai-plus-4.png) | ![](./docs/images/notionai-plus-5.png) |
 
 
 ## NotionAI Python SDK
@@ -94,9 +101,14 @@ To use the NotionAI Python SDK, you need to obtain a Notion token. You can do th
 2. Find Cookies and copy the value for `token_v2`
 3. Find the `spaceId` of your Notion workspace
 
+- get notion token
 ![Get Notion Token](./docs/images/get_notion_token.png)
+- get notion workspace id
+![Get Notion Workspace ID 1](./docs/images/notionai-spaceid-1.png)
+- if don't get spaceId, try to get it from here
+![Get Notion Workspace ID 2](./docs/images/notionai-spaceid-2.png)
 
-![Get Notion Workspace ID](./docs/images/get_notion_space_id.png)
+
 
 #### Examples
 
