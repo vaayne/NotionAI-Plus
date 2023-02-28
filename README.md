@@ -11,6 +11,12 @@ NotionAI Plus is a browser extension that adds NotionAI's powerful features to a
 
 ### NotionAI Chrome Extension Demo
 
+
+
+https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-84b6-57a3333510f0.mp4
+
+
+
 #### Screen Capture
 
 |            Screen Capture 1            |            Screen Capture 2            |            Screen Capture 3            |            Screen Capture 4            |            Screen Capture 5            |
