@@ -7,6 +7,7 @@ NotionAI is an unofficial NotionAI API that provides a Python SDK and a Chrome e
 NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
+- [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
 
 
 ### NotionAI Chrome Extension Demo
