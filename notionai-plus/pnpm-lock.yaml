@@ -13,6 +13,7 @@ specifiers:
   autoprefixer: ^10.4.13
   cache-manager: ^5.1.7
   daisyui: ^2.51.0
+  lucide-react: ^0.121.0
   marked: ^4.2.12
   plasmo: 0.65.1
   postcss: 8.4.21
@@ -20,6 +21,7 @@ specifiers:
   react: 18.2.0
   react-dom: 18.2.0
   tailwindcss: 3.2.4
+  theme-change: ^2.4.0
   typescript: 4.9.4
   uuid: ^9.0.0
 
@@ -30,6 +32,7 @@ dependencies:
   autoprefixer: 10.4.13_postcss@8.4.21
   cache-manager: 5.1.7
   daisyui: 2.51.0_gbtt6ss3tbiz4yjtvdr6fbrj44
+  lucide-react: 0.121.0_react@18.2.0
   marked: 4.2.12
   plasmo: 0.65.1_gjpyg5imi5mt2gbvkmn3a4dr7m
   react: 18.2.0
@@ -46,6 +49,7 @@ devDependencies:
   '@types/react-dom': 18.0.10
   postcss: 8.4.21
   prettier: 2.8.3
+  theme-change: 2.4.0
   typescript: 4.9.4
 
 packages:
@@ -3963,6 +3967,14 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
+  /lucide-react/0.121.0_react@18.2.0:
+    resolution: {integrity: sha512-O4DgRR9YnlIO1vnzeiin9h2K70u17jM5HrCBWXp0kzVEH20vp0ONhe/rCnUWSj/GpGXsHDbSIxZWXdEvXVYHIw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /magic-string/0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
     dependencies:
@@ -5099,6 +5111,10 @@ packages:
       commander: 2.20.3
       source-map-support: 0.5.21
     dev: false
+
+  /theme-change/2.4.0:
+    resolution: {integrity: sha512-HbMckoxM7sV8L7wk53S5ceiBQWcTxFozuvUmvjdjPqpyVFkzPQHylSsDHYyT8qTruORe+1Sft7ExqlXQEeWHBA==}
+    dev: true
 
   /thenify-all/1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}

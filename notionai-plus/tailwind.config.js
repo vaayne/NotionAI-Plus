@@ -6,6 +6,6 @@ module.exports = {
   content: ["./src/**/*.{tsx,html}"],
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
   daisyui: {
-    themes: ["light"]
+    themes: ["cupcake", "halloween"]
   }
 }
