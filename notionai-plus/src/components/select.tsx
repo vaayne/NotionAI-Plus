@@ -21,13 +21,14 @@ export const SelectComponent = ({
   const promptOptions = () => {
     if (
       selectedPrompt == PromptTypeEnum.HelpMeWrite ||
-      selectedPrompt == PromptTypeEnum.ChatGPT
+      selectedPrompt == PromptTypeEnum.ChatGPTWeb ||
+      selectedPrompt == PromptTypeEnum.ChatGPTAPI
     ) {
       return (
         <input
           type="text"
           placeholder="Please input you custom prompt"
-          className="input-xs input-bordered input-primary w-full box-border px-2 text-sm"
+          className="input-xs input-bordered input-primary w-full box-border px-2 text-sm rounded-lg"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
@@ -36,62 +37,55 @@ export const SelectComponent = ({
   }
 
   return (
-    // <div className="flex flex-row items-center mx-2">
-    <select
-      className="flex-1 select-xs select-primary w-1/3 text-sm dark:bg-info-content dark:text-white"
-      value={selectedPrompt}
-      // defaultValue="default"
-      onChange={(e) => handleSelect(e.target.value)}>
-      <option value="default" key="default">
-        --- 📝 Select your prompt ---
-      </option>
-      {TopicOptions.map((option) => (
-        <option value={option.value} key={option.value}>
-          {option.label}
+    <div className="flex-1 flex flex-row items-center mx-1">
+      <select
+        className="shrink select-xs select-primary w-1/2 text-sm dark:bg-info-content dark:text-white rounded-lg"
+        value={selectedPrompt}
+        // defaultValue="default"
+        onChange={(e) => handleSelect(e.target.value)}>
+        <option value="default" key="default">
+          --- 📝 Select your prompt ---
         </option>
-      ))}
-      {PromptTypeOptions.map((option) => {
-        if (
-          option.value === PromptTypeEnum.ChatGPT ||
-          option.value === PromptTypeEnum.ChangeTone ||
-          option.value === PromptTypeEnum.Translate ||
-          option.value === PromptTypeEnum.TopicWriting ||
-          option.value === PromptTypeEnum.HelpMeWrite
-        ) {
-        } else {
-          return (
-            <option value={option.value} key={option.value}>
-              {option.label}
-            </option>
-          )
-        }
-      })}
-      <option disabled value="TopicWriting" key="TopicWriting">
-        --- 📝 Topic Writing ---
-      </option>
-      {TopicOptions.map((option) => (
-        <option value={option.value} key={option.value}>
-          {option.label}
+        {PromptTypeOptions.map((option) => {
+          if (
+            option.value === PromptTypeEnum.ChangeTone ||
+            option.value === PromptTypeEnum.Translate ||
+            option.value === PromptTypeEnum.TopicWriting
+          ) {
+          } else {
+            return (
+              <option value={option.value} key={option.value}>
+                {option.label}
+              </option>
+            )
+          }
+        })}
+        <option disabled value="TopicWriting" key="TopicWriting">
+          --- 📝 Topic Writing ---
         </option>
-      ))}
-      <option disabled value="ChangeTone" key="ChangeTone">
-        --- 🎭 Change Tone ---
-      </option>
-      {ToneOptions.map((option) => (
-        <option value={option.value} key={option.value}>
-          {option.label}
+        {TopicOptions.map((option) => (
+          <option value={option.value} key={option.value}>
+            {option.label}
+          </option>
+        ))}
+        <option disabled value="ChangeTone" key="ChangeTone">
+          --- 🎭 Change Tone ---
         </option>
-      ))}
-      <option disabled value="Translate" key="Translate">
-        --- 🌐 Translate ---
-      </option>
-      {LanguageOptions.map((option) => (
-        <option value={option.value} key={option.value}>
-          {option.label}
+        {ToneOptions.map((option) => (
+          <option value={option.value} key={option.value}>
+            {option.label}
+          </option>
+        ))}
+        <option disabled value="Translate" key="Translate">
+          --- 🌐 Translate ---
         </option>
-      ))}
-    </select>
-    //<div className="flex-1">{promptOptions()}</div>
-    // </div>
+        {LanguageOptions.map((option) => (
+          <option value={option.value} key={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <div className="w-full mx-1">{promptOptions()}</div>
+    </div>
   )
 }

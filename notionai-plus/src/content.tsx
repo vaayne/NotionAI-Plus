@@ -34,8 +34,12 @@ const Index = () => {
     key: "noiton-space-id",
     instance: storage
   })
+  const [chatGPTAPIKey] = useStorage<string>({
+    key: "chat-gpt-api-key",
+    instance: storage
+  })
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isShowElement, setIsShowElement] = useState(true)
+  const [isShowElement, setIsShowElement] = useState(false)
   const [notification, setNotification] = useState<string>("")
 
   // hidden panel using ESC
@@ -95,7 +99,6 @@ const Index = () => {
     let tone: string = ""
 
     const prompts = selectedPrompt.split("-")
-    console.log("prompts: " + prompts)
     let promptType = prompts[0]
     if (promptType === PromptTypeEnum.Translate) {
       language = prompts[1]
@@ -104,23 +107,33 @@ const Index = () => {
     } else if (promptType === PromptTypeEnum.TopicWriting) {
       setPrompt(prompts[1])
       lprompt = prompts[1]
-    } else if (promptType === PromptTypeEnum.HelpMeWrite) {
+    } else if (
+      promptType === PromptTypeEnum.HelpMeWrite ||
+      promptType === PromptTypeEnum.ChatGPTAPI ||
+      promptType === PromptTypeEnum.ChatGPTWeb
+    ) {
       lprompt = prompt
     }
 
-    setResponseMessage("Waitting for Notion AI...")
+    setResponseMessage("Waitting for AI response ...")
+
+    const body = {
+      promptType: promptType,
+      context: context,
+      prompt: lprompt,
+      language: language,
+      tone: tone,
+      notionSpaceId: notionSpaceId,
+      chatGPTAPIKey: chatGPTAPIKey
+    }
+
     const response = await sendToBackground({
       name: "request",
-      body: {
-        promptType: promptType,
-        context: context,
-        prompt: lprompt,
-        language: language,
-        tone: tone,
-        notionSpaceId: notionSpaceId
-      }
+      body: body
     })
-    console.log(response.message)
+    // console.log(
+    //   `request: ${JSON.stringify(body)}, response: ${response.message}`
+    // )
     setResponseMessage(response.message)
     setIsLoading(false)
   }
@@ -180,7 +193,7 @@ const Index = () => {
             />
 
             <button
-              className="btn-xs btn-base-300 m-2 dark:bg-info-content dark:text-white"
+              className="btn-xs btn-base-300 ml-0 m-2 rounded-lg dark:bg-info-content dark:text-white"
               onClick={handleMessage}>
               Submit
             </button>
@@ -188,7 +201,7 @@ const Index = () => {
           <div className="divider m-0"></div>
           <div className="p-0 m-0 flex flex-row justify-between content-center items-stretch">
             <p className="px-4 my-1 self-center text-sm text-black dark:text-white">
-              <strong>NotionAI Says:</strong>
+              <strong>AI Says:</strong>
             </p>
             <div className="flex flex-row">
               <button
