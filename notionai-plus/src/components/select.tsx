@@ -28,7 +28,7 @@ export const SelectComponent = ({
         <input
           type="text"
           placeholder="Please input you custom prompt"
-          className="input-xs input-bordered input-primary w-full box-border px-2 text-sm"
+          className="input-xs input-bordered input-primary w-full box-border px-2 text-sm rounded-lg"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
@@ -37,9 +37,9 @@ export const SelectComponent = ({
   }
 
   return (
-    <div className="flex flex-row items-center justify-between mx-2">
+    <div className="flex-1 flex flex-row items-center mx-1">
       <select
-        className="flex-1 select-xs select-primary w-1/3 text-sm dark:bg-info-content dark:text-white"
+        className="shrink select-xs select-primary w-1/2 text-sm dark:bg-info-content dark:text-white rounded-lg"
         value={selectedPrompt}
         // defaultValue="default"
         onChange={(e) => handleSelect(e.target.value)}>
@@ -85,7 +85,7 @@ export const SelectComponent = ({
           </option>
         ))}
       </select>
-      <div className="flex-1">{promptOptions()}</div>
+      <div className="w-full mx-1">{promptOptions()}</div>
     </div>
   )
 }

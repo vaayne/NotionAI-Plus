@@ -131,9 +131,9 @@ const Index = () => {
       name: "request",
       body: body
     })
-    console.log(
-      `request: ${JSON.stringify(body)}, response: ${response.message}`
-    )
+    // console.log(
+    //   `request: ${JSON.stringify(body)}, response: ${response.message}`
+    // )
     setResponseMessage(response.message)
     setIsLoading(false)
   }
@@ -193,7 +193,7 @@ const Index = () => {
             />
 
             <button
-              className="btn-xs btn-base-300 m-2 dark:bg-info-content dark:text-white"
+              className="btn-xs btn-base-300 ml-0 m-2 rounded-lg dark:bg-info-content dark:text-white"
               onClick={handleMessage}>
               Submit
             </button>
