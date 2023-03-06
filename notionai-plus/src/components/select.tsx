@@ -20,11 +20,7 @@ export const SelectComponent = ({
   }
 
   const promptOptions = () => {
-    if (
-      selectedPrompt == PromptTypeEnum.HelpMeWrite ||
-      selectedPrompt == PromptTypeEnum.ChatGPTWeb ||
-      selectedPrompt == PromptTypeEnum.ChatGPTAPI
-    ) {
+    if (selectedPrompt == PromptTypeEnum.HelpMeWrite) {
       return (
         <input
           type="text"
@@ -43,12 +39,12 @@ export const SelectComponent = ({
     <div className="flex-1 flex flex-row items-center mx-1">
       <select
         className={` ${
-          isFullMode ? "text-base select-base" : "text-xs select-xs"
+          isFullMode ? "text select" : "text-xs select-xs"
         } shrink  select-primary w-1/2  dark:bg-info-content dark:text-white rounded-lg`}
         value={selectedPrompt}
         onChange={(e) => handleSelect(e.target.value)}>
         <option value="default" key="default">
-          --- 📝 Select your prompt ---
+          📝 Select your prompt
         </option>
         {PromptTypeOptions.map((option) => {
           if (

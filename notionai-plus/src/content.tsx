@@ -18,7 +18,12 @@ import { useMessage } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { SelectComponent } from "~components/select"
-import { PromptTypeEnum } from "~lib/enums"
+import {
+  ConstEnum,
+  EngineOptions,
+  ProcessTypeEnum,
+  PromptTypeEnum
+} from "~lib/enums"
 import { storage } from "~lib/storage"
 
 export const config: PlasmoCSConfig = {
@@ -33,16 +38,22 @@ export const getStyle = () => {
 }
 
 const Index = () => {
+  const [defaultEngine] = useStorage<string>({
+    key: ConstEnum.DEFAULT_ENGINE,
+    instance: storage
+  })
+  const [engine, setEngine] = useState<string>(defaultEngine)
+  const [processType, setProcessType] = useState<string>(ProcessTypeEnum.Text)
   const [selectedPrompt, setSelectedPrompt] = useState<string>("")
   const [context, setContext] = useState<string>("")
   const [prompt, setPrompt] = useState<string>("")
   const [responseMessage, setResponseMessage] = useState<string>("")
   const [notionSpaceId] = useStorage<string>({
-    key: "noiton-space-id",
+    key: ConstEnum.NOTION_SPACE_ID,
     instance: storage
   })
   const [chatGPTAPIKey] = useStorage<string>({
-    key: "chat-gpt-api-key",
+    key: ConstEnum.CHATGPT_API_KEY,
     instance: storage
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -60,6 +71,9 @@ const Index = () => {
 
     document.addEventListener("keydown", handleEscape)
 
+    // set default engine
+    setEngine(defaultEngine)
+    console.log(`default engine: ${defaultEngine}, engine: ${engine}`)
     return () => {
       document.removeEventListener("keydown", handleEscape)
     }
@@ -102,6 +116,23 @@ const Index = () => {
         dangerouslySetInnerHTML={{ __html: html }}></article>
     )
   }
+
+  const handleSummary = async () => {
+    setIsLoading(true)
+    setProcessType(ProcessTypeEnum.Page)
+
+    const body = {
+      url: document.URL
+    }
+    // console.log(`page html: \n ${document.body.innerHTML}`)
+    const response = await sendToBackground({
+      name: "request",
+      body: body
+    })
+    setResponseMessage(response.message)
+    setIsLoading(false)
+  }
+
   const handleMessage = async () => {
     setIsLoading(true)
 
@@ -118,20 +149,18 @@ const Index = () => {
     } else if (promptType === PromptTypeEnum.TopicWriting) {
       setPrompt(prompts[1])
       lprompt = prompts[1]
-    } else if (
-      promptType === PromptTypeEnum.HelpMeWrite ||
-      promptType === PromptTypeEnum.ChatGPTAPI ||
-      promptType === PromptTypeEnum.ChatGPTWeb
-    ) {
+    } else if (promptType === PromptTypeEnum.HelpMeWrite) {
       lprompt = prompt
     }
 
     setResponseMessage("Waitting for AI response ...")
 
     const body = {
-      promptType: promptType,
+      engine: engine,
+      processType: processType,
+      builtinPrompt: promptType,
+      customPromot: lprompt,
       context: context,
-      prompt: lprompt,
       language: language,
       tone: tone,
       notionSpaceId: notionSpaceId,
@@ -190,10 +219,43 @@ const Index = () => {
             isFullMode ? "h-5/6 w-11/12 top-10" : "h-1/2 w-1/3 top-1/3 "
           } min-w-64 overflow-hidden rounded-lg flex flex-col bg-base-300 dark:bg-slate-500`}>
           <div className="form-control flex flex-col">
-            <div className="flex flex-row justify-between">
-              <label className="label">
-                <span className="label-text"></span>
-              </label>
+            <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-row items-center justify-start bg-stone-400  dark:bg-slate-600 rounded-lg">
+                <div
+                  className="tooltip tooltip-right"
+                  data-tip="Please select your engine">
+                  <button
+                    className={`${
+                      isFullMode ? "btn" : "btn-xs"
+                    } btn-base-300 m-1 rounded-lg dark:bg-info-content dark:text-white`}>
+                    Engine:
+                  </button>
+                </div>
+                <select
+                  className={` ${
+                    isFullMode ? "text select" : "text-xs select-xs"
+                  } shrink  select-primary dark:bg-info-content dark:text-white rounded-lg mr-1`}
+                  value={engine}
+                  defaultValue={defaultEngine}
+                  onChange={(e) => setEngine(e.target.value)}>
+                  {EngineOptions.map((option) => (
+                    <option value={option.value} key={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* <div
+                className="tooltip tooltip-bottom"
+                data-tip="Summary the page">
+                <button
+                  className={`${
+                    isFullMode ? "btn" : "btn-sm"
+                  } btn-base-300 ml-0 m-2 rounded-lg dark:bg-info-content dark:text-white`}
+                  onClick={handleSummary}>
+                  Summary Page
+                </button>
+              </div> */}
               <div className="flex flex-row items-center justify-end mr-2">
                 <a
                   href="https://twitter.com/LiuVaayne"
@@ -213,7 +275,7 @@ const Index = () => {
 
             <textarea
               className={`textarea mx-1 break-all ${
-                isFullMode ? "text-sm" : "text-xs"
+                isFullMode ? "text" : "text-xs"
               }  rounded-lg dark:bg-info-content dark:text-white`}
               placeholder="Please enter your context"
               value={context}
@@ -230,7 +292,7 @@ const Index = () => {
 
             <button
               className={`${
-                isFullMode ? "btn-sm" : "btn-xs"
+                isFullMode ? "btn" : "btn-xs"
               } btn-base-300 ml-0 m-2 rounded-lg dark:bg-info-content dark:text-white`}
               onClick={handleMessage}>
               Submit
@@ -240,21 +302,21 @@ const Index = () => {
           <div className="p-0 m-0 flex flex-row justify-between content-center items-stretch">
             <p
               className={`px-4 my-1 self-center ${
-                isFullMode ? "text-sm" : "text-xs"
+                isFullMode ? "text" : "text-xs"
               } text-black dark:text-white`}>
               <strong>AI Says:</strong>
             </p>
             <div className="flex flex-row">
               <button
                 className={`${
-                  isFullMode ? "btn-sm" : "btn-xs"
+                  isFullMode ? "btn" : "btn-xs"
                 } btn-primary bg-transparent border-0 gap-2`}
                 onClick={handleClear}>
                 <Eraser />
               </button>
               <button
                 className={`${
-                  isFullMode ? "btn-sm" : "btn-xs"
+                  isFullMode ? "btn" : "btn-xs"
                 } btn-primary bg-transparent border-0 gap-2`}
                 onClick={handleCopy}>
                 <ClipboardCopy />
