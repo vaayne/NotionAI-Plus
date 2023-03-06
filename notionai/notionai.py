@@ -41,19 +41,21 @@ class NotionAIBase(object):
             "context": content,
         }
 
+        headers = self._build_headers()
+        return requests.post(
+            self.url, json=payload, headers=headers, stream=self.stream
+        )
+
+    def _build_headers(self):
         cookies = [
             "token_v2=" + self.token,
         ]
 
-        headers = {
+        return {
             "accept": "application/json",
             "Cookie": "; ".join(cookies),
             "Content-Type": "application/json",
         }
-
-        return requests.post(
-            self.url, json=payload, headers=headers, stream=self.stream
-        )
 
     def _post(self, content: dict) -> str:
         r = self._request(content)
@@ -76,6 +78,32 @@ class NotionAIBase(object):
 
 
 class NotionAI(NotionAIBase):
+    def get_spaces(self) -> str:
+        """Get all spaces
+
+        Returns:
+            list[dict]: list of spaces with id and name
+
+        Example: [
+            {"id": "space_id_1", "name": "space_name"},
+            {"id": "space_id_2", "name": "space_name"}
+        ]
+        """
+        url = "https://www.notion.so/api/v3/getSpaces"
+        r = requests.post(url, headers=self._build_headers())
+        if r.status_code != 200:
+            raise ValueError("Cannot get spaces")
+        res = r.json()
+        spaces = []
+        for _, val in res.items():
+            space = val.get("space")
+            if space:
+                for k, v in space.items():
+                    space_id = k
+                    space_name = v["value"]["name"]
+                    spaces.append({"id": space_id, "name": space_name})
+        return spaces
+
     def writing_with_topic(self, topic: TopicEnum, prompt: str) -> str:
         """Writing for special topic
 
