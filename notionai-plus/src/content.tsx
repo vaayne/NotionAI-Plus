@@ -3,10 +3,12 @@ import "~base.css"
 import cssText from "data-text:~style.css"
 import {
   ClipboardCopy,
+  Edit,
   Eraser,
   Expand,
   Github,
   Shrink,
+  TextCursorInputIcon,
   Twitter
 } from "lucide-react"
 import { marked } from "marked"
@@ -60,6 +62,7 @@ const Index = () => {
   const [isShowElement, setIsShowElement] = useState(false)
   const [notification, setNotification] = useState<string>("")
   const [isFullMode, setIsFullMode] = useState<boolean>(false)
+  const [selectedElement, setSelectedElement] = useState<HTMLElement>()
 
   // hidden panel using ESC
   useEffect(() => {
@@ -98,11 +101,23 @@ const Index = () => {
         const selection = window.getSelection().toString()
         setContext(selection)
       }
+      handlerSelectText()
       setIsShowElement(!isShowElement)
     }
   })
 
-  // show input for ChatGPT and hel me write
+  const handlerSelectText = () => {
+    if (
+      document.activeElement &&
+      (document.activeElement.isContentEditable ||
+        document.activeElement.nodeName.toUpperCase() === "TEXTAREA" ||
+        document.activeElement.nodeName.toUpperCase() === "INPUT")
+    ) {
+      console.log("select text from input")
+      // Set as original for later
+      setSelectedElement(document.activeElement as HTMLElement)
+    }
+  }
 
   const handleLoading = () => {
     if (isLoading) {
@@ -196,6 +211,18 @@ const Index = () => {
     handleToast("Cleared")
   }
 
+  const handleInsertClick = () => {
+    if (selectedElement) {
+      selectedElement.value = `${selectedElement.value}\n\n${responseMessage}`
+    }
+  }
+
+  const handleReplaceClick = () => {
+    if (selectedElement) {
+      selectedElement.value = responseMessage
+    }
+  }
+
   const renderFullMode = () => {
     const mode = () => {
       if (isFullMode) {
@@ -206,11 +233,15 @@ const Index = () => {
     }
 
     return (
-      <button
-        className="btn bg-transparent border-0"
-        onClick={() => setIsFullMode(!isFullMode)}>
-        {mode()}
-      </button>
+      <div
+        className="tooltip tooltip-left"
+        data-tip={`FullMode ${isFullMode ? "Off" : "On"}`}>
+        <button
+          className="btn bg-transparent border-0"
+          onClick={() => setIsFullMode(!isFullMode)}>
+          {mode()}
+        </button>
+      </div>
     )
   }
 
@@ -272,6 +303,7 @@ const Index = () => {
                   className="bg-accent-transparent">
                   <Github />
                 </a>
+
                 {renderFullMode()}
               </div>
             </div>
@@ -305,25 +337,55 @@ const Index = () => {
           <div className="p-0 m-0 flex flex-row justify-between content-center items-stretch">
             <p
               className={`px-4 my-1 self-center ${
-                isFullMode ? "text" : "text-xs"
+                isFullMode ? "text" : "text-sm"
               } text-black dark:text-white`}>
               <strong>AI Says:</strong>
             </p>
-            <div className="flex flex-row">
-              <button
-                className={`${
-                  isFullMode ? "btn" : "btn-xs"
-                } btn-primary bg-transparent border-0 gap-2`}
-                onClick={handleClear}>
-                <Eraser />
-              </button>
-              <button
-                className={`${
-                  isFullMode ? "btn" : "btn-xs"
-                } btn-primary bg-transparent border-0 gap-2`}
-                onClick={handleCopy}>
-                <ClipboardCopy />
-              </button>
+            <div className="flex flex-row mx-2">
+              <div
+                className="tooltip tooltip-top tooltip-primary"
+                data-tip="Clear">
+                <button
+                  className={`${
+                    isFullMode ? "btn" : "btn-sm"
+                  } btn-primary bg-transparent border-0 gap-2`}
+                  onClick={handleClear}>
+                  <Eraser />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-top tooltip-primary"
+                data-tip="Copy">
+                <button
+                  className={`${
+                    isFullMode ? "btn" : "btn-sm"
+                  } btn-primary bg-transparent border-0 gap-2`}
+                  onClick={handleCopy}>
+                  <ClipboardCopy />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-top tooltip-primary"
+                data-tip="Insert">
+                <button
+                  className={`${
+                    isFullMode ? "btn" : "btn-sm"
+                  } btn-primary bg-transparent border-0 gap-2`}
+                  onClick={handleInsertClick}>
+                  <TextCursorInputIcon />
+                </button>
+              </div>
+              <div
+                className="tooltip tooltip-top tooltip-primary"
+                data-tip="Replace">
+                <button
+                  className={`${
+                    isFullMode ? "btn" : "btn-sm"
+                  } btn-primary bg-transparent border-0 gap-2`}
+                  onClick={handleReplaceClick}>
+                  <Edit />
+                </button>
+              </div>
             </div>
           </div>
           <div className="divider m-0"></div>
