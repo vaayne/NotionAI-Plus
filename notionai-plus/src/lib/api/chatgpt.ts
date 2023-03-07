@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { storage } from "~lib/storage"
 
-const CHATGPT_MODEL = "text-davinci-002-render-next"
+const CHATGPT_MODEL = "text-davinci-002-render-sha"
 const CHATGPT_HOST = "https://chat.openai.com"
 
 const CACHE_KEY_TOKEN = "chatgpt-token"
@@ -36,8 +36,12 @@ async function PostChatGPT(prompt: string): Promise<string> {
 
   const data = {
     action: "next",
+    conversation_id: uuidv4(),
     messages: [
       {
+        author: {
+          role: "user"
+        },
         id: uuidv4(),
         role: "user",
         content: { content_type: "text", parts: [prompt] }
@@ -59,9 +63,13 @@ async function PostChatGPT(prompt: string): Promise<string> {
 
   if (resp.status == 200) {
     return parseChatGPTResponse(await resp.text())
+  }
+  if (resp.status == 403 || resp.status == 401) {
+    await storage.remove(CACHE_KEY_TOKEN)
+    return "ChatGPT return 403 FORBIDDEN, please login in to https://chat.openai.com"
   } else {
     console.log(`fail: ${resp.text}`)
-    return `ChatGPT return error, status: ${resp.status}`
+    return `ChatGPT return error, please retry, status: ${resp.status}, error: ${resp.text}`
   }
 }
 
