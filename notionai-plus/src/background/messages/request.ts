@@ -91,19 +91,42 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   let message: string
 
   const body = req.body as RequestBody
+  const instruction: string = buildChatGPTinstruction(body)
+  const prompt: string = buildChatGPTPrompt(body)
   // console.log(`request body: ${JSON.stringify(body)}`)
 
   if (body.processType === ProcessTypeEnum.Page) {
     // summary page article or vedio
     try {
       const data = await Parse(req.body.url)
-      message = data.content
+      switch (body.engine) {
+        case EngineEnum.ChatGPTWeb:
+          message = await PostChatGPT(
+            `${instruction}\n\n${SummarizeTemplate(data.content)}`
+          )
+          break
+        case EngineEnum.ChatGPTAPI:
+          message = await Chat(
+            instruction,
+            SummarizeTemplate(data.content),
+            body.chatGPTAPIKey
+          )
+          break
+        case EngineEnum.NotionAI:
+          message = await PostNotion(
+            body.builtinPrompt,
+            data.content,
+            body.notionSpaceId,
+            body.customPromot,
+            body.language,
+            body.tone
+          )
+          break
+      }
     } catch (error) {
       message = error
     }
   } else {
-    const instruction: string = buildChatGPTinstruction(body)
-    const prompt: string = buildChatGPTPrompt(body)
     console.log(`instruction: ${instruction}, prompt: ${prompt}`)
     switch (body.engine) {
       case EngineEnum.ChatGPTWeb:

@@ -139,11 +139,17 @@ const Index = () => {
   const handleSummary = async () => {
     setIsLoading(true)
     setProcessType(ProcessTypeEnum.Page)
-
     const body = {
-      url: document.URL
+      engine: engine,
+      processType: ProcessTypeEnum.Page,
+      url: document.URL,
+      builtinPrompt: PromptTypeEnum.Summarize,
+      customPromot: "",
+      language: "",
+      tone: "",
+      notionSpaceId: notionSpaceId,
+      chatGPTAPIKey: chatGPTAPIKey
     }
-    // console.log(`page html: \n ${document.body.innerHTML}`)
     const response = await sendToBackground({
       name: "request",
       body: body

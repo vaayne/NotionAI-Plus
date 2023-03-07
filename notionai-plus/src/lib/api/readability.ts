@@ -24,7 +24,7 @@ async function Parse(url: string): Promise<ParseResult> {
     const encodedURL = encodeURI(HOST + path + query)
     const resp = await fetch(encodedURL)
     const data = await resp.json()
-    console.log(`readability response: ${JSON.stringify(data)}`)
+    // console.log(`readability response: ${JSON.stringify(data)}`)
     return data as ParseResult
   } catch (error) {
     console.log(`readability error: ${error}`)
