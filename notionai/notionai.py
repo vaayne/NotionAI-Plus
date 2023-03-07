@@ -41,14 +41,14 @@ class NotionAIBase(object):
             "context": content,
         }
 
-        headers = self._build_headers()
+        headers = self._build_headers(self.token)
         return requests.post(
             self.url, json=payload, headers=headers, stream=self.stream
         )
 
-    def _build_headers(self):
+    def _build_headers(self, token: str):
         cookies = [
-            "token_v2=" + self.token,
+            "token_v2=" + token,
         ]
 
         return {
@@ -78,8 +78,11 @@ class NotionAIBase(object):
 
 
 class NotionAI(NotionAIBase):
-    def get_spaces(self) -> str:
+    @classmethod
+    def get_spaces(cls, token: str) -> list[dict]:
         """Get all spaces
+        Params:
+            token (str): Notion token_v2
 
         Returns:
             list[dict]: list of spaces with id and name
@@ -90,7 +93,7 @@ class NotionAI(NotionAIBase):
         ]
         """
         url = "https://www.notion.so/api/v3/getSpaces"
-        r = requests.post(url, headers=self._build_headers())
+        r = requests.post(url, headers=cls._build_headers(token))
         if r.status_code != 200:
             raise ValueError("Cannot get spaces")
         res = r.json()

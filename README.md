@@ -111,10 +111,21 @@ To use the NotionAI Python SDK, you need to obtain a Notion token. You can do th
 - get notion token
 ![Get Notion Token](./docs/images/get_notion_token.png)
 - get notion workspace id
-![Get Notion Workspace ID 1](./docs/images/notionai-spaceid-1.png)
-- if don't get spaceId, try to get it from here
-![Get Notion Workspace ID 2](./docs/images/notionai-spaceid-2.png)
+![Get Notion Workspace ID](./docs/images/notion-space-id.png)
 
+**Note: Now can get Notion space id using api**
+
+```python
+import os
+from notionai import NotionAI
+TOKEN = os.getenv("NOTION_TOKEN")
+
+spaces = NotionAI.get_spaces(TOKEN)
+print(spaces)
+# the result will looks like
+# [{'id': 'xxxxx', 'name': 'xxxxx'}]
+
+```
 
 
 #### Examples
