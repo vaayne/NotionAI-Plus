@@ -37,12 +37,12 @@ export const getStyle = () => {
   return style
 }
 
+export const getDefaultEngine = async () => {
+  return await storage.get(ConstEnum.DEFAULT_ENGINE)
+}
+
 const Index = () => {
-  const [defaultEngine] = useStorage<string>({
-    key: ConstEnum.DEFAULT_ENGINE,
-    instance: storage
-  })
-  const [engine, setEngine] = useState<string>(defaultEngine)
+  const [engine, setEngine] = useState<string>()
   const [processType, setProcessType] = useState<string>(ProcessTypeEnum.Text)
   const [selectedPrompt, setSelectedPrompt] = useState<string>("")
   const [context, setContext] = useState<string>("")
@@ -70,10 +70,12 @@ const Index = () => {
     }
 
     document.addEventListener("keydown", handleEscape)
-
     // set default engine
-    setEngine(defaultEngine)
-    console.log(`default engine: ${defaultEngine}, engine: ${engine}`)
+    getDefaultEngine().then((engine) => {
+      setEngine(engine)
+      console.log(`default engine: ${engine}`)
+    })
+
     return () => {
       document.removeEventListener("keydown", handleEscape)
     }
@@ -109,12 +111,14 @@ const Index = () => {
           className={`progress ${isFullMode ? "w-full" : "w-56"}`}></progress>
       )
     }
-    const html = marked(responseMessage)
-    return (
-      <article
-        className={`${isFullMode ? "prose-base" : "prose-xs"} `}
-        dangerouslySetInnerHTML={{ __html: html }}></article>
-    )
+    if (responseMessage != undefined && responseMessage != "") {
+      const html = marked(responseMessage)
+      return (
+        <article
+          className={`${isFullMode ? "prose-base" : "prose-xs"} `}
+          dangerouslySetInnerHTML={{ __html: html }}></article>
+      )
+    }
   }
 
   const handleSummary = async () => {
@@ -236,7 +240,6 @@ const Index = () => {
                     isFullMode ? "text select" : "text-xs select-xs"
                   } shrink  select-primary dark:bg-info-content dark:text-white rounded-lg mr-1`}
                   value={engine}
-                  defaultValue={defaultEngine}
                   onChange={(e) => setEngine(e.target.value)}>
                   {EngineOptions.map((option) => (
                     <option value={option.value} key={option.value}>

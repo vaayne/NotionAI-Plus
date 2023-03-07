@@ -22,6 +22,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   let message: string
 
   const body = req.body as RequestBody
+  // console.log(`request body: ${JSON.stringify(body)}`)
 
   if (body.processType === ProcessTypeEnum.Page) {
     // summary page article or vedio
@@ -36,12 +37,14 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     switch (body.engine) {
       case EngineEnum.ChatGPTWeb:
         message = await PostChatGPT(body.customPromot, body.context)
+        break
       case EngineEnum.ChatGPTAPI:
         message = await Chat(
           body.customPromot,
           body.context,
           body.chatGPTAPIKey
         )
+        break
       case EngineEnum.NotionAI:
         message = await PostNotion(
           body.builtinPrompt,
@@ -51,6 +54,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
           body.language,
           body.tone
         )
+        break
     }
   }
   res.send({
