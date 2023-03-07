@@ -7,6 +7,7 @@ import {
 } from "~lib/enums"
 
 export const SelectComponent = ({
+  isFullMode,
   selectedPrompt,
   setSelectedPrompt,
   prompt,
@@ -19,16 +20,14 @@ export const SelectComponent = ({
   }
 
   const promptOptions = () => {
-    if (
-      selectedPrompt == PromptTypeEnum.HelpMeWrite ||
-      selectedPrompt == PromptTypeEnum.ChatGPTWeb ||
-      selectedPrompt == PromptTypeEnum.ChatGPTAPI
-    ) {
+    if (selectedPrompt == PromptTypeEnum.HelpMeWrite) {
       return (
         <input
           type="text"
           placeholder="Please input you custom prompt"
-          className="input-xs input-bordered input-primary w-full box-border px-2 text-sm rounded-lg"
+          className={` ${
+            isFullMode ? "input-sm" : "input-xs"
+          } input-bordered input-primary w-full box-border px-2 text-sm rounded-lg`}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
@@ -39,12 +38,13 @@ export const SelectComponent = ({
   return (
     <div className="flex-1 flex flex-row items-center mx-1">
       <select
-        className="shrink select-xs select-primary w-1/2 text-sm dark:bg-info-content dark:text-white rounded-lg"
+        className={` ${
+          isFullMode ? "text select" : "text-xs select-xs"
+        } shrink  select-primary w-1/2  dark:bg-info-content dark:text-white rounded-lg`}
         value={selectedPrompt}
-        // defaultValue="default"
         onChange={(e) => handleSelect(e.target.value)}>
         <option value="default" key="default">
-          --- 📝 Select your prompt ---
+          📝 Select your prompt
         </option>
         {PromptTypeOptions.map((option) => {
           if (
