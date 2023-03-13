@@ -6,6 +6,10 @@ NotionAI Plus is a browser extension that adds NotionAI's powerful features to a
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
 - [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
 
+
+**If you are looking for the NotionAI Python SDK, please visit [notionai-py](https://github.com/Vaayne/notionai-py)**
+
+
 ### Demo
 
 https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-84b6-57a3333510f0.mp4

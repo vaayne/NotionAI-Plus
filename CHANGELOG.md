@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.10 - 2023-03-13
+### Fixed
+- Resolved an issue that occurred while setting the Notion space ID and default engine in the options page.
+
 ## v0.0.9 - 2023-03-07
 
 ### Fixed
