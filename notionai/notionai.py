@@ -46,7 +46,8 @@ class NotionAIBase(object):
             self.url, json=payload, headers=headers, stream=self.stream
         )
 
-    def _build_headers(self, token: str):
+    @classmethod
+    def _build_headers(cls, token: str):
         cookies = [
             "token_v2=" + token,
         ]
