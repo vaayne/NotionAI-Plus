@@ -20,32 +20,26 @@ jobs:
         with:
           version: latest
           run_install: true
-      - name: Use Node.js 16.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3.4.1
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: "pnpm"
-      - name: Build the extension
-        run: pnpm build
-      - name: Package the extension into a zip artifact
-        run: pnpm package
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: chrome-mv3-prod
-          path: build/chrome-mv3-prod.zip
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: firefox-mv3-prod
-          path: build/firefox-mv3-prod.zip
-      - name: Release assert to github release
+      - name: Build and Package the extension into a zip artifact
+        run: |
+          pnpm build --target=chrome-mv3 --zip
+          pnpm build --target=firefox-mv2 --zip
+          pnpm build --target=edge-mv3 --zip
+
+      - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
+          generate_release_notes: true
+          body_path: CHANGELOG.md
           files: |
             build/chrome-mv3-prod.zip
-            build/firefox-mv3-prod.zip
+            build/firefox-mv2-prod.zip
+            build/edge-mv3-prod.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
