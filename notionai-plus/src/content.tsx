@@ -76,7 +76,6 @@ const Index = () => {
     // set default engine
     getDefaultEngine().then((engine) => {
       setEngine(engine)
-      console.log(`default engine: ${engine}`)
     })
 
     return () => {

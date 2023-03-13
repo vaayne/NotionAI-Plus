@@ -1,22 +1,41 @@
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { CountButton } from "~features/count-button"
 import { storage } from "~lib/storage"
 
 import "~base.css"
 import "~style.css"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+import { ConstEnum } from "~lib/enums"
 
 function IndexPopup() {
-  const [notionSpaceId] = useStorage<string>({
-    key: "noiton-space-id",
-    instance: storage
-  })
+  const [notionSpaceId, setNotionSpaceId] = useState<string>("")
+  const [defaultEngine, setDefaultEngine] = useStorage<string>("")
+
+  useEffect(() => {
+    init()
+  }, [])
+
+  const init = async () => {
+    const spaceID = await storage.get(ConstEnum.NOTION_SPACE_ID)
+    setNotionSpaceId(spaceID)
+    const engine = await storage.get(ConstEnum.DEFAULT_ENGINE)
+    setDefaultEngine(engine)
+  }
 
   const handleIsReady = () => {
     if (notionSpaceId) {
-      return <p>NotionAI is ready</p>
+      return (
+        <div className="prose bg-stone-200 text-sm text-black p-2 rounded-lg">
+          <p>
+            NotionAI is <strong>ready</strong>
+          </p>
+          <p>
+            The default engine is <strong>{defaultEngine}</strong>
+          </p>
+        </div>
+      )
     } else {
       return (
         <p>
