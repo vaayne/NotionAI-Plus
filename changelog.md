@@ -1,11 +1,12 @@
 # Changelog
 
-## v0.1.0 - 2023-02-23
+## v0.0.9 - 2023-03-07
 
 ### Fixed
-- Fixed response none when Notion start to charge for the API
+- Fixed an issue with the ChatGPT web.
 
-## v0.1.1 - 2023-03-07
-
-### Improved
-- add new api `get_spaces` to auto get space id
+### Added
+- Added support for ChatGPT API and ChatGPT web.
+- Support for automatically getting space ID for NotionAI.
+- Added a full mode feature.
+- Added "append" and "replace" buttons for input boxes in the webpage.
