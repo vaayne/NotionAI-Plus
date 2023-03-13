@@ -77,7 +77,7 @@ function OptionsPage() {
                 className="select select-primary flex-1"
                 value={notionSpaceId}
                 onChange={(e) => setNotionSpaceId(e.target.value)}>
-                <option value="disabled" key="disbaled" disabled>
+                <option value="disabled" key="disbaled">
                   Please select a space
                 </option>
                 {JSON.parse(notionSpaces)?.map((space) => {
@@ -112,6 +112,9 @@ function OptionsPage() {
               className="select select-primary rounded-full flex-1 mx-2"
               value={defaultEngine}
               onChange={(e) => setDefaultEngine(e.target.value)}>
+              <option value="disabled" key="disbaled">
+                Please select a engine
+              </option>
               {EngineOptions.map((option) => (
                 <option value={option.value} key={option.value}>
                   {option.label}
