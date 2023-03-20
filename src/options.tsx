@@ -1,4 +1,3 @@
-import "~base.css"
 import "~style.css"
 
 import { sendToBackground } from "@plasmohq/messaging"

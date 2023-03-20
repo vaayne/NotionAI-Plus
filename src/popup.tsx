@@ -2,7 +2,6 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import { storage } from "~lib/storage"
 
-import "~base.css"
 import "~style.css"
 
 import { useEffect, useState } from "react"
