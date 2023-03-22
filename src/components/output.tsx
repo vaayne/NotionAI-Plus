@@ -9,7 +9,9 @@ export function OutputComponent() {
     if (isLoading) {
       return (
         <progress
-          className={`progress ${isFullMode ? "w-full" : "w-56"}`}></progress>
+          className={`progress-primary ${
+            isFullMode ? "w-full" : "w-56"
+          }`}></progress>
       )
     }
     if (responseMessage != undefined && responseMessage != "") {

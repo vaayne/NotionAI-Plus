@@ -40,6 +40,9 @@
     "host_permissions": [
       "https://*/*"
     ],
+    "permissions": [
+      "contextMenus"
+    ],
     "commands": {
       "activate-notionai": {
         "suggested_key": {
