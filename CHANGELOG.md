@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.0.11 - 2023-03-25
+
+### Added
+- Added a new feature that allows you to drag the window to any position on the screen.
+- Added a new feature that allows you to activate the window by using context menu.
+- Redesign the UI
+- Add instructions for popup and options page.
+
+### Fixed
+- Fixed UI issues caused by the daisy ui.
+
 ## v0.0.10 - 2023-03-13
 ### Fixed
 - Resolved an issue that occurred while setting the Notion space ID and default engine in the options page.

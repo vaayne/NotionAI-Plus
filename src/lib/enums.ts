@@ -11,7 +11,7 @@ export enum EngineEnum {
   ChatGPTAPI = "chatGPTAPI"
 }
 
-export const EngineOptions = [
+export const EngineOptions: PromptType[] = [
   { label: "🤖 NotionAI", value: EngineEnum.NotionAI },
   { label: "💬 ChatGPTWeb", value: EngineEnum.ChatGPTWeb },
   { label: "💬 ChatGPTAPI", value: EngineEnum.ChatGPTAPI }
@@ -20,6 +20,11 @@ export const EngineOptions = [
 export enum ProcessTypeEnum {
   Text = "text",
   Page = "page"
+}
+
+export interface PromptType {
+  label: string
+  value: string
 }
 
 export enum PromptTypeEnum {
@@ -38,9 +43,10 @@ export enum PromptTypeEnum {
   SimplifyLanguage = "simplifyLanguage"
 }
 
-export const PromptTypeOptions = [
+export const PromptTypeOptions: PromptType[] = [
+  { label: "📝 Help Me Write", value: PromptTypeEnum.HelpMeWrite },
   { label: "📝 Topic Writing", value: PromptTypeEnum.TopicWriting },
-  { label: "🆘 Custom Prompt", value: PromptTypeEnum.HelpMeWrite },
+
   { label: "🚀 Continue Writing", value: PromptTypeEnum.ContinueWriting },
   { label: "🎭 Change Tone", value: PromptTypeEnum.ChangeTone },
   { label: "📝 Summarize", value: PromptTypeEnum.Summarize },
@@ -73,7 +79,7 @@ export enum TopicEnum {
   recruitingEmail = "recruitingEmail"
 }
 
-export const TopicOptions = [
+export const TopicOptions: PromptType[] = [
   {
     label: "💡 Brainstorm Ideas",
     value: `${PromptTypeEnum.TopicWriting}-${TopicEnum.brainstormIdeas}`
@@ -145,7 +151,7 @@ export enum LanguageEnum {
   vietnamese = "vietnamese"
 }
 
-export const LanguageOptions = [
+export const LanguageOptions: PromptType[] = [
   {
     label: "🇺🇸 English",
     value: `${PromptTypeEnum.Translate}-${LanguageEnum.english}`
@@ -212,7 +218,7 @@ export enum ToneEnum {
   friendly = "friendly"
 }
 
-export const ToneOptions = [
+export const ToneOptions: PromptType[] = [
   {
     label: "💼 Professional",
     value: `${PromptTypeEnum.ChangeTone}-${ToneEnum.professional}`
