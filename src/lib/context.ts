@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction, createContext } from "react"
 
+import type { PromptType } from "./enums"
+
 interface InputContextProps {
   engine: string
   setEngine: Dispatch<SetStateAction<string>>
@@ -10,14 +12,15 @@ interface InputContextProps {
   //   processType: string
   //   setProcessType: Dispatch<SetStateAction<string>>
 
-  selectedPrompt: string
-  setSelectedPrompt: Dispatch<SetStateAction<string>>
+  selectedPrompt: PromptType
+  setSelectedPrompt: Dispatch<SetStateAction<PromptType>>
 
   context: string
   setContext: Dispatch<SetStateAction<string>>
 
   prompt: string
   setPrompt: Dispatch<SetStateAction<string>>
+  isLoading: boolean
 
   handleMessage: () => void
 }
@@ -25,7 +28,6 @@ interface InputContextProps {
 export const InputContext = createContext({} as InputContextProps)
 
 interface ToolbarContextProps {
-  isFullMode: boolean
   handleClear: () => void
   handleCopy: () => void
   handleInsertClick: () => void
@@ -36,7 +38,6 @@ export const ToolbarContext = createContext({} as ToolbarContextProps)
 
 interface OutputContextProps {
   isFullMode: boolean
-  isLoading: boolean
   responseMessage: string
 }
 

@@ -1,4 +1,4 @@
-import { PromptTypeEnum, ToneEnum } from "./enums"
+import { PromptTypeEnum } from "./enums"
 
 export const ChatGPTInstractionMap = new Map<string, string>([
   [

@@ -1,65 +1,47 @@
-import { useStorage } from "@plasmohq/storage/hook"
-
-import { storage } from "~lib/storage"
-
 import "~style.css"
 
-import { useEffect, useState } from "react"
+import { marked } from "marked"
 
-import { ConstEnum } from "~lib/enums"
+const usageStr = `
+# NotionAI Plus
+
+This project is Open Source, and the source code can be found on [Github](https://github.com/Vaayne/NotionAI-Plus).
+
+You can connect me on [Twitter](https://twitter.com/LiuVaayne) if you have any questions or suggestions.
+
+## Features
+
+- All**NotionAI** features, such as enhancing writing, summarizing, changing tone, translating, etc. 
+- Support for multiple engines like ChatGPT **Web** and ChatGPT **API**. 
+- **Draggable** window.
+- Full screen mode.
+
+## Usage
+
+### Triggers
+There are two ways to use NotionAI Plus:
+1. Select text on a webpage and right-click to open the context menu.
+2. Select text on a webpage and press the shortcut key.
+
+#### Shortcuts
+
+Default keybindings:
+- Mac: CMD+K
+- Windows: Alt+K
+
+You can change the shortcut key by going to the extension's options page.
+
+#### Context Menu
+
+You can also use NotionAI Plus by right-clicking on a selected text and selecting the option starting with **NotionAI**.
+
+`
 
 function IndexPopup() {
-  const [notionSpaceId, setNotionSpaceId] = useState<string>("")
-  const [defaultEngine, setDefaultEngine] = useStorage<string>("")
-
-  useEffect(() => {
-    init()
-  }, [])
-
-  const init = async () => {
-    const spaceID = await storage.get(ConstEnum.NOTION_SPACE_ID)
-    setNotionSpaceId(spaceID)
-    const engine = await storage.get(ConstEnum.DEFAULT_ENGINE)
-    setDefaultEngine(engine)
-  }
-
-  const handleIsReady = () => {
-    if (notionSpaceId) {
-      return (
-        <div className="prose bg-stone-200 text-sm text-black p-2 rounded-lg">
-          <p>
-            NotionAI is <strong>ready</strong>
-          </p>
-          <p>
-            The default engine is <strong>{defaultEngine}</strong>
-          </p>
-        </div>
-      )
-    } else {
-      return (
-        <p>
-          NotionAI is not ready, please go to option page and set Notion Space
-          ID
-        </p>
-      )
-    }
-  }
-
   return (
-    <div className="prose w-64 p-4">
-      <article>
-        <h1>NotionAI+</h1>
-        <p>
-          NotionAI plus is a browser extension that let you use NotionAI in your
-          browser
-        </p>
-        <p>
-          This project is Open Source, you can find the source code on{" "}
-          <a href="https://github.com/Vaayne/NotionAI">Github</a>
-        </p>
-        <div className="">{handleIsReady()}</div>
-      </article>
-    </div>
+    <div
+      className="p-2 prose w-[550px]"
+      dangerouslySetInnerHTML={{ __html: marked(usageStr) }}></div>
   )
 }
 

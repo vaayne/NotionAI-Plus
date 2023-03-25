@@ -7,12 +7,17 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { useMessage } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { InputComponent } from "~components/input"
+import ComboxComponent from "~components/combobox"
+import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
-import { ToastComponent } from "~components/toast"
-import { ToolBarComponent } from "~components/toolbar"
+import DividerComponent from "~components/toolbar"
 import { InputContext, OutputContext, ToolbarContext } from "~lib/context"
-import { ConstEnum, ProcessTypeEnum, PromptTypeEnum } from "~lib/enums"
+import {
+  ConstEnum,
+  ProcessTypeEnum,
+  PromptType,
+  PromptTypeEnum
+} from "~lib/enums"
 import { storage } from "~lib/storage"
 
 export const config: PlasmoCSConfig = {
@@ -33,7 +38,7 @@ const getDefaultEngine = async () => {
 const Index = () => {
   const [engine, setEngine] = useState<string>()
   const [processType, setProcessType] = useState<string>(ProcessTypeEnum.Text)
-  const [selectedPrompt, setSelectedPrompt] = useState<string>("")
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptType>()
   const [context, setContext] = useState<string>("")
   const [prompt, setPrompt] = useState<string>("")
   const [responseMessage, setResponseMessage] = useState<string>("")
@@ -46,10 +51,11 @@ const Index = () => {
     instance: storage
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isShowElement, setIsShowElement] = useState(false)
+  const [isShowElement, setIsShowElement] = useState(true)
   const [notification, setNotification] = useState<string>("")
   const [isFullMode, setIsFullMode] = useState<boolean>(false)
   const [selectedElement, setSelectedElement] = useState<HTMLElement>()
+  const [isShowToast, setIsShowToast] = useState<boolean>(false)
 
   // when press ESC will hidden the  window
   const handleEscape = (event: any) => {
@@ -70,16 +76,6 @@ const Index = () => {
       document.removeEventListener("keydown", handleEscape)
     }
   }, [])
-
-  // show toast
-  useEffect(() => {
-    if (notification != "") {
-      const timer = setTimeout(() => {
-        setNotification("")
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [notification])
 
   // show panel using shortcut
   useMessage<string, string>(async (req, res) => {
@@ -113,13 +109,21 @@ const Index = () => {
   }
 
   const handleMessage = async () => {
+    if (!engine) {
+      handleToast("Please select an engine")
+      return
+    }
+    if (!context) {
+      handleToast("Please input context")
+      return
+    }
     setIsLoading(true)
 
     let lprompt: string = ""
     let language: string = ""
     let tone: string = ""
-
-    const prompts = selectedPrompt.split("-")
+    console.log("selectedPrompt", selectedPrompt)
+    const prompts = selectedPrompt.value.split("-")
     let promptType = prompts[0]
     if (promptType === PromptTypeEnum.Translate) {
       language = prompts[1]
@@ -164,6 +168,7 @@ const Index = () => {
 
   const handleToast = (message: string) => {
     setNotification(message)
+    setIsShowToast(true)
   }
 
   const handleClear = () => {
@@ -185,51 +190,58 @@ const Index = () => {
 
   if (isShowElement) {
     return (
-      <Draggable>
-        <div
-          id="notionai-plus"
-          className={`fixed right-10 ${
-            isFullMode ? "h-5/6 w-11/12 top-10" : "h-1/2 w-1/3 top-1/3 "
-          } min-w-64 overflow-hidden rounded-lg flex flex-col bg-slate-100 dark:bg-slate-700`}>
-          <InputContext.Provider
-            value={{
-              engine,
-              setEngine,
-              isFullMode,
-              setIsFullMode,
-              selectedPrompt,
-              setSelectedPrompt,
-              context,
-              setContext,
-              prompt,
-              setPrompt,
-              handleMessage
-            }}>
-            <InputComponent />
-          </InputContext.Provider>
+      <>
+        <Draggable>
+          <div
+            id="notionai-plus"
+            className={`fixed  ${
+              isFullMode
+                ? " h-5/6 w-11/12 top-10 left-10"
+                : "top-1/3 right-10 w-1/3 h-1/2"
+            } overflow-hidden rounded-lg flex flex-col bg-slate-200 dark:bg-slate-700`}>
+            <InputContext.Provider
+              value={{
+                engine,
+                setEngine,
+                isFullMode,
+                setIsFullMode,
+                selectedPrompt,
+                setSelectedPrompt,
+                context,
+                setContext,
+                prompt,
+                setPrompt,
+                handleMessage,
+                isLoading
+              }}>
+              <ComboxComponent />
+            </InputContext.Provider>
 
-          <ToolbarContext.Provider
-            value={{
-              isFullMode,
-              handleClear,
-              handleCopy,
-              handleInsertClick,
-              handleReplaceClick
-            }}>
-            <ToolBarComponent />
-          </ToolbarContext.Provider>
+            <ToolbarContext.Provider
+              value={{
+                handleClear,
+                handleCopy,
+                handleInsertClick,
+                handleReplaceClick
+              }}>
+              {responseMessage && <DividerComponent />}
+            </ToolbarContext.Provider>
 
-          <OutputContext.Provider
-            value={{
-              isFullMode,
-              isLoading,
-              responseMessage
-            }}>
-            <OutputComponent />
-          </OutputContext.Provider>
-          <ToastComponent notification={notification} />
-        </div>
-      </Draggable>
+            <OutputContext.Provider
+              value={{
+                isFullMode,
+                responseMessage
+              }}>
+              {responseMessage && <OutputComponent />}
+            </OutputContext.Provider>
+          </div>
+        </Draggable>
+        <NotificationComponent
+          isShow={isShowToast}
+          setIsShow={setIsShowToast}
+          title={notification}
+        />
+      </>
     )
   }
 }

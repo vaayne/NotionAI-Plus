@@ -4,24 +4,18 @@ import { useContext } from "react"
 import { OutputContext } from "~lib/context"
 
 export function OutputComponent() {
-  const { isFullMode, isLoading, responseMessage } = useContext(OutputContext)
-  const handleLoading = () => {
-    if (isLoading) {
-      return (
-        <progress
-          className={`progress-primary ${
-            isFullMode ? "w-full" : "w-56"
-          }`}></progress>
-      )
-    }
-    if (responseMessage != undefined && responseMessage != "") {
-      const html = marked(responseMessage)
-      return (
+  const { isFullMode, responseMessage } = useContext(OutputContext)
+
+  if (responseMessage) {
+    const html = marked(responseMessage)
+    return (
+      <div className="box-border px-4 overflow-auto ">
         <article
-          className={`${isFullMode ? "prose-base" : "prose-xs"} `}
+          className={`${
+            isFullMode ? "prose-base" : "prose-xs"
+          } dark:text-white`}
           dangerouslySetInnerHTML={{ __html: html }}></article>
-      )
-    }
+      </div>
+    )
   }
-  return <div className="px-4 overflow-auto box-border ">{handleLoading()}</div>
 }
