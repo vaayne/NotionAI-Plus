@@ -240,3 +240,14 @@ export const ToneOptions: PromptType[] = [
     value: `${PromptTypeEnum.ChangeTone}-${ToneEnum.friendly}`
   }
 ]
+
+const allPromptTypes = [
+  ...PromptTypeOptions,
+  ...TopicOptions,
+  ...LanguageOptions,
+  ...ToneOptions
+]
+
+export function newPromptType(value: string): PromptType | undefined {
+  return allPromptTypes.find((promptType) => promptType.value === value)
+}

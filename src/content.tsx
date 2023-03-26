@@ -16,8 +16,10 @@ import {
   ConstEnum,
   ProcessTypeEnum,
   PromptType,
-  PromptTypeEnum
+  PromptTypeEnum,
+  newPromptType
 } from "~lib/enums"
+import type { MessageBody } from "~lib/model"
 import { storage } from "~lib/storage"
 
 export const config: PlasmoCSConfig = {
@@ -86,7 +88,9 @@ const Index = () => {
         setContext(selection)
       }
       if (req.body) {
-        setContext(req.body)
+        const msg = JSON.parse(req.body) as MessageBody
+        setContext(msg.text)
+        setSelectedPrompt(newPromptType(msg.prompt))
       } else {
         handlerSelectText()
       }
