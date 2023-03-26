@@ -1,6 +1,8 @@
 
 # NotionAI Plus
 
+![Icon](./assets/icon.png)
+
 NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
