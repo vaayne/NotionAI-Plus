@@ -191,7 +191,7 @@ const Index = () => {
   if (isShowElement) {
     return (
       <>
-        <Draggable>
+        <Draggable handle="#dragable">
           <div
             id="notionai-plus"
             className={`fixed  ${

@@ -4,7 +4,7 @@ import {
   ChevronUpDownIcon,
   ChevronUpIcon
 } from "@heroicons/react/20/solid"
-import { Github, Maximize, Minus, Send, Twitter } from "lucide-react"
+import { Github, Maximize, Minus, Move, Send, Twitter } from "lucide-react"
 import { useContext, useEffect, useRef, useState } from "react"
 
 import { InputContext } from "~lib/context"
@@ -113,13 +113,13 @@ export default function ComboxComponent() {
             type="button"
             className="inline-flex items-center border border-transparent rounded-full shadow-sm dark:text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             onClick={() => setIsFullMode(!isFullMode)}>
-            <Minus size={16} />
+            {isFullMode ? <Minus size={16} /> : <Maximize size={16} />}
           </button>
           <button
+            id="dragable"
             type="button"
-            className="inline-flex items-center border border-transparent rounded-full shadow-sm dark:text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={() => setIsFullMode(!isFullMode)}>
-            <Maximize size={16} className="" />
+            className="inline-flex items-center border border-transparent rounded-full shadow-sm dark:text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <Move size={16} />
           </button>
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function ComboxComponent() {
       <select
         id="location"
         name="location"
-        className="block w-1/3 py-2 pl-3 pr-10 my-1 text-base border-gray-300 rounded-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        className="block py-1 pl-3 pr-10 my-1 text-base border-gray-300 rounded-md max-w-64 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         defaultValue={engine}
         onChange={(e) => setEngine(e.target.value)}>
         {EngineOptions.map((option) => (
