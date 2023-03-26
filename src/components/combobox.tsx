@@ -5,7 +5,7 @@ import {
   ChevronUpIcon
 } from "@heroicons/react/20/solid"
 import { Github, Maximize, Minus, Send, Twitter } from "lucide-react"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 
 import { InputContext } from "~lib/context"
 import {
@@ -180,33 +180,30 @@ export default function ComboxComponent() {
     )
   }
 
-  const handleSelectPromot = (prompt: PromptType) => {
-    setSelectedPrompt(prompt)
-    if (prompt.value == PromptTypeEnum.HelpMeWrite) {
-      return
+  useEffect(() => {
+    if (selectedPrompt && selectedPrompt.value != PromptTypeEnum.HelpMeWrite) {
+      handleMessage()
     }
-    handleMessage()
-  }
+  }, [selectedPrompt])
 
   const comboxSelect = () => {
     return (
       <Combobox
-        as="div"
+        as="button"
         value={selectedPrompt}
-        onChange={handleSelectPromot}
+        onChange={setSelectedPrompt}
         className="w-full">
         <div className="relative">
-          <Combobox.Input
-            className="w-full py-[6px] pl-3 pr-10 bg-white border-0 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Please select a prompt..."
-            displayValue={(option: PromptType) => option?.label}
-          />
-          <Combobox.Button className="absolute inset-y-0 flex items-center px-2 right-2 rounded-r-md focus:outline-none">
-            <ChevronUpDownIcon
-              className="w-5 h-5 text-gray-400"
-              aria-hidden="true"
+          <Combobox.Button as="div" className="flex items-center">
+            <Combobox.Input
+              className="w-full py-[6px] pl-3 pr-10 bg-white border-0 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="What do you want to write?"
+              displayValue={(option: PromptType) => option?.label}
             />
+            <span className="absolute right-2">
+              <ChevronUpDownIcon className="w-5 h-5 text-gray-400 origin-center stroke-current" />
+            </span>
           </Combobox.Button>
 
           {filteredOptions.length > 0 && (

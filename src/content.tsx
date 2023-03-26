@@ -51,7 +51,7 @@ const Index = () => {
     instance: storage
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isShowElement, setIsShowElement] = useState(true)
+  const [isShowElement, setIsShowElement] = useState(false)
   const [notification, setNotification] = useState<string>("")
   const [isFullMode, setIsFullMode] = useState<boolean>(false)
   const [selectedElement, setSelectedElement] = useState<HTMLElement>()
@@ -122,7 +122,7 @@ const Index = () => {
     let lprompt: string = ""
     let language: string = ""
     let tone: string = ""
-    console.log("selectedPrompt", selectedPrompt)
+    // console.log("selectedPrompt", selectedPrompt)
     const prompts = selectedPrompt.value.split("-")
     let promptType = prompts[0]
     if (promptType === PromptTypeEnum.Translate) {
