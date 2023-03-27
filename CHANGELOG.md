@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.0.13 - 2023-03-27
+### Fixed
+- Fixed an issue that NotionAI continue writing not working
+
+## v0.0.12 - 2023-03-26
+
+### Added
+- Added a new icon from midjourney.
+- Add a dragable button.
+- Add more context menu items.
+
+### Improved
+- Improved the UI, auto show prompt options when focus on input.
+
 ## v0.0.11 - 2023-03-25
 
 ### Added
