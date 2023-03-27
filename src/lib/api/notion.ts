@@ -35,13 +35,13 @@ async function PostNotion(
     }
   } else if (promptType === PromptTypeEnum.HelpMeWrite) {
     data.context = {
-      type: "helpMeWrite",
+      type: promptType,
       prompt: prompt,
       previousContent: context
     }
   } else if (promptType === PromptTypeEnum.ChangeTone) {
     data.context = {
-      type: "changeTone",
+      type: promptType,
       text: context,
       tone: tone
     }
@@ -50,6 +50,11 @@ async function PostNotion(
       type: prompt,
       topic: context,
       pageContent: ""
+    }
+  } else if (promptType === PromptTypeEnum.ContinueWriting) {
+    data.context = {
+      type: promptType,
+      previousContent: context
     }
   } else {
     data.context = {
