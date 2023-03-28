@@ -171,6 +171,9 @@ export default function ComboxComponent() {
         className="block py-1 pl-3 pr-10 my-1 text-base border-gray-300 rounded-md max-w-64 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         defaultValue={engine}
         onChange={(e) => setEngine(e.target.value)}>
+        <option value="engine" key="engine">
+          Select engine
+        </option>
         {EngineOptions.map((option) => (
           <option value={option.value} key={option.value}>
             {option.label}

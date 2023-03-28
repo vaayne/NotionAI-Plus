@@ -58,17 +58,12 @@ function OptionsPage() {
     instance: storage
   })
 
-  const [message, setMessage] = useStorage<string>({
-    key: "message",
-    instance: storage
-  })
-
   const handleGetNotionSpaces = async () => {
     const response = await sendToBackground({
       name: "get-notion-spaces",
       body: {}
     })
-    setMessage(response)
+    alert(response)
   }
 
   return (
@@ -95,6 +90,7 @@ function OptionsPage() {
               <select
                 id="location"
                 name="location"
+                value={notionSpaceId}
                 className="block w-full py-2 pl-3 pr-10 text-base border-gray-300 rounded-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                 onChange={(e) => setNotionSpaceId(e.target.value)}>
                 <option value="disabled" key="disbaled">
@@ -139,8 +135,9 @@ function OptionsPage() {
             <select
               id="location"
               name="location"
+              value={defaultEngine}
               className="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              onChange={(e) => setNotionSpaceId(e.target.value)}>
+              onChange={(e) => setDefaultEngine(e.target.value)}>
               <option value="disabled" key="disbaled">
                 Please select a engine
               </option>
