@@ -1,3 +1,5 @@
+import browser from "webextension-polyfill"
+
 import { sendToContentScript } from "@plasmohq/messaging"
 
 import {
@@ -18,55 +20,81 @@ chrome.commands.onCommand.addListener(function (command) {
 })
 
 // Create a new context menu
-chrome.contextMenus.create({
-  id: "notionai-plus",
-  title: "NotionAI Plus",
-  contexts: ["selection", "page"]
-})
+chrome.contextMenus.create(
+  {
+    id: "notionai-plus",
+    title: "NotionAI Plus",
+    contexts: ["selection", "page"]
+  },
+  () => {
+    browser.runtime.lastError
+  }
+)
 
 PromptTypeOptions.forEach((prompt) => {
-  chrome.contextMenus.create({
-    id: prompt.value,
-    title: prompt.label,
-    contexts: ["selection"],
-    parentId: "notionai-plus"
-  })
+  chrome.contextMenus.create(
+    {
+      id: prompt.value,
+      title: prompt.label,
+      contexts: ["selection"],
+      parentId: "notionai-plus"
+    },
+    () => {
+      browser.runtime.lastError
+    }
+  )
 })
 
 TopicOptions.forEach((topic) => {
-  chrome.contextMenus.create({
-    id: topic.value,
-    title: topic.label,
-    contexts: ["selection"],
-    parentId: PromptTypeEnum.TopicWriting
-  })
+  chrome.contextMenus.create(
+    {
+      id: topic.value,
+      title: topic.label,
+      contexts: ["selection"],
+      parentId: PromptTypeEnum.TopicWriting
+    },
+    () => {
+      browser.runtime.lastError
+    }
+  )
 })
 
 LanguageOptions.forEach((lang) => {
-  chrome.contextMenus.create({
-    id: lang.value,
-    title: lang.label,
-    contexts: ["selection"],
-    parentId: PromptTypeEnum.Translate
-  })
+  chrome.contextMenus.create(
+    {
+      id: lang.value,
+      title: lang.label,
+      contexts: ["selection"],
+      parentId: PromptTypeEnum.Translate
+    },
+    () => {
+      browser.runtime.lastError
+    }
+  )
 })
 
 ToneOptions.forEach((tone) => {
-  chrome.contextMenus.create({
-    id: tone.value,
-    title: tone.label,
-    contexts: ["selection"],
-    parentId: PromptTypeEnum.ChangeTone
-  })
+  chrome.contextMenus.create(
+    {
+      id: tone.value,
+      title: tone.label,
+      contexts: ["selection"],
+      parentId: PromptTypeEnum.ChangeTone
+    },
+    () => {
+      browser.runtime.lastError
+    }
+  )
 })
 
 // auto add selected text to context
-chrome.contextMenus.onClicked.addListener((info, tab?) => {
-  sendToContentScript({
-    name: "activate",
-    body: JSON.stringify({
-      prompt: info.menuItemId,
-      text: info.selectionText
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  tab.id &&
+    sendToContentScript({
+      name: "activate",
+      body: JSON.stringify({
+        prompt: info.menuItemId,
+        text: info.selectionText
+      })
     })
-  })
 })
