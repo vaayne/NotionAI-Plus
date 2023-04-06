@@ -1,5 +1,3 @@
-const API_URL = "https://api.openai.com/v1/chat/completions"
-
 const MODEL = "gpt-3.5-turbo"
 
 type ChatGPTResponseChoice = {
@@ -25,7 +23,12 @@ type ChatGPTResponse = {
   usage: ChatGPTResponseUsgae
 }
 
-async function Chat(instraction: string, prompt: string, api_key: string) {
+async function Chat(
+  url: string,
+  instraction: string,
+  prompt: string,
+  api_key: string
+) {
   if (api_key == "") {
     return "Please set your OpenAI API key in the extension options page."
   }
@@ -38,7 +41,7 @@ async function Chat(instraction: string, prompt: string, api_key: string) {
   }
   console.log(`ChatGPTAPI request: ${JSON.stringify(data)}`)
 
-  const resp = await fetch(API_URL, {
+  const resp = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

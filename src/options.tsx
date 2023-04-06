@@ -30,6 +30,9 @@ To use NotionAI as an engine, follow these steps:
 ### ChatGPT ApiKey
 If you prefer to use ChatGPT API as an engine instead of NotionAI, obtain an API key from [OpenAI](https://openai.com/).
 
+### NotionBoy ApiKey
+If you prefer to use NotionBoy as an engine instead of NotionAI, obtain an API key from [NotionBoy](https://notionboy.theboys.tech/).
+
 ### ChatGPT Web
 Alternatively, if you want to use ChatGPT Web as your engine of choice for analyzing text on webpages, sign in to [ChatGPT](https://chat.openai.com/).
 
@@ -52,7 +55,10 @@ function OptionsPage() {
     key: ConstEnum.CHATGPT_API_KEY,
     instance: storage
   })
-
+  const [NotionBoyAPIKey, setNotionBoyAPIKey] = useStorage<string>({
+    key: ConstEnum.NOTIONBOY_API_KEY,
+    instance: storage
+  })
   const [notionSpaces] = useStorage<string>({
     key: ConstEnum.NOTION_SPACES,
     instance: storage
@@ -122,6 +128,22 @@ function OptionsPage() {
               placeholder="Please input your OpenAI ApiKey"
               value={ChatGPTAPIKey}
               onChange={(e) => setChatGPTAPIKey(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col space-y-1 ">
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700">
+              NotionBoy ApiKey: (only set it if you using NotionBoy as engine)
+            </label>
+            <input
+              type="password"
+              id="openai-key"
+              className="block w-full p-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              placeholder="Please input your NotionBoy ApiKey"
+              value={NotionBoyAPIKey}
+              onChange={(e) => setNotionBoyAPIKey(e.target.value)}
             />
           </div>
 

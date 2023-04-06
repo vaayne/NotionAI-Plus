@@ -30,7 +30,11 @@ type RequestBody = {
   tone: string
   notionSpaceId: string
   chatGPTAPIKey: string
+  notionBoyAPIKey: string
 }
+
+const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+const NOTIONBOY_API_URL = "https://notionboy.theboys.tech/v1/chat/completions"
 
 function buildChatGPTinstruction(body: RequestBody): string {
   let instruction: string = ChatGPTInstractionMap.get("default")
@@ -107,9 +111,18 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
           break
         case EngineEnum.ChatGPTAPI:
           message = await Chat(
+            OPENAI_API_URL,
             instruction,
             SummarizeTemplate(data.content),
             body.chatGPTAPIKey
+          )
+          break
+        case EngineEnum.NotionBoy:
+          message = await Chat(
+            NOTIONBOY_API_URL,
+            instruction,
+            SummarizeTemplate(data.content),
+            body.notionBoyAPIKey
           )
           break
         case EngineEnum.NotionAI:
@@ -133,7 +146,20 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
         message = await PostChatGPT(`${instruction}\n\n${prompt}`)
         break
       case EngineEnum.ChatGPTAPI:
-        message = await Chat(instruction, prompt, body.chatGPTAPIKey)
+        message = await Chat(
+          OPENAI_API_URL,
+          instruction,
+          prompt,
+          body.chatGPTAPIKey
+        )
+        break
+      case EngineEnum.NotionBoy:
+        message = await Chat(
+          NOTIONBOY_API_URL,
+          instruction,
+          prompt,
+          body.notionBoyAPIKey
+        )
         break
       case EngineEnum.NotionAI:
         message = await PostNotion(
