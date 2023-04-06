@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.15 - 2023-04-06
+### Added
+- support NotionBoy as backend engine
+
 ## v0.0.14 - 2023-03-28
 ### Fixed
 - Fixed an issue that can not set the default engine in the options page.
