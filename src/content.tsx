@@ -52,6 +52,10 @@ const Index = () => {
     key: ConstEnum.CHATGPT_API_KEY,
     instance: storage
   })
+  const [notionBoyAPIKey] = useStorage<string>({
+    key: ConstEnum.NOTIONBOY_API_KEY,
+    instance: storage
+  })
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isShowElement, setIsShowElement] = useState(false)
   const [notification, setNotification] = useState<string>("")
@@ -151,7 +155,8 @@ const Index = () => {
       language: language,
       tone: tone,
       notionSpaceId: notionSpaceId,
-      chatGPTAPIKey: chatGPTAPIKey
+      chatGPTAPIKey: chatGPTAPIKey,
+      notionBoyAPIKey: notionBoyAPIKey
     }
 
     const response = await sendToBackground({

@@ -9,7 +9,7 @@ export function OutputComponent() {
   if (responseMessage) {
     const html = marked(responseMessage)
     return (
-      <div className="box-border px-4 overflow-auto ">
+      <div className="box-border px-4 mt-4 overflow-auto ">
         <article
           className={`${
             isFullMode ? "prose-base" : "prose-xs"

@@ -14,9 +14,11 @@ specifiers:
   '@types/node': 18.11.18
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  '@types/webextension-polyfill': ^0.10.0
   autoprefixer: ^10.4.13
   cache-manager: ^5.1.7
   daisyui: ^2.51.0
+  eventsource-parser: ^1.0.0
   lucide-react: ^0.121.0
   marked: ^4.2.12
   plasmo: 0.65.1
@@ -31,6 +33,7 @@ specifiers:
   theme-change: ^2.4.0
   typescript: 4.9.4
   uuid: ^9.0.0
+  webextension-polyfill: ^0.10.0
 
 dependencies:
   '@headlessui/react': 1.7.13_biqbaboplfbrettd7655fr4n2y
@@ -42,6 +45,7 @@ dependencies:
   '@types/marked': 4.0.8
   cache-manager: 5.1.7
   daisyui: 2.51.0_gbtt6ss3tbiz4yjtvdr6fbrj44
+  eventsource-parser: 1.0.0
   lucide-react: 0.121.0_react@18.2.0
   marked: 4.2.12
   plasmo: 0.65.1_gjpyg5imi5mt2gbvkmn3a4dr7m
@@ -59,12 +63,14 @@ devDependencies:
   '@types/node': 18.11.18
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  '@types/webextension-polyfill': 0.10.0
   autoprefixer: 10.4.13_postcss@8.4.21
   postcss: 8.4.21
   prettier: 2.8.3
   tailwindcss: 3.2.4_postcss@8.4.21
   theme-change: 2.4.0
   typescript: 4.9.4
+  webextension-polyfill: 0.10.0
 
 packages:
 
@@ -2171,7 +2177,6 @@ packages:
 
   /@types/webextension-polyfill/0.10.0:
     resolution: {integrity: sha512-If4EcaHzYTqcbNMp/FdReVdRmLL/Te42ivnJII551bYjhX19bWem5m14FERCqdJA732OloGuxCRvLBvcMGsn4A==}
-    dev: false
 
   /@vue/compiler-core/3.2.45:
     resolution: {integrity: sha512-rcMj7H+PYe5wBV3iYeUgbCglC+pbpN8hBLTJvRiK2eKQiWqu+fG9F+8sW99JdL4LQi7Re178UOxn09puSXvn4A==}
@@ -3228,6 +3233,11 @@ packages:
   /events/3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
+    dev: false
+
+  /eventsource-parser/1.0.0:
+    resolution: {integrity: sha512-9jgfSCa3dmEme2ES3mPByGXfgZ87VbP97tng1G2nWwWx6bV2nYxm2AWCrbQjXToSe+yYlqaZNtxffR9IeQr95g==}
+    engines: {node: '>=14.18'}
     dev: false
 
   /execa/5.1.1:
@@ -5418,7 +5428,6 @@ packages:
 
   /webextension-polyfill/0.10.0:
     resolution: {integrity: sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==}
-    dev: false
 
   /webidl-conversions/4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
