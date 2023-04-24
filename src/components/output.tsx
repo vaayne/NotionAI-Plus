@@ -10,9 +10,7 @@ export function OutputComponent() {
     return (
       <div className="box-border px-4 mt-4 overflow-auto ">
         <article
-          className={`${
-            isFullMode ? "prose-base" : "prose-xs"
-          } dark:text-white`}
+          className={`${isFullMode ? "prose-base" : "prose"} dark:text-white`}
           dangerouslySetInnerHTML={{ __html: streamPort.data }}></article>
       </div>
     )

@@ -1,8 +1,10 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import { Chat } from "~lib/api/chatgptapi"
+import { ChatStream } from "~lib/api/chatgptapi-stream"
 import { PostChatGPTStream } from "~lib/api/chatgptstream"
 import { PostNotion } from "~lib/api/notion"
+import { PostNotionStream } from "~lib/api/notion-stream"
 import { Parse } from "~lib/api/readability"
 import { EngineEnum, ProcessTypeEnum, PromptTypeEnum } from "~lib/enums"
 import {
@@ -19,6 +21,9 @@ import {
   TopicWritingTemplate,
   TranslateTemplate
 } from "~lib/prompt-enums"
+
+const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+const NOTIONBOY_API_URL = "https://notionboy.theboys.tech/v1/chat/completions"
 
 type RequestBody = {
   engine: string
@@ -94,7 +99,39 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
   const prompt: string = buildChatGPTPrompt(body)
   // console.log(req)
 
-  await PostChatGPTStream(`${instruction}\n\n${prompt}`, res)
+  switch (body.engine) {
+    case EngineEnum.ChatGPTWeb:
+      await PostChatGPTStream(`${instruction}\n\n${prompt}`, res)
+      break
+    case EngineEnum.ChatGPTAPI:
+      await ChatStream(
+        OPENAI_API_URL,
+        instruction,
+        prompt,
+        body.chatGPTAPIKey,
+        res
+      )
+      break
+    case EngineEnum.NotionBoy:
+      await ChatStream(
+        NOTIONBOY_API_URL,
+        instruction,
+        prompt,
+        body.notionBoyAPIKey,
+        res
+      )
+      break
+    case EngineEnum.NotionAI:
+      await PostNotionStream(
+        res,
+        body.builtinPrompt,
+        body.context,
+        body.notionSpaceId,
+        body.customPromot,
+        body.language,
+        body.tone
+      )
+  }
 }
 
 export default handler

@@ -128,7 +128,7 @@ const Index = () => {
       handleToast("Please input context")
       return
     }
-    setIsLoading(true)
+    // setIsLoading(true)
 
     let lprompt: string = ""
     let language: string = ""
@@ -162,20 +162,22 @@ const Index = () => {
       notionBoyAPIKey: notionBoyAPIKey
     }
 
-    if (body.engine == EngineEnum.ChatGPTWeb) {
-      streamPort.send(body)
-      return
-    }
+    streamPort.send(body)
 
-    const response = await sendToBackground({
-      name: "request",
-      body: body
-    })
-    // console.log(
-    //   `request: ${JSON.stringify(body)}, response: ${response.message}`
-    // )
-    setResponseMessage(response.message)
-    setIsLoading(false)
+    // if (body.engine == EngineEnum.ChatGPTWeb) {
+    //   streamPort.send(body)
+    //   return
+    // }
+
+    // const response = await sendToBackground({
+    //   name: "request",
+    //   body: body
+    // })
+    // // console.log(
+    // //   `request: ${JSON.stringify(body)}, response: ${response.message}`
+    // // )
+    // setResponseMessage(response.message)
+    // setIsLoading(false)
   }
 
   const handleCopy = async () => {
