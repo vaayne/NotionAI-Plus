@@ -1,11 +1,10 @@
 import "~style.css"
 
-import { marked } from "marked"
-
 import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
-import type { NotionSpace } from "~lib/api/notion"
+import { MarkdownComponent } from "~components/makrdown"
+import type { NotionSpace } from "~lib/api/notion-space"
 import { ConstEnum, EngineOptions } from "~lib/enums"
 import { storage } from "~lib/storage"
 
@@ -75,9 +74,10 @@ function OptionsPage() {
   return (
     <div className="container mx-auto">
       <div className="flex flex-row">
-        <div
-          className="w-full p-2 prose"
-          dangerouslySetInnerHTML={{ __html: marked(IntroStr) }}></div>
+        <div className="w-1/2">
+          <MarkdownComponent text={IntroStr} />
+        </div>
+
         <form className="flex flex-col w-2/3 p-4 space-y-3 prose justify-items-start bg-slate-100">
           <div className="flex flex-col space-y-1">
             <label

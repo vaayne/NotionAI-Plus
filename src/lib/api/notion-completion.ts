@@ -65,7 +65,7 @@ async function PostNotionStream(
       selectedText: context
     }
   }
-  console.log(`request body: ${JSON.stringify(data)}`)
+  // console.log(`request body: ${JSON.stringify(data)}`)
   let headers = {
     "Content-Type": "application/json",
     accept: "application/x-ndjson"

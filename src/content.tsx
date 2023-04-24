@@ -3,7 +3,6 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 import Draggable from "react-draggable"
 
-import { sendToBackground } from "@plasmohq/messaging"
 import { useMessage, usePort } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -14,7 +13,6 @@ import DividerComponent from "~components/toolbar"
 import { InputContext, OutputContext, ToolbarContext } from "~lib/context"
 import {
   ConstEnum,
-  EngineEnum,
   ProcessTypeEnum,
   PromptType,
   PromptTypeEnum,
@@ -85,6 +83,12 @@ const Index = () => {
       document.removeEventListener("keydown", handleEscape)
     }
   }, [])
+
+  useEffect(() => {
+    if (streamPort.data) {
+      setResponseMessage(streamPort.data)
+    }
+  }, [streamPort.data])
 
   // show panel using shortcut
   useMessage<string, string>(async (req, res) => {
@@ -163,21 +167,6 @@ const Index = () => {
     }
 
     streamPort.send(body)
-
-    // if (body.engine == EngineEnum.ChatGPTWeb) {
-    //   streamPort.send(body)
-    //   return
-    // }
-
-    // const response = await sendToBackground({
-    //   name: "request",
-    //   body: body
-    // })
-    // // console.log(
-    // //   `request: ${JSON.stringify(body)}, response: ${response.message}`
-    // // )
-    // setResponseMessage(response.message)
-    // setIsLoading(false)
   }
 
   const handleCopy = async () => {
@@ -249,8 +238,7 @@ const Index = () => {
             <OutputContext.Provider
               value={{
                 isFullMode,
-                responseMessage,
-                streamPort
+                responseMessage
               }}>
               {responseMessage && <OutputComponent />}
             </OutputContext.Provider>

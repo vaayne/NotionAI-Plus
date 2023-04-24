@@ -29,6 +29,6 @@ export async function processNdjsonResp(
 
   if (buffer) {
     const json = JSON.parse(buffer)
-    console.log(json)
+    onMessage(json)
   }
 }
