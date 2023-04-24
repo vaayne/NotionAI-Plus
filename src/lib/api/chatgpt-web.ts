@@ -63,7 +63,7 @@ async function PostChatGPTStream(
     body: JSON.stringify(data)
   })
 
-  let conversationId: string
+  let conversationId: string = ""
 
   if (resp.status == 200) {
     await parseSSEResponse(resp, (message) => {

@@ -45,7 +45,7 @@ async function ChatStream(
       { role: "user", content: prompt }
     ]
   }
-  console.log(`ChatGPTAPI request: ${JSON.stringify(data)}`)
+  // console.log(`ChatGPTAPI request: ${JSON.stringify(data)}`)
 
   const resp = await fetch(url, {
     method: "POST",
@@ -55,7 +55,7 @@ async function ChatStream(
     },
     body: JSON.stringify(data)
   })
-  let content: string
+  let content: string = ""
 
   if (resp.status == 200) {
     await parseSSEResponse(resp, (message) => {
