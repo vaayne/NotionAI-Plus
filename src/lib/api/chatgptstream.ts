@@ -63,10 +63,13 @@ async function PostChatGPTStream(
     body: JSON.stringify(data)
   })
 
+  let conversationId: string
+
   if (resp.status == 200) {
     await parseSSEResponse(resp, (message) => {
       if (message === "[DONE]") {
-        console.debug("chatgpt sse message done")
+        // console.debug("chatgpt sse message done, start remove conversation")
+        removeConversation(conversationId)
         return
       }
       try {
@@ -75,6 +78,7 @@ async function PostChatGPTStream(
         if (text) {
           // console.debug("chatgpt sse message", text)
           res.send(text)
+          conversationId = data.conversation_id
         }
       } catch (err) {
         console.error(err)
@@ -82,6 +86,27 @@ async function PostChatGPTStream(
         return
       }
     })
+  } else {
+    res.send(resp.statusText)
+  }
+}
+
+async function removeConversation(id: string) {
+  const accessToken = await getAccessToken()
+  try {
+    const resp = await fetch(`${CHATGPT_HOST}/backend-api/conversation/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        is_visible: false
+      })
+    })
+    console.log(await resp.json())
+  } catch (err) {
+    console.error(err)
   }
 }
 

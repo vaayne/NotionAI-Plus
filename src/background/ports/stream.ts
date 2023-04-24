@@ -89,12 +89,10 @@ function buildChatGPTinstruction(body: RequestBody): string {
 }
 
 const handler: PlasmoMessaging.PortHandler = async (req, res) => {
-  let message: string
-
   const body = req.body as RequestBody
   const instruction: string = buildChatGPTinstruction(body)
   const prompt: string = buildChatGPTPrompt(body)
-  console.log(req)
+  // console.log(req)
 
   await PostChatGPTStream(`${instruction}\n\n${prompt}`, res)
 }
