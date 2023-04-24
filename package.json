@@ -19,6 +19,7 @@
     "cache-manager": "^5.1.7",
     "daisyui": "^2.51.0",
     "eventsource-parser": "^1.0.0",
+    "lodash-es": "^4.17.21",
     "lucide-react": "^0.121.0",
     "marked": "^4.2.12",
     "plasmo": "0.65.1",

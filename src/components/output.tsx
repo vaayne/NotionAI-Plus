@@ -4,7 +4,19 @@ import { useContext } from "react"
 import { OutputContext } from "~lib/context"
 
 export function OutputComponent() {
-  const { isFullMode, responseMessage } = useContext(OutputContext)
+  const { isFullMode, responseMessage, streamPort } = useContext(OutputContext)
+
+  if (streamPort.data) {
+    return (
+      <div className="box-border px-4 mt-4 overflow-auto ">
+        <article
+          className={`${
+            isFullMode ? "prose-base" : "prose-xs"
+          } dark:text-white`}
+          dangerouslySetInnerHTML={{ __html: streamPort.data }}></article>
+      </div>
+    )
+  }
 
   if (responseMessage) {
     const html = marked(responseMessage)

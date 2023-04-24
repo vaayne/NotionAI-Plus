@@ -39,6 +39,7 @@ export const ToolbarContext = createContext({} as ToolbarContextProps)
 interface OutputContextProps {
   isFullMode: boolean
   responseMessage: string
+  streamPort: any
 }
 
 export const OutputContext = createContext({} as OutputContextProps)

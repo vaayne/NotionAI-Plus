@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Draggable from "react-draggable"
 
 import { sendToBackground } from "@plasmohq/messaging"
-import { useMessage } from "@plasmohq/messaging/hook"
+import { useMessage, usePort } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import ComboxComponent from "~components/combobox"
@@ -14,6 +14,7 @@ import DividerComponent from "~components/toolbar"
 import { InputContext, OutputContext, ToolbarContext } from "~lib/context"
 import {
   ConstEnum,
+  EngineEnum,
   ProcessTypeEnum,
   PromptType,
   PromptTypeEnum,
@@ -62,6 +63,8 @@ const Index = () => {
   const [isFullMode, setIsFullMode] = useState<boolean>(false)
   const [selectedElement, setSelectedElement] = useState<HTMLElement>()
   const [isShowToast, setIsShowToast] = useState<boolean>(false)
+
+  const streamPort = usePort("stream")
 
   // when press ESC will hidden the  window
   const handleEscape = (event: any) => {
@@ -159,6 +162,11 @@ const Index = () => {
       notionBoyAPIKey: notionBoyAPIKey
     }
 
+    if (body.engine == EngineEnum.ChatGPTWeb) {
+      streamPort.send(body)
+      return
+    }
+
     const response = await sendToBackground({
       name: "request",
       body: body
@@ -239,7 +247,8 @@ const Index = () => {
             <OutputContext.Provider
               value={{
                 isFullMode,
-                responseMessage
+                responseMessage,
+                streamPort
               }}>
               {responseMessage && <OutputComponent />}
             </OutputContext.Provider>
