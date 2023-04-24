@@ -68,7 +68,6 @@ export default function ComboxComponent() {
       : Options.filter((option) => {
           return option.label.toLowerCase().includes(query.toLowerCase())
         })
-
   const inputCustomPrompt = () => {
     if (selectedPrompt && selectedPrompt.value == PromptTypeEnum.HelpMeWrite) {
       return (
@@ -80,6 +79,7 @@ export default function ComboxComponent() {
             className="block w-full p-2 pr-6 border-gray-300 rounded-md shadow-sm relivate focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             placeholder="Write your custom prompt here..."
             value={prompt}
+            onKeyDown={(e) => e.stopPropagation()}
             onChange={(e) => setPrompt(e.target.value)}
           />
           <button
@@ -154,6 +154,7 @@ export default function ComboxComponent() {
                   placeholder="Here are your context."
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
                 />
               </div>
             </Disclosure.Panel>
