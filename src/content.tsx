@@ -3,8 +3,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 import Draggable from "react-draggable"
 
-import { sendToBackground } from "@plasmohq/messaging"
-import { useMessage } from "@plasmohq/messaging/hook"
+import { useMessage, usePort } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import ComboxComponent from "~components/combobox"
@@ -63,6 +62,8 @@ const Index = () => {
   const [selectedElement, setSelectedElement] = useState<HTMLElement>()
   const [isShowToast, setIsShowToast] = useState<boolean>(false)
 
+  const streamPort = usePort("stream")
+
   // when press ESC will hidden the  window
   const handleEscape = (event: any) => {
     if (event.key === "Escape") {
@@ -82,6 +83,12 @@ const Index = () => {
       document.removeEventListener("keydown", handleEscape)
     }
   }, [])
+
+  useEffect(() => {
+    if (streamPort.data) {
+      setResponseMessage(streamPort.data)
+    }
+  }, [streamPort.data])
 
   // show panel using shortcut
   useMessage<string, string>(async (req, res) => {
@@ -125,7 +132,7 @@ const Index = () => {
       handleToast("Please input context")
       return
     }
-    setIsLoading(true)
+    // setIsLoading(true)
 
     let lprompt: string = ""
     let language: string = ""
@@ -159,15 +166,7 @@ const Index = () => {
       notionBoyAPIKey: notionBoyAPIKey
     }
 
-    const response = await sendToBackground({
-      name: "request",
-      body: body
-    })
-    // console.log(
-    //   `request: ${JSON.stringify(body)}, response: ${response.message}`
-    // )
-    setResponseMessage(response.message)
-    setIsLoading(false)
+    streamPort.send(body)
   }
 
   const handleCopy = async () => {

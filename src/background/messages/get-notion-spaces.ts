@@ -1,6 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
-import { GetSpaces } from "~lib/api/notion"
+import { GetSpaces } from "~lib/api/notion-space"
 import { ConstEnum } from "~lib/enums"
 import { storage } from "~lib/storage"
 

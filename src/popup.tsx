@@ -1,6 +1,6 @@
-import "~style.css"
+import { MarkdownComponent } from "~components/makrdown"
 
-import { marked } from "marked"
+import "~style.css"
 
 const usageStr = `
 # NotionAI Plus
@@ -11,10 +11,11 @@ You can connect me on [Twitter](https://twitter.com/LiuVaayne) if you have any q
 
 ## Features
 
-- All**NotionAI** features, such as enhancing writing, summarizing, changing tone, translating, etc. 
+- All **NotionAI** features, such as enhancing writing, summarizing, changing tone, translating, etc. 
 - Support for multiple engines like ChatGPT **Web** and ChatGPT **API**. 
 - **Draggable** window.
 - Full screen mode.
+- Stream response.
 
 ## Usage
 
@@ -39,9 +40,9 @@ You can also use NotionAI Plus by right-clicking on a selected text and selectin
 
 function IndexPopup() {
   return (
-    <div
-      className="p-2 prose w-[550px]"
-      dangerouslySetInnerHTML={{ __html: marked(usageStr) }}></div>
+    <div className="w-96">
+      <MarkdownComponent text={usageStr} />
+    </div>
   )
 }
 

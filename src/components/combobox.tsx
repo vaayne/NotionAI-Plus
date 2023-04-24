@@ -68,27 +68,19 @@ export default function ComboxComponent() {
       : Options.filter((option) => {
           return option.label.toLowerCase().includes(query.toLowerCase())
         })
-
   const inputCustomPrompt = () => {
     if (selectedPrompt && selectedPrompt.value == PromptTypeEnum.HelpMeWrite) {
       return (
-        <div className="relative">
-          <textarea
-            rows={2}
-            name="comment"
-            id="comment"
-            className="block w-full p-2 pr-6 border-gray-300 rounded-md shadow-sm relivate focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder="Write your custom prompt here..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={handleMessage}
-            className="absolute right-2 bottom-1 inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            <Send size={16} className={isLoading ? "animate-spin" : ""} />
-          </button>
-        </div>
+        <textarea
+          rows={2}
+          name="comment"
+          id="comment"
+          className="block w-full p-2 pr-6 border-gray-300 rounded-md shadow-sm relivate focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          placeholder="Write your custom prompt here..."
+          value={prompt}
+          onKeyDown={(e) => e.stopPropagation()}
+          onChange={(e) => setPrompt(e.target.value)}
+        />
       )
     }
   }
@@ -154,6 +146,7 @@ export default function ComboxComponent() {
                   placeholder="Here are your context."
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
                 />
               </div>
             </Disclosure.Panel>
@@ -197,17 +190,25 @@ export default function ComboxComponent() {
         onChange={setSelectedPrompt}
         className="w-full">
         <div className="relative">
-          <Combobox.Button as="div" className="flex items-center">
-            <Combobox.Input
-              className="w-full py-[6px] pl-3 pr-10 bg-white border-0 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="What do you want to write?"
-              displayValue={(option: PromptType) => option?.label}
-            />
-            <span className="absolute right-2">
-              <ChevronUpDownIcon className="w-5 h-5 text-gray-400 origin-center stroke-current" />
-            </span>
-          </Combobox.Button>
+          <div className="flex flex-row items-center space-x-1">
+            <Combobox.Button as="div" className="relative items-center flex-1">
+              <Combobox.Input
+                className="w-full py-[6px] pl-3 pr-10 bg-white border-0 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="What do you want to write?"
+                displayValue={(option: PromptType) => option?.label}
+              />
+              <span className="absolute right-2 bottom-2">
+                <ChevronUpDownIcon className="w-5 h-5 text-gray-400 origin-center stroke-current" />
+              </span>
+            </Combobox.Button>
+            <button
+              type="button"
+              onClick={handleMessage}
+              className="rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <Send size={16} className={isLoading ? "animate-spin" : ""} />
+            </button>
+          </div>
 
           {filteredOptions.length > 0 && (
             <Combobox.Options className="box-border absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">

@@ -1,3 +1,7 @@
+import type { PlasmoMessaging } from "@plasmohq/messaging"
+
+import { parseSSEResponse } from "~lib/utils/sse"
+
 const MODEL = "gpt-3.5-turbo"
 
 type ChatGPTResponseChoice = {
@@ -23,23 +27,25 @@ type ChatGPTResponse = {
   usage: ChatGPTResponseUsgae
 }
 
-async function Chat(
+async function ChatStream(
   url: string,
   instraction: string,
   prompt: string,
-  api_key: string
+  api_key: string,
+  res: PlasmoMessaging.Response<any>
 ) {
   if (api_key == "") {
     return "Please set your OpenAI API key in the extension options page."
   }
   const data = {
     model: MODEL,
+    stream: true,
     messages: [
       { role: "system", content: instraction },
       { role: "user", content: prompt }
     ]
   }
-  console.log(`ChatGPTAPI request: ${JSON.stringify(data)}`)
+  // console.log(`ChatGPTAPI request: ${JSON.stringify(data)}`)
 
   const resp = await fetch(url, {
     method: "POST",
@@ -49,13 +55,33 @@ async function Chat(
     },
     body: JSON.stringify(data)
   })
+  let content: string = ""
 
   if (resp.status == 200) {
-    const respData = (await resp.json()) as ChatGPTResponse
-    return respData.choices[0].message.content
+    await parseSSEResponse(resp, (message) => {
+      if (message === "[DONE]") {
+        return
+      }
+
+      try {
+        const data = JSON.parse(message)
+        // console.log(content)
+        if (data?.choices?.length) {
+          const delta = data.choices[0].delta
+          if (delta?.content) {
+            content += delta.content
+            res.send(content)
+          }
+        }
+      } catch (err) {
+        console.error(err)
+        res.send(err)
+        return
+      }
+    })
   } else {
-    return `ChatGPT return error, status: ${resp.status}`
+    res.send(`ChatGPT return error, status: ${resp.status}`)
   }
 }
 
-export { Chat }
+export { ChatStream }

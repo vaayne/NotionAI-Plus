@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.0.16 - 2023-04-24
+### Added
+- support stream response, so you can see the response in real time.
+- markdown support code highlight
+
+### Fixed
+- Fixed an issue when typing in input box, will trigger global shortcut key on github.
+- Fixed chatgpt web not working.
+
 ## v0.0.15 - 2023-04-06
 ### Added
 - support NotionBoy as backend engine
