@@ -32,7 +32,8 @@
     "remark-math": "^5.1.1",
     "tailwind-merge": "^1.10.0",
     "tailwindcss-animate": "^1.0.5",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "websocket-as-promised": "^2.0.1"
   },
   "devDependencies": {
     "@plasmohq/prettier-plugin-sort-imports": "3.6.1",

@@ -11,7 +11,8 @@ export enum EngineEnum {
   ChatGPTWeb = "chatGPTWeb",
   ChatGPTAPI = "chatGPTAPI",
   NotionBoy = "notionBoy",
-  Bard = "bard"
+  Bard = "bard",
+  Bing = "bing"
 }
 
 export const EngineOptions: PromptType[] = [
@@ -19,7 +20,8 @@ export const EngineOptions: PromptType[] = [
   { label: "💬 ChatGPTWeb", value: EngineEnum.ChatGPTWeb },
   { label: "💬 ChatGPTAPI", value: EngineEnum.ChatGPTAPI },
   { label: "🤖 NotionBoy", value: EngineEnum.NotionBoy },
-  { label: "🎤 Bard", value: EngineEnum.Bard }
+  { label: "🎤 Bard", value: EngineEnum.Bard },
+  { label: "🔎 Bing", value: EngineEnum.Bing }
 ]
 
 export enum ProcessTypeEnum {
