@@ -5,7 +5,6 @@
 
 NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
-
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
 - [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
 
@@ -26,7 +25,15 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
 ## Features
 
 - Analyze text, generate summaries, and perform sentiment analysis on any webpage using NotionAI's powerful features
-- Backend engine support for `NotionAI`, `ChatGPT Web`, and `ChatGPT API`
+- Support multiple engines:
+  - **Free**:
+    - [ChatGPT Web](https://chat.openai.com/)
+    - [New Bing](https://www.bing.com/new)
+    - [Brad](https://bard.google.com/)
+  - **Paid**:
+    - [NotionAI](https://www.notion.so/product/ai)
+    - [ChatGPT API](https://platform.openai.com/docs/api-reference/chat/create)
+
 - Support for all NotionAI built-in prompts
 - Support for using custom prompts
 
