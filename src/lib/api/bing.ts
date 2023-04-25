@@ -255,7 +255,7 @@ export async function BingChat(
     for (const event of events) {
       if (JSON.stringify(event) === "{}") {
         wsp.sendPacked({ type: 6 })
-        wsp.sendPacked(this.buildChatRequest(conversation, prompt))
+        wsp.sendPacked(buildChatRequest(conversationContext, prompt))
         conversationContext.invocationId += 1
       } else if (event.type === 6) {
         wsp.sendPacked({ type: 6 })
@@ -263,8 +263,10 @@ export async function BingChat(
         wsp.removeAllListeners()
         wsp.close()
       } else if (event.type === 1) {
-        const text = convertMessageToMarkdown(event.arguments[0].messages[0])
-        res.send(text)
+        if (event.arguments[0].messages) {
+          const text = convertMessageToMarkdown(event.arguments[0].messages[0])
+          res.send(text)
+        }
       } else if (event.type === 2) {
         const messages = event.item.messages as ChatResponseMessage[]
         const limited = messages.some(
