@@ -109,8 +109,8 @@ export default function ComboxComponent() {
           <>
             <div className="flex flex-row items-center justify-between space-x-2">
               {selectEngine()}
-              <Disclosure.Button className="flex justify-between w-1/2 px-4 py-2 text-sm font-medium text-left text-purple-900 bg-indigo-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                <span>Show context</span>
+              <Disclosure.Button className="flex justify-between w-1/2 px-4 py-1 text-sm font-medium text-left text-purple-900 bg-indigo-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                <span>context</span>
                 <ChevronUpIcon
                   className={`${
                     open ? "rotate-180 transform" : ""
