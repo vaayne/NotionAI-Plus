@@ -137,7 +137,7 @@ const Index = () => {
     let lprompt: string = ""
     let language: string = ""
     let tone: string = ""
-    // console.log("selectedPrompt", selectedPrompt)
+
     const prompts = selectedPrompt.value.split("-")
     let promptType = prompts[0]
     if (promptType === PromptTypeEnum.Translate) {
@@ -147,8 +147,8 @@ const Index = () => {
     } else if (promptType === PromptTypeEnum.TopicWriting) {
       setPrompt(prompts[1])
       lprompt = prompts[1]
-    } else if (promptType === PromptTypeEnum.HelpMeWrite) {
-      lprompt = prompt
+    } else if (promptType === PromptTypeEnum.AskAI) {
+      lprompt = PromptTypeEnum.AskAI
     }
 
     setResponseMessage("Waitting for AI response ...")

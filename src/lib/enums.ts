@@ -36,7 +36,6 @@ export interface PromptType {
 
 export enum PromptTypeEnum {
   TopicWriting = "topicWriting",
-  HelpMeWrite = "helpMeWrite",
   ContinueWriting = "continueWriting",
   ChangeTone = "changeTone",
   Summarize = "summarize",
@@ -47,11 +46,12 @@ export enum PromptTypeEnum {
   MakeLonger = "makeLonger",
   MakeShorter = "makeShorter",
   FindActionItems = "findActionItems",
-  SimplifyLanguage = "simplifyLanguage"
+  SimplifyLanguage = "simplifyLanguage",
+  AskAI = "askAI"
 }
 
 export const PromptTypeOptions: PromptType[] = [
-  { label: "📝 Help Me Write", value: PromptTypeEnum.HelpMeWrite },
+  { label: "❓ Ask AI", value: PromptTypeEnum.AskAI },
   { label: "📝 Topic Writing", value: PromptTypeEnum.TopicWriting },
 
   { label: "🚀 Continue Writing", value: PromptTypeEnum.ContinueWriting },

@@ -36,12 +36,6 @@ async function PostNotionStream(
       text: context,
       language: language
     }
-  } else if (promptType === PromptTypeEnum.HelpMeWrite) {
-    data.context = {
-      type: promptType,
-      prompt: prompt,
-      previousContent: context
-    }
   } else if (promptType === PromptTypeEnum.ChangeTone) {
     data.context = {
       type: promptType,
