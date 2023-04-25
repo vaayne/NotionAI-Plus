@@ -1,5 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
+import { BardChat } from "~lib/api/bard"
 import { ChatStream } from "~lib/api/chatgpt-api"
 import { PostChatGPTStream } from "~lib/api/chatgpt-web"
 import { PostNotionStream } from "~lib/api/notion-completion"
@@ -30,6 +31,9 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
         body.chatGPTAPIKey,
         res
       )
+      break
+    case EngineEnum.Bard:
+      await BardChat(`${instruction}\n\n${prompt}`, res)
       break
     case EngineEnum.NotionBoy:
       await ChatStream(
