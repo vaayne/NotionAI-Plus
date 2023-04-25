@@ -64,6 +64,9 @@ function buildChatGPTPrompt(body: RequestBody): string {
       case PromptTypeEnum.ExplainThis:
         prompt = ExplainThisTemplate(body.context)
         break
+      case PromptTypeEnum.AskAI:
+        prompt = body.context
+        break
       default:
         prompt = body.customPromot
     }

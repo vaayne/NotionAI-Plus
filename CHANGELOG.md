@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.17 - 2023-04-25
+### Added
+- Support new bing as backend engine
+- Support Google Bard as backend engine
+
 ## v0.0.16 - 2023-04-24
 ### Added
 - support stream response, so you can see the response in real time.

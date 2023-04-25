@@ -10,14 +10,18 @@ export enum EngineEnum {
   NotionAI = "notionAI",
   ChatGPTWeb = "chatGPTWeb",
   ChatGPTAPI = "chatGPTAPI",
-  NotionBoy = "notionBoy"
+  NotionBoy = "notionBoy",
+  Bard = "bard",
+  Bing = "bing"
 }
 
 export const EngineOptions: PromptType[] = [
   { label: "🤖 NotionAI", value: EngineEnum.NotionAI },
   { label: "💬 ChatGPTWeb", value: EngineEnum.ChatGPTWeb },
   { label: "💬 ChatGPTAPI", value: EngineEnum.ChatGPTAPI },
-  { label: "🤖 NotionBoy", value: EngineEnum.NotionBoy }
+  { label: "🤖 NotionBoy", value: EngineEnum.NotionBoy },
+  { label: "🎤 Bard", value: EngineEnum.Bard },
+  { label: "🔎 Bing", value: EngineEnum.Bing }
 ]
 
 export enum ProcessTypeEnum {
@@ -32,7 +36,6 @@ export interface PromptType {
 
 export enum PromptTypeEnum {
   TopicWriting = "topicWriting",
-  HelpMeWrite = "helpMeWrite",
   ContinueWriting = "continueWriting",
   ChangeTone = "changeTone",
   Summarize = "summarize",
@@ -43,11 +46,12 @@ export enum PromptTypeEnum {
   MakeLonger = "makeLonger",
   MakeShorter = "makeShorter",
   FindActionItems = "findActionItems",
-  SimplifyLanguage = "simplifyLanguage"
+  SimplifyLanguage = "simplifyLanguage",
+  AskAI = "askAI"
 }
 
 export const PromptTypeOptions: PromptType[] = [
-  { label: "📝 Help Me Write", value: PromptTypeEnum.HelpMeWrite },
+  { label: "❓ Ask AI", value: PromptTypeEnum.AskAI },
   { label: "📝 Topic Writing", value: PromptTypeEnum.TopicWriting },
 
   { label: "🚀 Continue Writing", value: PromptTypeEnum.ContinueWriting },

@@ -68,22 +68,6 @@ export default function ComboxComponent() {
       : Options.filter((option) => {
           return option.label.toLowerCase().includes(query.toLowerCase())
         })
-  const inputCustomPrompt = () => {
-    if (selectedPrompt && selectedPrompt.value == PromptTypeEnum.HelpMeWrite) {
-      return (
-        <textarea
-          rows={2}
-          name="comment"
-          id="comment"
-          className="block w-full p-2 pr-6 border-gray-300 rounded-md shadow-sm relivate focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder="Write your custom prompt here..."
-          value={prompt}
-          onKeyDown={(e) => e.stopPropagation()}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-      )
-    }
-  }
 
   const header = () => {
     return (
@@ -120,13 +104,13 @@ export default function ComboxComponent() {
 
   const showContext = () => {
     return (
-      <Disclosure>
+      <Disclosure defaultOpen={true}>
         {({ open }) => (
           <>
             <div className="flex flex-row items-center justify-between space-x-2">
               {selectEngine()}
-              <Disclosure.Button className="flex justify-between w-1/2 px-4 py-2 text-sm font-medium text-left text-purple-900 bg-indigo-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                <span>Show context</span>
+              <Disclosure.Button className="flex justify-between w-1/2 px-4 py-1 text-sm font-medium text-left text-purple-900 bg-indigo-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                <span>context</span>
                 <ChevronUpIcon
                   className={`${
                     open ? "rotate-180 transform" : ""
@@ -177,7 +161,7 @@ export default function ComboxComponent() {
   }
 
   useEffect(() => {
-    if (selectedPrompt && selectedPrompt.value != PromptTypeEnum.HelpMeWrite) {
+    if (selectedPrompt && context) {
       handleMessage()
     }
   }, [selectedPrompt])
@@ -258,7 +242,6 @@ export default function ComboxComponent() {
     <div className="flex flex-col m-2 space-y-1">
       {showContext()}
       {comboxSelect()}
-      {inputCustomPrompt()}
     </div>
   )
 }

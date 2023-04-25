@@ -1,5 +1,7 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
+import { BardChat } from "~lib/api/bard"
+import { BingChat } from "~lib/api/bing"
 import { ChatStream } from "~lib/api/chatgpt-api"
 import { PostChatGPTStream } from "~lib/api/chatgpt-web"
 import { PostNotionStream } from "~lib/api/notion-completion"
@@ -22,6 +24,9 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
     case EngineEnum.ChatGPTWeb:
       await PostChatGPTStream(`${instruction}\n\n${prompt}`, res)
       break
+    case EngineEnum.Bing:
+      await BingChat(`${instruction}\n\n${prompt}`, res)
+      break
     case EngineEnum.ChatGPTAPI:
       await ChatStream(
         OPENAI_API_URL,
@@ -30,6 +35,9 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
         body.chatGPTAPIKey,
         res
       )
+      break
+    case EngineEnum.Bard:
+      await BardChat(`${instruction}\n\n${prompt}`, res)
       break
     case EngineEnum.NotionBoy:
       await ChatStream(
