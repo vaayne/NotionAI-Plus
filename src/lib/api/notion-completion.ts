@@ -81,7 +81,7 @@ async function complation(
   await processNdjsonResp(resp, onMessage)
 }
 
-async function PostNotionStream(
+async function NotionCompletion(
   res: PlasmoMessaging.Response<any>,
   promptType: string,
   context: string,
@@ -115,4 +115,4 @@ async function PostNotionStream(
   res.send(message)
 }
 
-export { PostNotionStream }
+export { NotionCompletion }

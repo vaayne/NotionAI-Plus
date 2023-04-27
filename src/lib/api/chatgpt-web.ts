@@ -27,7 +27,7 @@ async function getAccessToken(): Promise<string> {
   return data.accessToken
 }
 
-async function PostChatGPTStream(
+async function ChatGPTWebChat(
   prompt: string,
   res: PlasmoMessaging.Response<any>
 ) {
@@ -120,4 +120,4 @@ async function removeConversation(id: string) {
   }
 }
 
-export { PostChatGPTStream }
+export { ChatGPTWebChat }

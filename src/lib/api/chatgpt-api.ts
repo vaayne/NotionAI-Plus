@@ -53,7 +53,7 @@ async function chat(
   })
 }
 
-async function ChatStream(
+async function ChatGPTApiChat(
   url: string,
   instraction: string,
   prompt: string,
@@ -78,4 +78,4 @@ async function ChatStream(
   res.send(message)
 }
 
-export { ChatStream }
+export { ChatGPTApiChat }

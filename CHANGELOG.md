@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.18 - 2023-04-27
+### Fixed
+- Fix using chatgpt web
+- Enhance error message
+
 ## v0.0.17 - 2023-04-25
 ### Added
 - Support new bing as backend engine
