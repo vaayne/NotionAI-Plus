@@ -1,3 +1,4 @@
+import { ofetch } from "ofetch"
 import { v4 as uuidv4 } from "uuid"
 
 import type { PlasmoMessaging } from "@plasmohq/messaging"
@@ -8,7 +9,7 @@ import { processNdjsonResp } from "~lib/utils/ndjson"
 const MODEL = "openai-3"
 const HOST = "https://www.notion.so"
 
-async function PostNotionStream(
+async function complation(
   res: PlasmoMessaging.Response<any>,
   promptType: string,
   context: string,
@@ -16,11 +17,7 @@ async function PostNotionStream(
   prompt?: string,
   language?: string,
   tone?: string
-): Promise<string> {
-  if (!notionSpaceId) {
-    return "Please set notionSpaceId in options page"
-  }
-
+) {
   const url = `${HOST}/api/v3/getCompletion`
   const data = {
     id: uuidv4(),
@@ -65,10 +62,11 @@ async function PostNotionStream(
     accept: "application/x-ndjson"
   }
 
-  const resp = await fetch(url, {
+  const resp = await ofetch(url, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+    retry: 3
   })
   let fullMessage: string = ""
   const onMessage = (msg: any) => {
@@ -80,13 +78,41 @@ async function PostNotionStream(
       res.send(msg.completion)
     }
   }
-
-  if (resp.status == 200) {
-    await processNdjsonResp(resp, onMessage)
-  } else {
-    console.log(`fail: ${resp.status}`)
-    res.send(resp.statusText)
-  }
+  await processNdjsonResp(resp, onMessage)
 }
 
-export { PostNotionStream }
+async function NotionCompletion(
+  res: PlasmoMessaging.Response<any>,
+  promptType: string,
+  context: string,
+  notionSpaceId: string,
+  prompt?: string,
+  language?: string,
+  tone?: string
+): Promise<string> {
+  if (!notionSpaceId) {
+    res.send("Please set notionSpaceId in options page")
+    return
+  }
+  let message = ""
+  for (let i = 0; i < 3; i++) {
+    try {
+      await complation(
+        res,
+        promptType,
+        context,
+        notionSpaceId,
+        prompt,
+        language,
+        tone
+      )
+      return
+    } catch (err) {
+      console.log(err)
+      message = err.message
+    }
+  }
+  res.send(message)
+}
+
+export { NotionCompletion }
