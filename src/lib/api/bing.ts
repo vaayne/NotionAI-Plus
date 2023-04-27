@@ -232,10 +232,7 @@ export async function createConversation(): Promise<ConversationResponse> {
   return resp
 }
 
-export async function BingChat(
-  prompt: string,
-  res: PlasmoMessaging.Response<any>
-) {
+async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
   const conversation = await createConversation()
   const bingConversationStyle = BingConversationStyle.Balanced
   const conversationContext = {
@@ -285,4 +282,18 @@ export async function BingChat(
 
   await wsp.open()
   wsp.sendPacked({ protocol: "json", version: 1 })
+}
+
+export async function BingChat(
+  prompt: string,
+  res: PlasmoMessaging.Response<any>
+) {
+  try {
+    chat(prompt, res)
+  } catch (err) {
+    console.error("BingChat", err)
+    res.send(
+      "Sorry, Bing Chat is not available at the moment. error: " + err.message
+    )
+  }
 }

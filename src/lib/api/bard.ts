@@ -33,10 +33,7 @@ function generateReqId() {
   return Math.floor(Math.random() * 900000) + 100000
 }
 
-export async function BardChat(
-  prompt: string,
-  res: PlasmoMessaging.Response<any>
-) {
+async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
   const requestParams = await fetchRequestParams()
   let contextIds = ["", "", ""]
   const resp = await ofetch(
@@ -61,4 +58,18 @@ export async function BardChat(
   const { text, ids } = parseBartResponse(resp)
   contextIds = ids
   res.send(text)
+}
+
+export async function BardChat(
+  prompt: string,
+  res: PlasmoMessaging.Response<any>
+) {
+  try {
+    await chat(prompt, res)
+  } catch (err) {
+    console.error(err)
+    res.send(
+      "Sorry, Bard Chat is not available at the moment. error: " + err.message
+    )
+  }
 }
