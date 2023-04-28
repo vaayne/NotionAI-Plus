@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.19 - 2023-04-28
+### Fixed
+- Fix fetch API not working.
+
 ## v0.0.18 - 2023-04-27
 ### Fixed
 - Fix using chatgpt web
