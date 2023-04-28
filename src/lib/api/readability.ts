@@ -27,7 +27,7 @@ async function Parse(url: string): Promise<ParseResult> {
     // console.log(`readability response: ${JSON.stringify(data)}`)
     return data as ParseResult
   } catch (error) {
-    console.log(`readability error: ${error}`)
+    console.error(`readability error: ${error}`)
     throw new Error(error)
   }
 }

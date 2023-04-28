@@ -1,5 +1,3 @@
-import { ofetch } from "ofetch"
-
 import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import { parseSSEResponse } from "~lib/utils/sse"
@@ -21,7 +19,7 @@ async function chat(
       { role: "user", content: prompt }
     ]
   }
-  const resp = await ofetch(url, {
+  const resp = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,6 +27,13 @@ async function chat(
     },
     body: JSON.stringify(data)
   })
+
+  if (!resp.ok) {
+    const errMsg = `ChatGPTAPI return error, status: ${resp.status}`
+    console.error(errMsg)
+    throw new Error(errMsg)
+  }
+
   let content: string = ""
 
   await parseSSEResponse(resp, (message) => {
@@ -60,7 +65,6 @@ async function ChatGPTApiChat(
   api_key: string,
   res: PlasmoMessaging.Response<any>
 ) {
-  console.log(`ChatStream: ${url}, ${instraction}, ${prompt}, ${api_key}`)
   if (!api_key) {
     res.send("Please set your OpenAI API key in the extension options page.")
     return

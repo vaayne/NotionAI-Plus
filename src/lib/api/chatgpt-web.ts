@@ -1,4 +1,3 @@
-import { ofetch } from "ofetch"
 import { v4 as uuidv4 } from "uuid"
 
 import type { PlasmoMessaging } from "@plasmohq/messaging"
@@ -18,7 +17,7 @@ async function getAccessToken(): Promise<string> {
     return cacheToken as string
   }
 
-  const resp = await ofetch(`${CHATGPT_HOST}/api/auth/session`)
+  const resp = await fetch(`${CHATGPT_HOST}/api/auth/session`)
   const data = await resp.json()
   if (!data.accessToken) {
     throw new Error("401 UNAUTHORIZED")
@@ -41,7 +40,7 @@ async function ChatGPTWebChat(
       console.error(err)
       message = err.message
     }
-    console.log(message)
+    // console.log(message)
   }
   res.send(message)
 }
@@ -68,7 +67,7 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
     model: CHATGPT_MODEL
   }
   const url = `${CHATGPT_HOST}/backend-api/conversation`
-  const resp = await ofetch(url, {
+  const resp = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -76,6 +75,12 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
     },
     body: JSON.stringify(data)
   })
+
+  if (!resp.ok) {
+    const errMsg = `ChatGPT return error, status: ${resp.status}`
+    console.error(errMsg)
+    throw new Error(errMsg)
+  }
 
   let conversationId: string = ""
 
@@ -104,7 +109,7 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
 async function removeConversation(id: string) {
   const accessToken = await getAccessToken()
   try {
-    const resp = await fetch(`${CHATGPT_HOST}/backend-api/conversation/${id}`, {
+    await fetch(`${CHATGPT_HOST}/backend-api/conversation/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +119,7 @@ async function removeConversation(id: string) {
         is_visible: false
       })
     })
-    console.log(await resp.json())
+    // console.log(await resp.json())
   } catch (err) {
     console.error(err)
   }

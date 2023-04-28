@@ -117,7 +117,7 @@ const Index = () => {
         document.activeElement.nodeName.toUpperCase() === "TEXTAREA" ||
         document.activeElement.nodeName.toUpperCase() === "INPUT")
     ) {
-      console.log("select text from input")
+      // console.log("select text from input")
       // Set as original for later
       setSelectedElement(document.activeElement as HTMLElement)
     }

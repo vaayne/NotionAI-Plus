@@ -1,4 +1,3 @@
-import { ofetch } from "ofetch"
 import { v4 as uuidv4 } from "uuid"
 
 import type { PlasmoMessaging } from "@plasmohq/messaging"
@@ -62,12 +61,17 @@ async function complation(
     accept: "application/x-ndjson"
   }
 
-  const resp = await ofetch(url, {
+  const resp = await fetch(url, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify(data),
-    retry: 3
+    body: JSON.stringify(data)
   })
+
+  if (!resp.ok) {
+    const errMsg = `NotionAI return error, status: ${resp.status}`
+    console.error(errMsg)
+    throw new Error(errMsg)
+  }
   let fullMessage: string = ""
   const onMessage = (msg: any) => {
     // console.log(`msg: ${JSON.stringify(msg)}`)
