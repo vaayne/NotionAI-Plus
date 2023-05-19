@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
 
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-
 import { PromptTypeEnum } from "~lib/enums"
 import { processNdjsonResp } from "~lib/utils/ndjson"
 
@@ -9,7 +7,7 @@ const MODEL = "openai-3"
 const HOST = "https://www.notion.so"
 
 async function complation(
-  res: PlasmoMessaging.Response<any>,
+  port: chrome.runtime.Port,
   promptType: string,
   context: string,
   notionSpaceId: string,
@@ -77,16 +75,16 @@ async function complation(
     // console.log(`msg: ${JSON.stringify(msg)}`)
     if (msg.type == "success") {
       fullMessage += msg.completion
-      res.send(fullMessage)
+      port.postMessage(fullMessage)
     } else {
-      res.send(msg.completion)
+      port.postMessage(msg.completion)
     }
   }
   await processNdjsonResp(resp, onMessage)
 }
 
 async function NotionCompletion(
-  res: PlasmoMessaging.Response<any>,
+  port: chrome.runtime.Port,
   promptType: string,
   context: string,
   notionSpaceId: string,
@@ -95,7 +93,7 @@ async function NotionCompletion(
   tone?: string
 ): Promise<string> {
   if (!notionSpaceId) {
-    res.send("Please set notionSpaceId in options page")
+    port.postMessage("Please set notionSpaceId in options page")
     return
   }
   let message = ""
@@ -116,7 +114,7 @@ async function NotionCompletion(
       message = err.message
     }
   }
-  res.send(message)
+  port.postMessage(message)
 }
 
 export { NotionCompletion }

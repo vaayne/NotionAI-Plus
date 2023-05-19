@@ -3,7 +3,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 import Draggable from "react-draggable"
 
-import { useMessage, usePort } from "@plasmohq/messaging/hook"
+import { useMessage } from "@plasmohq/messaging/hook"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import ComboxComponent from "~components/combobox"
@@ -62,7 +62,7 @@ const Index = () => {
   const [selectedElement, setSelectedElement] = useState<HTMLElement>()
   const [isShowToast, setIsShowToast] = useState<boolean>(false)
 
-  const streamPort = usePort("stream")
+  const streamPort = chrome.runtime.connect({ name: "stream" })
 
   // when press ESC will hidden the  window
   const handleEscape = (event: any) => {
@@ -70,6 +70,10 @@ const Index = () => {
       setIsShowElement(false)
     }
   }
+
+  streamPort.onMessage.addListener(function (msg) {
+    setResponseMessage(msg)
+  })
 
   // init on page load
   useEffect(() => {
@@ -83,12 +87,6 @@ const Index = () => {
       document.removeEventListener("keydown", handleEscape)
     }
   }, [])
-
-  useEffect(() => {
-    if (streamPort.data) {
-      setResponseMessage(streamPort.data)
-    }
-  }, [streamPort.data])
 
   // show panel using shortcut
   useMessage<string, string>(async (req, res) => {
@@ -166,7 +164,7 @@ const Index = () => {
       notionBoyAPIKey: notionBoyAPIKey
     }
 
-    streamPort.send(body)
+    streamPort.postMessage(body)
   }
 
   const handleCopy = async () => {

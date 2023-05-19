@@ -1,5 +1,3 @@
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-
 import { parseSSEResponse } from "~lib/utils/sse"
 
 const MODEL = "gpt-3.5-turbo"
@@ -9,7 +7,7 @@ async function chat(
   instraction: string,
   prompt: string,
   api_key: string,
-  res: PlasmoMessaging.Response<any>
+  port: chrome.runtime.Port
 ) {
   const data = {
     model: MODEL,
@@ -47,12 +45,12 @@ async function chat(
         const delta = data.choices[0].delta
         if (delta?.content) {
           content += delta.content
-          res.send(content)
+          port.postMessage(content)
         }
       }
     } catch (err) {
       console.error(err)
-      res.send(err)
+      port.postMessage(err.message)
       return
     }
   })
@@ -63,23 +61,25 @@ async function ChatGPTApiChat(
   instraction: string,
   prompt: string,
   api_key: string,
-  res: PlasmoMessaging.Response<any>
+  port: chrome.runtime.Port
 ) {
   if (!api_key) {
-    res.send("Please set your OpenAI API key in the extension options page.")
+    port.postMessage(
+      "Please set your OpenAI API key in the extension options page."
+    )
     return
   }
   let message = ""
   for (let i = 0; i < 3; i++) {
     try {
-      await chat(url, instraction, prompt, api_key, res)
+      await chat(url, instraction, prompt, api_key, port)
       return
     } catch (err) {
       console.error(err)
       message = err.message
     }
   }
-  res.send(message)
+  port.postMessage(message)
 }
 
 export { ChatGPTApiChat }

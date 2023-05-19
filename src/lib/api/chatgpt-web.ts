@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
 
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-
 import { storage } from "~lib/storage"
 import { parseSSEResponse } from "~lib/utils/sse"
 
@@ -26,14 +24,11 @@ async function getAccessToken(): Promise<string> {
   return data.accessToken
 }
 
-async function ChatGPTWebChat(
-  prompt: string,
-  res: PlasmoMessaging.Response<any>
-) {
+async function ChatGPTWebChat(prompt: string, port: chrome.runtime.Port) {
   let message = ""
   for (let i = 0; i < 3; i++) {
     try {
-      await chat(prompt, res)
+      await chat(prompt, port)
       return
     } catch (err) {
       await storage.remove(CACHE_KEY_TOKEN)
@@ -42,10 +37,10 @@ async function ChatGPTWebChat(
     }
     // console.log(message)
   }
-  res.send(message)
+  port.postMessage(message)
 }
 
-async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
+async function chat(prompt: string, port: chrome.runtime.Port) {
   const accessToken = await getAccessToken()
 
   const cacheConversationId = await storage.get(CACHE_KEY_CONVERSATION_ID)
@@ -95,12 +90,12 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
       const text = data.message?.content?.parts?.[0]
       if (text) {
         // console.debug("chatgpt sse message", text)
-        res.send(text)
+        port.postMessage(text)
         conversationId = data.conversation_id
       }
     } catch (err) {
       console.error(err)
-      res.send(`ChatGPT return error, error: ${err.message}`)
+      port.postMessage(`ChatGPT return error, error: ${err.message}`)
       return
     }
   })

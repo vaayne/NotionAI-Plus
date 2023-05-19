@@ -9,6 +9,7 @@ import {
   ToneOptions,
   TopicOptions
 } from "~lib/enums"
+import handleStream from "~lib/stream"
 
 // Register a keyboard shortcut
 chrome.commands.onCommand.addListener(function (command) {
@@ -97,4 +98,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         text: info.selectionText
       })
     })
+})
+
+chrome.runtime.onConnect.addListener(function (port) {
+  port.onMessage.addListener(function (msg) {
+    handleStream(msg, port)
+  })
 })

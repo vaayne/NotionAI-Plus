@@ -1,7 +1,5 @@
 import { ofetch } from "ofetch"
 
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-
 function extractFromHTML(variableName: string, html: string) {
   const regex = new RegExp(`"${variableName}":"([^"]+)"`)
   const match = regex.exec(html)
@@ -33,7 +31,7 @@ function generateReqId() {
   return Math.floor(Math.random() * 900000) + 100000
 }
 
-async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
+async function chat(prompt: string, port: chrome.runtime.Port) {
   const requestParams = await fetchRequestParams()
   let contextIds = ["", "", ""]
   const resp = await ofetch(
@@ -57,18 +55,15 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
   )
   const { text, ids } = parseBartResponse(resp)
   contextIds = ids
-  res.send(text)
+  port.postMessage(text)
 }
 
-export async function BardChat(
-  prompt: string,
-  res: PlasmoMessaging.Response<any>
-) {
+export async function BardChat(prompt: string, port: chrome.runtime.Port) {
   try {
-    await chat(prompt, res)
+    await chat(prompt, port)
   } catch (err) {
     console.error(err)
-    res.send(
+    port.postMessage(
       "Sorry, Bard Chat is not available at the moment. error: " + err.message
     )
   }

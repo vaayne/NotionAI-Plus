@@ -3,8 +3,6 @@ import { FetchError, ofetch } from "ofetch"
 import { v4 as uuidv4 } from "uuid"
 import WebSocketAsPromised from "websocket-as-promised"
 
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-
 export enum BingConversationStyle {
   Creative = "creative",
   Balanced = "balanced",
@@ -232,7 +230,7 @@ export async function createConversation(): Promise<ConversationResponse> {
   return resp
 }
 
-async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
+async function chat(prompt: string, port: chrome.runtime.Port) {
   const conversation = await createConversation()
   const bingConversationStyle = BingConversationStyle.Balanced
   const conversationContext = {
@@ -262,7 +260,7 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
       } else if (event.type === 1) {
         if (event.arguments[0].messages) {
           const text = convertMessageToMarkdown(event.arguments[0].messages[0])
-          res.send(text)
+          port.postMessage(text)
         }
       } else if (event.type === 2) {
         const messages = event.item.messages as ChatResponseMessage[]
@@ -270,7 +268,7 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
           (message) => message.contentOrigin === "TurnLimiter"
         )
         if (limited) {
-          res.send(
+          port.postMessage(
             "Sorry, you have reached chat turns limit in this conversation."
           )
         }
@@ -284,15 +282,12 @@ async function chat(prompt: string, res: PlasmoMessaging.Response<any>) {
   wsp.sendPacked({ protocol: "json", version: 1 })
 }
 
-export async function BingChat(
-  prompt: string,
-  res: PlasmoMessaging.Response<any>
-) {
+export async function BingChat(prompt: string, port: chrome.runtime.Port) {
   try {
-    chat(prompt, res)
+    chat(prompt, port)
   } catch (err) {
     console.error("BingChat", err)
-    res.send(
+    port.postMessage(
       "Sorry, Bing Chat is not available at the moment. error: " + err.message
     )
   }

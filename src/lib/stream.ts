@@ -1,5 +1,3 @@
-import type { PlasmoMessaging } from "@plasmohq/messaging"
-
 import { BardChat } from "~lib/api/bard"
 import { BingChat } from "~lib/api/bing"
 import { ChatGPTApiChat } from "~lib/api/chatgpt-api"
@@ -15,17 +13,19 @@ import {
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
 const NOTIONBOY_API_URL = "https://notionboy.theboys.tech/v1/chat/completions"
 
-const handler: PlasmoMessaging.PortHandler = async (req, res) => {
-  const body = req.body as RequestBody
+export default async function handleStream(
+  body: RequestBody,
+  port: chrome.runtime.Port
+) {
   const instruction: string = buildChatGPTinstruction(body)
   const prompt: string = buildChatGPTPrompt(body)
 
   switch (body.engine) {
     case EngineEnum.ChatGPTWeb:
-      await ChatGPTWebChat(`${instruction}\n\n${prompt}`, res)
+      await ChatGPTWebChat(`${instruction}\n\n${prompt}`, port)
       break
     case EngineEnum.Bing:
-      await BingChat(`${instruction}\n\n${prompt}`, res)
+      await BingChat(`${instruction}\n\n${prompt}`, port)
       break
     case EngineEnum.ChatGPTAPI:
       await ChatGPTApiChat(
@@ -33,11 +33,11 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
         instruction,
         prompt,
         body.chatGPTAPIKey,
-        res
+        port
       )
       break
     case EngineEnum.Bard:
-      await BardChat(`${instruction}\n\n${prompt}`, res)
+      await BardChat(`${instruction}\n\n${prompt}`, port)
       break
     case EngineEnum.NotionBoy:
       await ChatGPTApiChat(
@@ -45,12 +45,12 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
         instruction,
         prompt,
         body.notionBoyAPIKey,
-        res
+        port
       )
       break
     case EngineEnum.NotionAI:
       await NotionCompletion(
-        res,
+        port,
         body.builtinPrompt,
         body.context,
         body.notionSpaceId,
@@ -60,5 +60,3 @@ const handler: PlasmoMessaging.PortHandler = async (req, res) => {
       )
   }
 }
-
-export default handler
