@@ -16,6 +16,15 @@ async function getAccessToken(): Promise<string> {
   }
 
   const resp = await fetch(`${CHATGPT_HOST}/api/auth/session`)
+  if (resp.status === 401 || resp.status === 403) {
+    throw new Error(
+      "401 UNAUTHORIZED, Please login to https://chat.openai.com/"
+    )
+  }
+  if (!resp.ok) {
+    throw new Error(`ChatGPT return error, status: ${resp.status}`)
+  }
+
   const data = await resp.json()
   if (!data.accessToken) {
     throw new Error("401 UNAUTHORIZED")
@@ -35,7 +44,6 @@ async function ChatGPTWebChat(prompt: string, port: chrome.runtime.Port) {
       console.error(err)
       message = err.message
     }
-    // console.log(message)
   }
   port.postMessage(message)
 }

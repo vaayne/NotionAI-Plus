@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.0.21 - 2023-06-01
+### Fixed
+- Fix NotionAI not working issue
+- Improve ChatGPT Web error message
+- Bard support image
+
 ## v0.0.20 - 2023-05-19
 ### Fixed
 - Fix port message API not responsing issue

@@ -20,7 +20,16 @@ export function parseBartResponse(resp: string) {
     throw new Error("Failed to access Bard: Empty response")
   }
   console.debug("bard response payload", payload)
-  const text = payload[0][0]
+  let text = payload[0][0] as string
+
+  const images = payload[4][0][4] || []
+  for (const image of images) {
+    const [media, source, placeholder] = image
+    text = text.replace(
+      placeholder,
+      `[![${media[4]}](${media[0][0]})](${source[0][0]})`
+    )
+  }
   return {
     text,
     ids: [...payload[1], payload[4][0][0]] as [string, string, string]

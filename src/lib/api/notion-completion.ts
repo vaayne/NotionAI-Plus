@@ -100,7 +100,7 @@ async function NotionCompletion(
   for (let i = 0; i < 3; i++) {
     try {
       await complation(
-        res,
+        port,
         promptType,
         context,
         notionSpaceId,
@@ -110,7 +110,7 @@ async function NotionCompletion(
       )
       return
     } catch (err) {
-      console.log(err)
+      console.error(err)
       message = err.message
     }
   }
