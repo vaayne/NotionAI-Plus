@@ -257,6 +257,7 @@ async function chat(prompt: string, port: chrome.runtime.Port) {
       } else if (event.type === 3) {
         wsp.removeAllListeners()
         wsp.close()
+        port.postMessage("[DONE]")
       } else if (event.type === 1) {
         if (event.arguments[0].messages) {
           const text = convertMessageToMarkdown(event.arguments[0].messages[0])
@@ -290,5 +291,6 @@ export async function BingChat(prompt: string, port: chrome.runtime.Port) {
     port.postMessage(
       "Sorry, Bing Chat is not available at the moment. error: " + err.message
     )
+    port.postMessage("[DONE]")
   }
 }

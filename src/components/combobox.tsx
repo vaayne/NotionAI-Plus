@@ -189,7 +189,10 @@ export default function ComboxComponent() {
             <button
               type="button"
               onClick={handleMessage}
-              className="rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              disabled={isLoading}
+              className={`rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                isLoading ? "opacity-30" : ""
+              }`}>
               <Send size={16} className={isLoading ? "animate-spin" : ""} />
             </button>
           </div>

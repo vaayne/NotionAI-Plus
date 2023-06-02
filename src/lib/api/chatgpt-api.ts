@@ -36,6 +36,7 @@ async function chat(
 
   await parseSSEResponse(resp, (message) => {
     if (message === "[DONE]") {
+      port.postMessage("[DONE]")
       return
     }
     try {

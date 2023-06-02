@@ -3,54 +3,34 @@ import { v4 as uuidv4 } from "uuid"
 import { storage } from "~lib/storage"
 import { parseSSEResponse } from "~lib/utils/sse"
 
-const CHATGPT_MODEL = "text-davinci-002-render-sha"
+const CHATGPT_MODEL = "text-davinci-002-render-sha-mobile"
 const CHATGPT_HOST = "https://chat.openai.com"
 
 const CACHE_KEY_TOKEN = "chatgpt-token"
 const CACHE_KEY_CONVERSATION_ID = "chatgpt-conversation-id"
 
-async function getAccessToken(): Promise<string> {
-  const cacheToken = await storage.get(CACHE_KEY_TOKEN)
-  if (cacheToken) {
-    return cacheToken as string
-  }
-
+async function getAccessToken() {
   const resp = await fetch(`${CHATGPT_HOST}/api/auth/session`)
-  if (resp.status === 401 || resp.status === 403) {
-    throw new Error(
-      "401 UNAUTHORIZED, Please login to https://chat.openai.com/"
-    )
+  if (resp.ok) {
+    const data = await resp.json()
+    if (data.accessToken) {
+      await storage.set(CACHE_KEY_TOKEN, data.accessToken)
+      return
+    }
   }
-  if (!resp.ok) {
-    throw new Error(`ChatGPT return error, status: ${resp.status}`)
-  }
-
-  const data = await resp.json()
-  if (!data.accessToken) {
-    throw new Error("401 UNAUTHORIZED")
-  }
-  await storage.set(CACHE_KEY_TOKEN, data.accessToken)
-  return data.accessToken
+  throw new Error(`${resp.status}, Please login to https://chat.openai.com/`)
 }
 
 async function ChatGPTWebChat(prompt: string, port: chrome.runtime.Port) {
-  let message = ""
-  for (let i = 0; i < 3; i++) {
-    try {
-      await chat(prompt, port)
-      return
-    } catch (err) {
-      await storage.remove(CACHE_KEY_TOKEN)
-      console.error(err)
-      message = err.message
-    }
+  try {
+    return await chat(prompt, port)
+  } catch (err) {
+    console.error(err)
+    port.postMessage(err.message)
   }
-  port.postMessage(message)
 }
 
 async function chat(prompt: string, port: chrome.runtime.Port) {
-  const accessToken = await getAccessToken()
-
   const cacheConversationId = await storage.get(CACHE_KEY_CONVERSATION_ID)
   if (!cacheConversationId) {
     await storage.set(CACHE_KEY_CONVERSATION_ID, uuidv4())
@@ -70,19 +50,30 @@ async function chat(prompt: string, port: chrome.runtime.Port) {
     model: CHATGPT_MODEL
   }
   const url = `${CHATGPT_HOST}/backend-api/conversation`
-  const resp = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify(data)
-  })
 
-  if (!resp.ok) {
-    const errMsg = `ChatGPT return error, status: ${resp.status}`
-    console.error(errMsg)
-    throw new Error(errMsg)
+  const sendRequest = async (): Promise<Response> => {
+    const accessToken = await storage.get(CACHE_KEY_TOKEN)
+    return await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(data)
+    })
+  }
+
+  let resp = await sendRequest()
+
+  if (resp.status === 401 || resp.status === 403) {
+    try {
+      await getAccessToken()
+      resp = await sendRequest()
+    } catch (err) {
+      console.error(err)
+      port.postMessage(err.message)
+      return
+    }
   }
 
   let conversationId: string = ""
@@ -91,6 +82,7 @@ async function chat(prompt: string, port: chrome.runtime.Port) {
     if (message === "[DONE]") {
       // console.debug("chatgpt sse message done, start remove conversation")
       removeConversation(conversationId)
+      port.postMessage("[DONE]")
       return
     }
     try {
@@ -110,7 +102,7 @@ async function chat(prompt: string, port: chrome.runtime.Port) {
 }
 
 async function removeConversation(id: string) {
-  const accessToken = await getAccessToken()
+  const accessToken = await storage.get(CACHE_KEY_TOKEN)
   try {
     await fetch(`${CHATGPT_HOST}/backend-api/conversation/${id}`, {
       method: "PATCH",

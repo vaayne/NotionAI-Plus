@@ -75,5 +75,7 @@ export async function BardChat(prompt: string, port: chrome.runtime.Port) {
     port.postMessage(
       "Sorry, Bard Chat is not available at the moment. error: " + err.message
     )
+  } finally {
+    port.postMessage("[DONE]")
   }
 }

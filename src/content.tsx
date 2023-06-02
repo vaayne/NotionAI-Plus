@@ -72,7 +72,11 @@ const Index = () => {
   }
 
   streamPort.onMessage.addListener(function (msg) {
-    setResponseMessage(msg)
+    if (msg === "[DONE]") {
+      setIsLoading(false)
+    } else {
+      setResponseMessage(msg)
+    }
   })
 
   // init on page load
@@ -130,7 +134,11 @@ const Index = () => {
       handleToast("Please input context")
       return
     }
-    // setIsLoading(true)
+    if (isLoading) {
+      handleToast("AI is processing, please wait")
+      return
+    }
+    setIsLoading(true)
 
     let lprompt: string = ""
     let language: string = ""
@@ -165,6 +173,9 @@ const Index = () => {
     }
 
     streamPort.postMessage(body)
+    // // wait 3 seconds
+    // await new Promise((resolve) => setTimeout(resolve, 5000))
+    // setIsLoading(false)
   }
 
   const handleCopy = async () => {

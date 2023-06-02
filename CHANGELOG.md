@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.0.22 - 2023-06-02
+### Fixed
+- Resolved authentication issue on ChatGPT Web
+- Added animation to send button for better user experience
+- Revised ChatGPT Mobile model to text-davinci-002-render-sha-mobile, improving speed and overall performance.
+
 ## v0.0.21 - 2023-06-01
 ### Fixed
 - Fix NotionAI not working issue

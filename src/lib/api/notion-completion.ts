@@ -112,6 +112,8 @@ async function NotionCompletion(
     } catch (err) {
       console.error(err)
       message = err.message
+    } finally {
+      port.postMessage("[DONE]")
     }
   }
   port.postMessage(message)
