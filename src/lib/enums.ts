@@ -3,25 +3,34 @@ export enum ConstEnum {
   NOTION_SPACE_ID = "notion-space-id",
   NOTION_SPACES = "notion-spaces",
   CHATGPT_API_KEY = "chatgpt-api-key",
-  NOTIONBOY_API_KEY = "notionboy-api-key"
+  CHATGPT_API_HOST = "chatgpt-api-host",
+  CHATGPT_API_MODEL = "chatgpt-api-model"
 }
 
 export enum EngineEnum {
   NotionAI = "notionAI",
   ChatGPTWeb = "chatGPTWeb",
   ChatGPTAPI = "chatGPTAPI",
-  NotionBoy = "notionBoy",
   Bard = "bard",
   Bing = "bing"
 }
 
 export const EngineOptions: PromptType[] = [
   { label: "🤖 NotionAI", value: EngineEnum.NotionAI },
-  { label: "💬 ChatGPTWeb", value: EngineEnum.ChatGPTWeb },
-  { label: "💬 ChatGPTAPI", value: EngineEnum.ChatGPTAPI },
-  { label: "🤖 NotionBoy", value: EngineEnum.NotionBoy },
+  { label: "💬 ChatGPT Web", value: EngineEnum.ChatGPTWeb },
+  { label: "💬 OpenAI API", value: EngineEnum.ChatGPTAPI },
   { label: "🎤 Bard", value: EngineEnum.Bard },
   { label: "🔎 Bing", value: EngineEnum.Bing }
+]
+
+export enum OpenAIModelEnum {
+  gpt35turbo = "gpt-3.5-turbo",
+  gpt4 = "gpt-4",
+}
+
+export const OpenAIModelOptions: PromptType[] = [
+  { label: "🤖 GPT-3.5 Turbo", value: OpenAIModelEnum.gpt35turbo },
+  { label: "🤖 GPT-4", value: OpenAIModelEnum.gpt4 },
 ]
 
 export enum ProcessTypeEnum {
