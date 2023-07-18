@@ -51,8 +51,8 @@ const Index = () => {
     key: ConstEnum.CHATGPT_API_KEY,
     instance: storage
   })
-  const [notionBoyAPIKey] = useStorage<string>({
-    key: ConstEnum.NOTIONBOY_API_KEY,
+  const [chatGPTAPIHost] = useStorage<string>({
+    key: ConstEnum.CHATGPT_API_HOST,
     instance: storage
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -169,7 +169,7 @@ const Index = () => {
       tone: tone,
       notionSpaceId: notionSpaceId,
       chatGPTAPIKey: chatGPTAPIKey,
-      notionBoyAPIKey: notionBoyAPIKey
+      chatGPTAPIHost: chatGPTAPIHost
     }
 
     streamPort.postMessage(body)
