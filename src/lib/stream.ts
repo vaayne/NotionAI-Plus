@@ -10,8 +10,6 @@ import {
   buildChatGPTinstruction
 } from "~lib/utils/prompt"
 
-const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
-const NOTIONBOY_API_URL = "https://notionboy.theboys.tech/v1/chat/completions"
 
 export default async function handleStream(
   body: RequestBody,
@@ -29,7 +27,7 @@ export default async function handleStream(
       break
     case EngineEnum.ChatGPTAPI:
       await ChatGPTApiChat(
-        OPENAI_API_URL,
+        body.chatGPTAPIHost,
         instruction,
         prompt,
         body.chatGPTAPIKey,
@@ -38,15 +36,6 @@ export default async function handleStream(
       break
     case EngineEnum.Bard:
       await BardChat(`${instruction}\n\n${prompt}`, port)
-      break
-    case EngineEnum.NotionBoy:
-      await ChatGPTApiChat(
-        NOTIONBOY_API_URL,
-        instruction,
-        prompt,
-        body.notionBoyAPIKey,
-        port
-      )
       break
     case EngineEnum.NotionAI:
       await NotionCompletion(

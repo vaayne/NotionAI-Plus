@@ -23,8 +23,8 @@ export type RequestBody = {
   language: string
   tone: string
   notionSpaceId: string
+  chatGPTAPIHost: string
   chatGPTAPIKey: string
-  notionBoyAPIKey: string
 }
 
 function buildChatGPTPrompt(body: RequestBody): string {

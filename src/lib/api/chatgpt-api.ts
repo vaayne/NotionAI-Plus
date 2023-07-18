@@ -58,7 +58,7 @@ async function chat(
 }
 
 async function ChatGPTApiChat(
-  url: string,
+  host: string,
   instraction: string,
   prompt: string,
   api_key: string,
@@ -73,6 +73,7 @@ async function ChatGPTApiChat(
   let message = ""
   for (let i = 0; i < 3; i++) {
     try {
+      const url = `${host}/v1/chat/completions`
       await chat(url, instraction, prompt, api_key, port)
       return
     } catch (err) {

@@ -1,11 +1,8 @@
 import "~style.css"
 
-import { f } from "ofetch/dist/error-04138797"
-
 import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { MarkdownComponent } from "~components/makrdown"
 import type { NotionSpace } from "~lib/api/notion-space"
 import {
   ConstEnum,
@@ -177,7 +174,6 @@ function OptionsPage() {
               ))}
             </select>
           </div>
-
 
           {defaultEngine === EngineEnum.NotionAI && notionAISettings()}
           {defaultEngine === EngineEnum.ChatGPTAPI && openaiAPISettings()}
