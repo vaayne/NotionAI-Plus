@@ -10,6 +10,7 @@ import {
   buildChatGPTinstruction
 } from "~lib/utils/prompt"
 
+import { ClaudeChat } from "./api/claude"
 
 export default async function handleStream(
   body: RequestBody,
@@ -24,6 +25,9 @@ export default async function handleStream(
       break
     case EngineEnum.Bing:
       await BingChat(`${instruction}\n\n${prompt}`, port)
+      break
+    case EngineEnum.Claude:
+      await ClaudeChat(`${instruction}\n\n${prompt}`, port)
       break
     case EngineEnum.ChatGPTAPI:
       await ChatGPTApiChat(

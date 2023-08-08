@@ -12,7 +12,8 @@ export enum EngineEnum {
   ChatGPTWeb = "chatGPTWeb",
   ChatGPTAPI = "chatGPTAPI",
   Bard = "bard",
-  Bing = "bing"
+  Bing = "bing",
+  Claude = "claude"
 }
 
 export const EngineOptions: PromptType[] = [
@@ -20,17 +21,18 @@ export const EngineOptions: PromptType[] = [
   { label: "💬 ChatGPT Web", value: EngineEnum.ChatGPTWeb },
   { label: "💬 OpenAI API", value: EngineEnum.ChatGPTAPI },
   { label: "🎤 Bard", value: EngineEnum.Bard },
-  { label: "🔎 Bing", value: EngineEnum.Bing }
+  { label: "🔎 Bing", value: EngineEnum.Bing },
+  { label: "🤖 Claude", value: EngineEnum.Claude }
 ]
 
 export enum OpenAIModelEnum {
   gpt35turbo = "gpt-3.5-turbo",
-  gpt4 = "gpt-4",
+  gpt4 = "gpt-4"
 }
 
 export const OpenAIModelOptions: PromptType[] = [
   { label: "🤖 GPT-3.5 Turbo", value: OpenAIModelEnum.gpt35turbo },
-  { label: "🤖 GPT-4", value: OpenAIModelEnum.gpt4 },
+  { label: "🤖 GPT-4", value: OpenAIModelEnum.gpt4 }
 ]
 
 export enum ProcessTypeEnum {
