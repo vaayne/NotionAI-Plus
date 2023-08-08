@@ -32,6 +32,7 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
     - [ChatGPT Web](https://chat.openai.com/)
     - [New Bing](https://www.bing.com/new)
     - [Brad](https://bard.google.com/)
+    - [Claude](https://claude.ai/)
   - **Paid**:
     - [NotionAI](https://www.notion.so/product/ai)
     - [ChatGPT API](https://platform.openai.com/docs/api-reference/chat/create)
@@ -45,15 +46,6 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
 2. Open the `options page` and set your `Notion space ID`
 3. Open any webpage and use the shortcut `alt+k` to activate the extension
 4. If you select some text and then use the shortcut `alt+k` to activate the extension, it will automatically fill the text in the input box.
-
-## TODO
-
-- [ ] Support for using custom prompts with shortcut and loading other prompts
-- [ ] Support for saving results to Notion
-- [ ] Support for summarizing articles on a page
-- [ ] Support for summarizing videos on Youtube and Bilibili
-- [ ] Support for setting default output language on the options page
-- [ ] Improved UI design
 
 ## Contributing
 
