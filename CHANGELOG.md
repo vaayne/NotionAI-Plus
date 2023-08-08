@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.24 - 2023-08-08
+### Added
+- Support Claude as backend engine
+
+## v0.0.23 - 2023-07-18
+### Added
+- support set openai proxy host
+
 ## v0.0.22 - 2023-06-02
 ### Fixed
 - Resolved authentication issue on ChatGPT Web
