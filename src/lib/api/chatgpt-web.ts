@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import { storage } from "~lib/storage"
 import { parseSSEResponse } from "~lib/utils/sse"
 
-const CHATGPT_MODEL = "text-davinci-002-render-sha-mobile"
+const CHATGPT_MODEL = "text-davinci-002-render-sha"
 const CHATGPT_HOST = "https://chat.openai.com"
 
 const CACHE_KEY_TOKEN = "chatgpt-token"
@@ -38,17 +38,28 @@ async function chat(prompt: string, port: chrome.runtime.Port) {
 
   const data = {
     action: "next",
-    conversation_id: undefined,
     messages: [
       {
-        author: { role: "user" },
         id: uuidv4(),
-        content: { content_type: "text", parts: [prompt] }
+        author: { role: "user" },
+        content: { content_type: "text", parts: [prompt] },
+        metadata: {}
       }
     ],
+    conversation_id: null,
     parent_message_id: cacheConversationId,
-    model: CHATGPT_MODEL
+    model: CHATGPT_MODEL,
+    timezone_offset_min: -480,
+    suggestions: [],
+    history_and_training_disabled: false,
+    arkose_token: null,
+    conversation_mode: {
+      kind: "primary_assistant"
+    },
+    force_paragen: false,
+    force_rate_limit: false
   }
+
   const url = `${CHATGPT_HOST}/backend-api/conversation`
 
   const sendRequest = async (): Promise<Response> => {
