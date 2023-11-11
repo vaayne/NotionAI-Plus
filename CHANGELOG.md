@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.25 - 2023-11-11
+### Fixed
+- Fix chatgpt web, claude web and google bard engine
+
 ## v0.0.24 - 2023-08-08
 ### Added
 - Support Claude as backend engine
