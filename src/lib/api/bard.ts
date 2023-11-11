@@ -14,13 +14,14 @@ export async function fetchRequestParams() {
 }
 
 export function parseBartResponse(resp: string) {
+  console.log(resp)
   const data = JSON.parse(resp.split("\n")[3])
   const payload = JSON.parse(data[0][2])
   if (!payload) {
     throw new Error("Failed to access Bard: Empty response")
   }
   console.debug("bard response payload", payload)
-  let text = payload[0][0] as string
+  let text = payload[4][0][1][0] as string
 
   const images = payload[4][0][4] || []
   for (const image of images) {
