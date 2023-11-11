@@ -16,7 +16,7 @@
     "@plasmohq/storage": "^1.0.5",
     "@tailwindcss/forms": "^0.5.3",
     "cache-manager": "^5.1.7",
-    "claude-ai": "^1.2.1",
+    "claude-ai": "^1.2.2",
     "daisyui": "^2.51.0",
     "eventsource-parser": "^1.0.0",
     "lodash-es": "^4.17.21",
