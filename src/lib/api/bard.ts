@@ -14,7 +14,6 @@ export async function fetchRequestParams() {
 }
 
 export function parseBartResponse(resp: string) {
-  console.log(resp)
   const data = JSON.parse(resp.split("\n")[3])
   const payload = JSON.parse(data[0][2])
   if (!payload) {

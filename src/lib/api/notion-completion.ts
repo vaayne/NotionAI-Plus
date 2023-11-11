@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import { PromptTypeEnum } from "~lib/enums"
 import { processNdjsonResp } from "~lib/utils/ndjson"
 
-const MODEL = "openai-3"
+const MODEL = "openai-4"
 const HOST = "https://www.notion.so"
 
 async function complation(
