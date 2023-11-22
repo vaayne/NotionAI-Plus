@@ -4,9 +4,16 @@ import {
   ChevronUpDownIcon,
   ChevronUpIcon
 } from "@heroicons/react/20/solid"
+import { useAtom } from "jotai"
 import { Github, Maximize, Minus, Move, Send, Twitter } from "lucide-react"
-import { useContext, useEffect, useRef, useState } from "react"
-
+import { useContext, useEffect, useState } from "react"
+import {
+  contextAtom,
+  engineAtom,
+  isFullModeAtom,
+  isLoadingAtom,
+  selectedPromptAtom
+} from "~/lib/state"
 import { InputContext } from "~lib/context"
 import {
   EngineOptions,
@@ -46,19 +53,14 @@ function classNames(...classes) {
 
 export default function ComboxComponent() {
   const {
-    engine,
-    setEngine,
-    isFullMode,
-    setIsFullMode,
-    selectedPrompt,
-    setSelectedPrompt,
-    context,
-    setContext,
-    prompt,
-    setPrompt,
     handleMessage,
-    isLoading
   } = useContext(InputContext)
+
+  const [engine, setEngine] = useAtom(engineAtom)
+  const [isFullMode, setIsFullMode] = useAtom(isFullModeAtom)
+  const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
+  const [context, setContext] = useAtom(contextAtom)
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
 
   const [query, setQuery] = useState("")
 
@@ -66,8 +68,8 @@ export default function ComboxComponent() {
     query === ""
       ? Options
       : Options.filter((option) => {
-          return option.label.toLowerCase().includes(query.toLowerCase())
-        })
+        return option.label.toLowerCase().includes(query.toLowerCase())
+      })
 
   const header = () => {
     return (
@@ -112,9 +114,8 @@ export default function ComboxComponent() {
               <Disclosure.Button className="flex justify-between w-1/2 px-4 py-1 text-sm font-medium text-left text-purple-900 bg-indigo-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
                 <span>context</span>
                 <ChevronUpIcon
-                  className={`${
-                    open ? "rotate-180 transform" : ""
-                  } h-5 w-5 text-purple-500`}
+                  className={`${open ? "rotate-180 transform" : ""
+                    } h-5 w-5 text-purple-500`}
                 />
               </Disclosure.Button>
 
@@ -190,9 +191,8 @@ export default function ComboxComponent() {
               type="button"
               onClick={handleMessage}
               disabled={isLoading}
-              className={`rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                isLoading ? "opacity-30" : ""
-              }`}>
+              className={`rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${isLoading ? "opacity-30" : ""
+                }`}>
               <Send size={16} className={isLoading ? "animate-spin" : ""} />
             </button>
           </div>

@@ -2,8 +2,8 @@ export enum ConstEnum {
   DEFAULT_ENGINE = "default-engine",
   NOTION_SPACE_ID = "notion-space-id",
   NOTION_SPACES = "notion-spaces",
-  CHATGPT_API_KEY = "chatgpt-api-key",
-  CHATGPT_API_HOST = "chatgpt-api-host",
+  OPENAI_API_KEY = "chatgpt-api-key",
+  OPENAI_API_HOST = "openai-api-host",
   CHATGPT_API_MODEL = "chatgpt-api-model"
 }
 

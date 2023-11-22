@@ -24,11 +24,11 @@ function OptionsPage() {
   })
 
   const [ChatGPTAPIKey, setChatGPTAPIKey] = useStorage<string>({
-    key: ConstEnum.CHATGPT_API_KEY,
+    key: ConstEnum.OPENAI_API_KEY,
     instance: storage
   })
-  const [ChatGPTAPIHost, setChatGPTAPIHost] = useStorage<string>({
-    key: ConstEnum.CHATGPT_API_HOST,
+  const [OpenAIHost, setOpenAIHost] = useStorage<string>({
+    key: ConstEnum.OPENAI_API_HOST,
     instance: storage
   })
 
@@ -103,7 +103,8 @@ function OptionsPage() {
             id="openai-key"
             className="block w-full p-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             defaultValue={"https://api.openai.com"}
-            onChange={(e) => setChatGPTAPIHost(e.target.value)}
+            value={OpenAIHost}
+            onChange={(e) => setOpenAIHost(e.target.value)}
           />
         </div>
         <div className="flex flex-col space-y-1 ">

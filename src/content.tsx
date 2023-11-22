@@ -1,20 +1,35 @@
 import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig } from "plasmo"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Draggable from "react-draggable"
 
 import { useMessage } from "@plasmohq/messaging/hook"
-import { useStorage } from "@plasmohq/storage/hook"
 
+import { useAtom, useAtomValue } from "jotai"
+import {
+  contextAtom,
+  engineAtom,
+  isFullModeAtom,
+  isLoadingAtom,
+  isShowElementAtom,
+  isShowToastAtom,
+  notificationAtom,
+  notionSpaceIdAtom,
+  openAIAPIHostAtom,
+  openAIAPIKeyAtom,
+  processTypeAtom,
+  promptAtom,
+  responseMessageAtom,
+  selectedElementAtom,
+  selectedPromptAtom
+} from "~/lib/state"
 import ComboxComponent from "~components/combobox"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
 import DividerComponent from "~components/toolbar"
-import { InputContext, OutputContext, ToolbarContext } from "~lib/context"
+import { InputContext, ToolbarContext } from "~lib/context"
 import {
   ConstEnum,
-  ProcessTypeEnum,
-  PromptType,
   PromptTypeEnum,
   newPromptType
 } from "~lib/enums"
@@ -32,35 +47,22 @@ export const getStyle = () => {
   return style
 }
 
-const getDefaultEngine = async () => {
-  return await storage.get(ConstEnum.DEFAULT_ENGINE)
-}
-
 const Index = () => {
-  const [engine, setEngine] = useState<string>()
-  const [processType, setProcessType] = useState<string>(ProcessTypeEnum.Text)
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptType>()
-  const [context, setContext] = useState<string>("")
-  const [prompt, setPrompt] = useState<string>("")
-  const [responseMessage, setResponseMessage] = useState<string>("")
-  const [notionSpaceId] = useStorage<string>({
-    key: ConstEnum.NOTION_SPACE_ID,
-    instance: storage
-  })
-  const [chatGPTAPIKey] = useStorage<string>({
-    key: ConstEnum.CHATGPT_API_KEY,
-    instance: storage
-  })
-  const [chatGPTAPIHost] = useStorage<string>({
-    key: ConstEnum.CHATGPT_API_HOST,
-    instance: storage
-  })
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isShowElement, setIsShowElement] = useState(false)
-  const [notification, setNotification] = useState<string>("")
-  const [isFullMode, setIsFullMode] = useState<boolean>(false)
-  const [selectedElement, setSelectedElement] = useState<HTMLElement>()
-  const [isShowToast, setIsShowToast] = useState<boolean>(false)
+  const [notionSpaceId, setNotionSpaceId] = useAtom(notionSpaceIdAtom)
+  const [openAIAPIKey, setOpenAIAPIKey] = useAtom(openAIAPIKeyAtom)
+  const [openAIAPIHost, setOpenAIAPIHost] = useAtom(openAIAPIHostAtom)
+  const [engine, setEngine] = useAtom(engineAtom)
+  const [processType, setProcessType] = useAtom(processTypeAtom)
+  const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
+  const [context, setContext] = useAtom(contextAtom)
+  const [prompt, setPrompt] = useAtom(promptAtom)
+  const [responseMessage, setResponseMessage] = useAtom(responseMessageAtom)
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
+  const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
+  const [notification, setNotification] = useAtom(notificationAtom)
+  const isFullMode = useAtomValue(isFullModeAtom)
+  const [selectedElement, setSelectedElement] = useAtom(selectedElementAtom)
+  const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
 
   const streamPort = chrome.runtime.connect({ name: "stream" })
 
@@ -82,9 +84,10 @@ const Index = () => {
   // init on page load
   useEffect(() => {
     // set default engine
-    getDefaultEngine().then((engine) => {
-      setEngine(engine)
-    })
+    storage.get(ConstEnum.DEFAULT_ENGINE).then(val => setEngine(val))
+    storage.get(ConstEnum.NOTION_SPACE_ID).then(val => setNotionSpaceId(val))
+    storage.get(ConstEnum.OPENAI_API_KEY).then(val => setOpenAIAPIKey(val))
+    storage.get(ConstEnum.OPENAI_API_HOST).then(val => setOpenAIAPIHost(val))
 
     document.addEventListener("keydown", handleEscape)
     return () => {
@@ -168,8 +171,8 @@ const Index = () => {
       language: language,
       tone: tone,
       notionSpaceId: notionSpaceId,
-      chatGPTAPIKey: chatGPTAPIKey,
-      chatGPTAPIHost: chatGPTAPIHost
+      chatGPTAPIKey: openAIAPIKey,
+      chatGPTAPIHost: openAIAPIHost
     }
 
     streamPort.postMessage(body)
@@ -211,25 +214,13 @@ const Index = () => {
         <Draggable handle="#dragable">
           <div
             id="notionai-plus"
-            className={`fixed  ${
-              isFullMode
-                ? " h-5/6 w-11/12 top-10 left-10"
-                : "top-1/3 right-10 w-1/3 h-1/2"
-            } overflow-hidden rounded-lg flex flex-col bg-slate-200 dark:bg-slate-700`}>
+            className={`fixed  ${isFullMode
+              ? " h-5/6 w-11/12 top-10 left-10"
+              : "top-1/3 right-10 w-1/3 h-1/2"
+              } overflow-hidden rounded-lg flex flex-col bg-slate-200 dark:bg-slate-700`}>
             <InputContext.Provider
               value={{
-                engine,
-                setEngine,
-                isFullMode,
-                setIsFullMode,
-                selectedPrompt,
-                setSelectedPrompt,
-                context,
-                setContext,
-                prompt,
-                setPrompt,
                 handleMessage,
-                isLoading
               }}>
               <ComboxComponent />
             </InputContext.Provider>
@@ -244,13 +235,9 @@ const Index = () => {
               {responseMessage && <DividerComponent />}
             </ToolbarContext.Provider>
 
-            <OutputContext.Provider
-              value={{
-                isFullMode,
-                responseMessage
-              }}>
               {responseMessage && <OutputComponent />}
-            </OutputContext.Provider>
+              {responseMessage && <OutputComponent />}
+            {responseMessage && <OutputComponent />}
           </div>
         </Draggable>
         <NotificationComponent

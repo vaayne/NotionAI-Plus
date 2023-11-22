@@ -1,11 +1,11 @@
-import { useContext } from "react"
 
-import { OutputContext } from "~lib/context"
-
+import { useAtomValue } from "jotai"
+import { responseMessageAtom } from "~lib/state"
 import { MarkdownComponent } from "./makrdown"
 
 export function OutputComponent() {
-  const { responseMessage } = useContext(OutputContext)
+
+  const responseMessage = useAtomValue(responseMessageAtom)
 
   if (responseMessage) {
     return (
