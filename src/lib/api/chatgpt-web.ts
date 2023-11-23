@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 
-import { storage } from "~lib/storage"
+import { storage } from "~lib/state"
 import { parseSSEResponse } from "~lib/utils/sse"
 
 const CHATGPT_MODEL = "text-davinci-002-render-sha"

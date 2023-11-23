@@ -4,7 +4,7 @@ export enum ConstEnum {
   NOTION_SPACES = "notion-spaces",
   OPENAI_API_KEY = "chatgpt-api-key",
   OPENAI_API_HOST = "openai-api-host",
-  CHATGPT_API_MODEL = "chatgpt-api-model"
+  OPENAI_API_MODEL = "chatgpt-api-model"
 }
 
 export enum EngineEnum {

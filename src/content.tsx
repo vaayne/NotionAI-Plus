@@ -29,12 +29,10 @@ import { OutputComponent } from "~components/output"
 import DividerComponent from "~components/toolbar"
 import { InputContext, ToolbarContext } from "~lib/context"
 import {
-  ConstEnum,
   PromptTypeEnum,
   newPromptType
 } from "~lib/enums"
 import type { MessageBody } from "~lib/model"
-import { storage } from "~lib/storage"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
@@ -48,10 +46,10 @@ export const getStyle = () => {
 }
 
 const Index = () => {
-  const [notionSpaceId, setNotionSpaceId] = useAtom(notionSpaceIdAtom)
-  const [openAIAPIKey, setOpenAIAPIKey] = useAtom(openAIAPIKeyAtom)
-  const [openAIAPIHost, setOpenAIAPIHost] = useAtom(openAIAPIHostAtom)
-  const [engine, setEngine] = useAtom(engineAtom)
+  const notionSpaceId = useAtomValue(notionSpaceIdAtom)
+  const openAIAPIKey = useAtomValue(openAIAPIKeyAtom)
+  const openAIAPIHost = useAtomValue(openAIAPIHostAtom)
+  const engine = useAtomValue(engineAtom)
   const [processType, setProcessType] = useAtom(processTypeAtom)
   const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
   const [context, setContext] = useAtom(contextAtom)
@@ -83,12 +81,6 @@ const Index = () => {
 
   // init on page load
   useEffect(() => {
-    // set default engine
-    storage.get(ConstEnum.DEFAULT_ENGINE).then(val => setEngine(val))
-    storage.get(ConstEnum.NOTION_SPACE_ID).then(val => setNotionSpaceId(val))
-    storage.get(ConstEnum.OPENAI_API_KEY).then(val => setOpenAIAPIKey(val))
-    storage.get(ConstEnum.OPENAI_API_HOST).then(val => setOpenAIAPIHost(val))
-
     document.addEventListener("keydown", handleEscape)
     return () => {
       document.removeEventListener("keydown", handleEscape)
@@ -174,6 +166,7 @@ const Index = () => {
       chatGPTAPIKey: openAIAPIKey,
       chatGPTAPIHost: openAIAPIHost
     }
+    console.log(body)
 
     streamPort.postMessage(body)
     // // wait 3 seconds
@@ -234,9 +227,6 @@ const Index = () => {
               }}>
               {responseMessage && <DividerComponent />}
             </ToolbarContext.Provider>
-
-              {responseMessage && <OutputComponent />}
-              {responseMessage && <OutputComponent />}
             {responseMessage && <OutputComponent />}
           </div>
         </Draggable>
