@@ -8,17 +8,11 @@ import { useMessage } from "@plasmohq/messaging/hook"
 import { useAtom, useAtomValue } from "jotai"
 import {
   contextAtom,
-  engineAtom,
   isFullModeAtom,
   isLoadingAtom,
   isShowElementAtom,
   isShowToastAtom,
   notificationAtom,
-  notionSpaceIdAtom,
-  openAIAPIHostAtom,
-  openAIAPIKeyAtom,
-  processTypeAtom,
-  promptAtom,
   responseMessageAtom,
   selectedElementAtom,
   selectedPromptAtom
@@ -27,9 +21,8 @@ import ComboxComponent from "~components/combobox"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
 import DividerComponent from "~components/toolbar"
-import { InputContext, ToolbarContext } from "~lib/context"
+import { ToolbarContext } from "~lib/context"
 import {
-  PromptTypeEnum,
   newPromptType
 } from "~lib/enums"
 import type { MessageBody } from "~lib/model"
@@ -46,14 +39,8 @@ export const getStyle = () => {
 }
 
 const Index = () => {
-  const notionSpaceId = useAtomValue(notionSpaceIdAtom)
-  const openAIAPIKey = useAtomValue(openAIAPIKeyAtom)
-  const openAIAPIHost = useAtomValue(openAIAPIHostAtom)
-  const engine = useAtomValue(engineAtom)
-  const [processType, setProcessType] = useAtom(processTypeAtom)
   const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
   const [context, setContext] = useAtom(contextAtom)
-  const [prompt, setPrompt] = useAtom(promptAtom)
   const [responseMessage, setResponseMessage] = useAtom(responseMessageAtom)
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
   const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
@@ -120,60 +107,6 @@ const Index = () => {
     }
   }
 
-  const handleMessage = async () => {
-    if (!engine) {
-      handleToast("Please select an engine")
-      return
-    }
-    if (!context) {
-      handleToast("Please input context")
-      return
-    }
-    if (isLoading) {
-      handleToast("AI is processing, please wait")
-      return
-    }
-    setIsLoading(true)
-
-    let lprompt: string = ""
-    let language: string = ""
-    let tone: string = ""
-
-    const prompts = selectedPrompt.value.split("-")
-    let promptType = prompts[0]
-    if (promptType === PromptTypeEnum.Translate) {
-      language = prompts[1]
-    } else if (promptType === PromptTypeEnum.ChangeTone) {
-      tone = prompts[1]
-    } else if (promptType === PromptTypeEnum.TopicWriting) {
-      setPrompt(prompts[1])
-      lprompt = prompts[1]
-    } else if (promptType === PromptTypeEnum.AskAI) {
-      lprompt = PromptTypeEnum.AskAI
-    }
-
-    setResponseMessage("Waitting for AI response ...")
-
-    const body = {
-      engine: engine,
-      processType: processType,
-      builtinPrompt: promptType,
-      customPromot: lprompt,
-      context: context,
-      language: language,
-      tone: tone,
-      notionSpaceId: notionSpaceId,
-      chatGPTAPIKey: openAIAPIKey,
-      chatGPTAPIHost: openAIAPIHost
-    }
-    console.log(body)
-
-    streamPort.postMessage(body)
-    // // wait 3 seconds
-    // await new Promise((resolve) => setTimeout(resolve, 5000))
-    // setIsLoading(false)
-  }
-
   const handleCopy = async () => {
     await navigator.clipboard.writeText(responseMessage)
     handleToast("Copied to clipboard")
@@ -211,12 +144,7 @@ const Index = () => {
               ? " h-5/6 w-11/12 top-10 left-10"
               : "top-1/3 right-10 w-1/3 h-1/2"
               } overflow-hidden rounded-lg flex flex-col bg-slate-200 dark:bg-slate-700`}>
-            <InputContext.Provider
-              value={{
-                handleMessage,
-              }}>
-              <ComboxComponent />
-            </InputContext.Provider>
+            <ComboxComponent />
 
             <ToolbarContext.Provider
               value={{

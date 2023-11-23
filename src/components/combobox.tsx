@@ -4,17 +4,24 @@ import {
   ChevronUpDownIcon,
   ChevronUpIcon
 } from "@heroicons/react/20/solid"
-import { useAtom } from "jotai"
+import { useAtom, useAtomValue } from "jotai"
 import { Github, Maximize, Minus, Move, Send, Twitter } from "lucide-react"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import {
   contextAtom,
   engineAtom,
   isFullModeAtom,
   isLoadingAtom,
+  isShowToastAtom,
+  notificationAtom,
+  notionSpaceIdAtom,
+  openAIAPIHostAtom,
+  openAIAPIKeyAtom,
+  processTypeAtom,
+  promptAtom,
+  responseMessageAtom,
   selectedPromptAtom
 } from "~/lib/state"
-import { InputContext } from "~lib/context"
 import {
   EngineOptions,
   LanguageOptions,
@@ -52,17 +59,23 @@ function classNames(...classes) {
 }
 
 export default function ComboxComponent() {
-  const {
-    handleMessage,
-  } = useContext(InputContext)
-
+  const notionSpaceId = useAtomValue(notionSpaceIdAtom)
+  const openAIAPIKey = useAtomValue(openAIAPIKeyAtom)
+  const openAIAPIHost = useAtomValue(openAIAPIHostAtom)
   const [engine, setEngine] = useAtom(engineAtom)
   const [isFullMode, setIsFullMode] = useAtom(isFullModeAtom)
   const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
   const [context, setContext] = useAtom(contextAtom)
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
+  const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
+  const [notification, setNotification] = useAtom(notificationAtom)
+  const [prompt, setPrompt] = useAtom(promptAtom)
+  const [responseMessage, setResponseMessage] = useAtom(responseMessageAtom)
+  const [processType, setProcessType] = useAtom(processTypeAtom)
 
   const [query, setQuery] = useState("")
+
+  const streamPort = chrome.runtime.connect({ name: "stream" })
 
   const filteredOptions =
     query === ""
@@ -70,6 +83,69 @@ export default function ComboxComponent() {
       : Options.filter((option) => {
         return option.label.toLowerCase().includes(query.toLowerCase())
       })
+
+  const handleToast = (message: string) => {
+    setNotification(message)
+    setIsShowToast(true)
+  }
+
+
+
+  const handleMessage = async () => {
+    if (!engine) {
+      handleToast("Please select an engine")
+      return
+    }
+    if (!context) {
+      handleToast("Please input context")
+      return
+    }
+    if (isLoading) {
+      handleToast("AI is processing, please wait")
+      return
+    }
+    setIsLoading(true)
+
+    let lprompt: string = ""
+    let language: string = ""
+    let tone: string = ""
+
+    const prompts = selectedPrompt.value.split("-")
+    let promptType = prompts[0]
+    if (promptType === PromptTypeEnum.Translate) {
+      language = prompts[1]
+    } else if (promptType === PromptTypeEnum.ChangeTone) {
+      tone = prompts[1]
+    } else if (promptType === PromptTypeEnum.TopicWriting) {
+      setPrompt(prompts[1])
+      lprompt = prompts[1]
+    } else if (promptType === PromptTypeEnum.AskAI) {
+      lprompt = PromptTypeEnum.AskAI
+    }
+
+    setResponseMessage("Waitting for AI response ...")
+
+    const body = {
+      engine: engine,
+      processType: processType,
+      builtinPrompt: promptType,
+      customPromot: lprompt,
+      context: context,
+      language: language,
+      tone: tone,
+      notionSpaceId: notionSpaceId,
+      chatGPTAPIKey: openAIAPIKey,
+      chatGPTAPIHost: openAIAPIHost
+    }
+    console.log(body)
+
+    streamPort.postMessage(body)
+    // // wait 3 seconds
+    // await new Promise((resolve) => setTimeout(resolve, 5000))
+    // setIsLoading(false)
+  }
+
+
 
   const header = () => {
     return (
