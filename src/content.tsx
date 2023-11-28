@@ -2,32 +2,25 @@ import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
 import Draggable from "react-draggable"
-
-import { useMessage } from "@plasmohq/messaging/hook"
-
-import { useAtom, useAtomValue } from "jotai"
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai"
 import {
 	contextAtom,
-	isFullModeAtom,
 	isLoadingAtom,
 	isShowElementAtom,
 	isShowToastAtom,
 	notificationAtom,
 	responseMessageAtom,
 	selectedElementAtom,
-	selectedPromptAtom,
 } from "~/lib/state"
 import ComboxComponent from "~components/combobox"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
-import DividerComponent from "~components/toolbar"
-import { ToolbarContext } from "~lib/context"
-import { newPromptType } from "~lib/enums"
-import type { MessageBody } from "~lib/model"
+import ContextMenuComponent from "~components/context_menu"
+import { streamPort } from "~lib/port"
 
 export const config: PlasmoCSConfig = {
 	matches: ["<all_urls>"],
-	all_frames: true,
+	all_frames: false,
 }
 
 export const getStyle = () => {
@@ -36,23 +29,23 @@ export const getStyle = () => {
 	return style
 }
 
-const Index = () => {
-	const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
-	const [context, setContext] = useAtom(contextAtom)
-	const [responseMessage, setResponseMessage] = useAtom(responseMessageAtom)
-	const [isLoading, setIsLoading] = useAtom(isLoadingAtom)
-	const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
-	const [notification, setNotification] = useAtom(notificationAtom)
-	const isFullMode = useAtomValue(isFullModeAtom)
-	const [selectedElement, setSelectedElement] = useAtom(selectedElementAtom)
-	const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
+const positionAtom = atom<{ x: number; y: number } | null>(null)
 
-	const streamPort = chrome.runtime.connect({ name: "stream" })
+const Index = () => {
+	const setContext = useSetAtom(contextAtom)
+	const setResponseMessage = useSetAtom(responseMessageAtom)
+	const setIsLoading = useSetAtom(isLoadingAtom)
+	const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
+	const notification = useAtomValue(notificationAtom)
+	const setSelectedElement = useSetAtom(selectedElementAtom)
+	const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
+	const [iconPosition, setIconPosition] = useAtom(positionAtom)
 
 	// when press ESC will hidden the  window
 	const handleEscape = (event: any) => {
 		if (event.key === "Escape") {
 			setIsShowElement(false)
+			setIconPosition(null)
 		}
 	}
 
@@ -64,109 +57,71 @@ const Index = () => {
 		}
 	})
 
+	const handleMouseUp = () => {
+		const selection = window.getSelection()
+		if (selection && selection.rangeCount > 0) {
+			const rect = selection
+				.getRangeAt(0)
+				.cloneRange()
+				?.getBoundingClientRect()
+			if (rect?.width > 0 && rect?.height > 0) {
+				setIconPosition({
+					x: rect.right + 5,
+					y: rect.bottom + 5,
+				})
+				setSelectedElement(selection)
+				setContext(selection.toString())
+			} // setIconPosition(null)
+		}
+	}
+
 	// init on page load
 	useEffect(() => {
 		document.addEventListener("keydown", handleEscape)
+		document.addEventListener("mouseup", handleMouseUp)
 		return () => {
 			document.removeEventListener("keydown", handleEscape)
+			document.removeEventListener("mouseup", handleMouseUp)
 		}
 	}, [])
 
-	// show panel using shortcut
-	useMessage<string, string>(async (req, res) => {
-		if (req.name === "activate") {
-			// if not select text, then get context from Webpage
-			if (!isShowElement && window.getSelection().toString() !== "") {
-				const selection = window.getSelection().toString()
-				setContext(selection)
-			}
-			if (req.body) {
-				const msg = JSON.parse(req.body) as MessageBody
-				setContext(msg.text)
-				setSelectedPrompt(newPromptType(msg.prompt))
-			} else {
-				handlerSelectText()
-			}
-
-			setIsShowElement(true)
-		}
-	})
-
-	const handlerSelectText = () => {
-		if (
-			document.activeElement &&
-			(document.activeElement.isContentEditable ||
-				document.activeElement.nodeName.toUpperCase() === "TEXTAREA" ||
-				document.activeElement.nodeName.toUpperCase() === "INPUT")
-		) {
-			// console.log("select text from input")
-			// Set as original for later
-			setSelectedElement(document.activeElement as HTMLElement)
-		}
-	}
-
-	const handleCopy = async () => {
-		await navigator.clipboard.writeText(responseMessage)
-		handleToast("Copied to clipboard")
-	}
-
-	const handleToast = (message: string) => {
-		setNotification(message)
-		setIsShowToast(true)
-	}
-
-	const handleClear = () => {
-		setResponseMessage("")
-		handleToast("Cleared")
-	}
-
-	const handleInsertClick = () => {
-		if (selectedElement) {
-			selectedElement.value = `${selectedElement.value}\n\n${responseMessage}`
-		}
-	}
-
-	const handleReplaceClick = () => {
-		if (selectedElement) {
-			selectedElement.value = responseMessage
-		}
-	}
-
-	if (isShowElement) {
-		return (
-			<>
+	return (
+		<>
+			{isShowElement && (
 				<Draggable handle="#dragable">
 					<div
 						id="notionai-plus"
-						className={`fixed  ${
-							isFullMode
-								? " h-5/6 w-11/12 top-10 left-10"
-								: "top-1/3 right-10 w-1/3 h-1/2"
-						} overflow-hidden rounded-lg flex flex-col bg-slate-200 dark:bg-slate-700`}
+						className={`flex flex-col rounded-lg w-96 bg-slate-200 justify-between`}
+						style={{
+							position: "fixed",
+							top: iconPosition?.y || "33.33%",
+							left: iconPosition?.x || "33.33",
+						}}
 					>
 						<ComboxComponent />
-
-						<ToolbarContext.Provider
-							value={{
-								handleClear,
-								handleCopy,
-								handleInsertClick,
-								handleReplaceClick,
-							}}
-						>
-							{responseMessage && <DividerComponent />}
-						</ToolbarContext.Provider>
 						<OutputComponent />
 					</div>
 				</Draggable>
-				<NotificationComponent
-					isShow={isShowToast}
-					setIsShow={setIsShowToast}
-					title={notification}
-				/>
-			</>
-		)
-	}
+			)}
+			{iconPosition && !isShowElement && (
+				<div
+					className="fixed p-1 bg-gray-200 rounded-md top-16 w-72"
+					style={{
+						position: "fixed",
+						top: iconPosition.y,
+						left: iconPosition.x,
+					}}
+				>
+					<ContextMenuComponent />
+				</div>
+			)}
+			<NotificationComponent
+				isShow={isShowToast}
+				setIsShow={setIsShowToast}
+				title={notification}
+			/>
+		</>
+	)
 }
 
 export default Index

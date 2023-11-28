@@ -162,7 +162,7 @@ function Options() {
 							defaultValue={DEFAULT_OPENAI_API_URL}
 							value={openAIAPIHost}
 							onChange={e =>
-								saveToStorage(ConstEnum.OPENAI_API_HOST, e)
+								saveToStorage(ConstEnum.OPENAI_API_HOST, e.target.value)
 							}
 						/>
 					</TextField.Root>
@@ -174,10 +174,11 @@ function Options() {
 					<TextField.Root className="max-w-lg grow">
 						<TextField.Input
 							placeholder="Please enter the API key"
-							type="text"
+							type="password"
 							value={openAIAPIKey}
 							onChange={e =>
-								saveToStorage(ConstEnum.OPENAI_API_KEY, e)
+								{saveToStorage(ConstEnum.OPENAI_API_KEY, e.target.value)
+								}
 							}
 						/>
 					</TextField.Root>
@@ -190,7 +191,8 @@ function Options() {
 						value={openAIAPIModel}
 						defaultValue="gpt-3dot5-turbo"
 						onValueChange={e =>
-							saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
+							{saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
+							}
 						}
 					>
 						<Select.Trigger className="max-w-lg grow" />
@@ -224,15 +226,15 @@ function Options() {
 
 	const selectEngineComponent = () => {
 		return (
-			<div className="flex flex-col flex-grow p-4 m-4 align-top bg-background rounded-4">
+			<div className="flex flex-col flex-grow p-4 m-4 align-top rounded-lg bg-background-200">
 				<Heading as="h1" size="8" mx="2" my="4">
-					Settings
+					General
 				</Heading>
 				<Separator my="3" size="4" />
 				<Heading m="2" size="6">
 					Set Default Engine for NotionAI Plus
 				</Heading>
-				<div className="flex-grow p-6 my-4 bg-accent-3 rounded-4">
+				<div className="flex-grow p-6 my-4 rounded-lg bg-background-200">
 					<RadioGroup.Root
 						value={engine}
 						onValueChange={e => {
@@ -279,7 +281,7 @@ function Options() {
 
 	const contactUsComponet = () => {
 		return (
-			<div className="flex flex-col justify-start flex-grow gap-4 p-8 m-4 bg-background rounded-4">
+			<div className="flex flex-col justify-start flex-grow gap-4 p-8 m-4 rounded-lg bg-background-200">
 				<div className="flex gap-1">
 					<Github color="blue" />
 					<Text weight="bold">
@@ -342,8 +344,8 @@ function Options() {
 	return (
 		<Theme>
 			<div className="flex flex-row m-8 p-6 gap-6 justify-center min-w-[50vh] min-h-[75vh]">
-				<div className="bg-gray-3 rounded-4">
-					<div className="flex flex-col items-start justify-between gap-4 p-4 m-4 bg-background rounded-4">
+				<div className="rounded-lg bg-background-200">
+					<div className="flex flex-col items-start justify-between gap-4 p-4 m-4 rounded-lg bg-background-200">
 						<Heading as="h1" size="8" my="4" mx="2">
 							NotionAI Plus
 						</Heading>
@@ -351,7 +353,7 @@ function Options() {
 						{settingTitle(SETTING_CONTACT_US)}
 					</div>
 				</div>
-				<div className="flex flex-col justify-between flex-grow bg-gray-3 rounded-4">
+				<div className="flex flex-col justify-between flex-grow rounded-lg bg-gray-3">
 					{settingId == settingNameToId(SETTING_GENERAL) &&
 						selectEngineComponent()}
 					{settingId == settingNameToId(SETTING_CONTACT_US) &&

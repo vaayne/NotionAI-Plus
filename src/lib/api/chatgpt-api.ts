@@ -65,9 +65,11 @@ async function ChatGPTApiChat(
 	port: chrome.runtime.Port
 ) {
 	if (!api_key) {
-		port.postMessage(
+		const msg =
 			"Please set your OpenAI API key in the extension options page."
-		)
+		console.error(msg)
+		port.postMessage(msg)
+		port.postMessage("[DONE]")
 		return
 	}
 	let message = ""
@@ -82,6 +84,7 @@ async function ChatGPTApiChat(
 		}
 	}
 	port.postMessage(message)
+	port.postMessage("[DONE]")
 }
 
 export { ChatGPTApiChat }

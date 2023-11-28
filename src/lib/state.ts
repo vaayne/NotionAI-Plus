@@ -1,5 +1,5 @@
 import { atom } from "jotai"
-import { ConstEnum, EngineEnum, ProcessTypeEnum, PromptType } from "./enums"
+import { ConstEnum, ProcessTypeEnum } from "./enums"
 // import { storage } from "~lib/storage"
 
 import { Storage } from "@plasmohq/storage"
@@ -25,8 +25,8 @@ export const openAIAPIModelAtom = atom(openAIAPIModel())
 export const chatGPTModelAtom = atom(chatGPTModel())
 
 export const processTypeAtom = atom(ProcessTypeEnum.Text)
-export const selectedPromptAtom = atom<PromptType>(null)
-export const selectedElementAtom = atom<HTMLElement>(null)
+export const selectedPromptAtom = atom(null)
+export const selectedElementAtom = atom<Selection | null>(null)
 export const contextAtom = atom("")
 export const promptAtom = atom("")
 export const responseMessageAtom = atom("")
@@ -35,3 +35,4 @@ export const isFullModeAtom = atom(false)
 export const isShowToastAtom = atom(false)
 export const notificationAtom = atom("")
 export const isShowElementAtom = atom(false)
+export const queryTextAtom = atom("")

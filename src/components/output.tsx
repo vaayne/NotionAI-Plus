@@ -7,7 +7,7 @@ export function OutputComponent() {
 
 	if (responseMessage) {
 		return (
-			<div className="box-border px-4 mt-4 overflow-auto ">
+			<div className="p-2 mx-2 mt-0 mb-2 overflow-auto text-gray-800 bg-white rounded-lg max-h-64">
 				<MarkdownComponent text={responseMessage} />
 			</div>
 		)
