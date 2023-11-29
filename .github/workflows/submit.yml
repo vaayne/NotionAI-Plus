@@ -1,57 +1,57 @@
 name: "Submit to Web Store"
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - v*.*.*
+    workflow_dispatch:
+    push:
+        tags:
+            - v*.*.*
 
 permissions:
-  contents: write
-  discussions: write
+    contents: write
+    discussions: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-      - uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7.26.3
-          run_install: true
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3.4.1
-        with:
-          node-version: 18.x
-          cache: "pnpm"
-      - name: Build and Package the extension into a zip artifact
-        run: |
-          pnpm build --target=chrome-mv3 --zip
-          pnpm build --target=firefox-mv2 --zip
-          pnpm build --target=edge-mv3 --zip
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Cache pnpm modules
+              uses: actions/cache@v3
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-
+            - uses: pnpm/action-setup@v2.2.4
+              with:
+                  version: 7.26.3
+                  run_install: true
+            - name: Use Node.js 18.x
+              uses: actions/setup-node@v3.4.1
+              with:
+                  node-version: 18.x
+                  cache: "pnpm"
+            - name: Build and Package the extension into a zip artifact
+              run: |
+                  pnpm build --target=chrome-mv3 --zip
+                  pnpm build --target=firefox-mv2 --zip
+                  pnpm build --target=edge-mv3 --zip
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          generate_release_notes: true
-          body: |
-            ## Changelog
-            Please see the [changelog](https://github.com/Vaayne/NotionAI-Plus/blob/main/CHANGELOG.md)
-          files: |
-            build/chrome-mv3-prod.zip
-            build/firefox-mv2-prod.zip
-            build/edge-mv3-prod.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Create Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  generate_release_notes: true
+                  body: |
+                      ## Changelog
+                      Please see the [changelog](https://github.com/Vaayne/NotionAI-Plus/blob/main/CHANGELOG.md)
+                  files: |
+                      build/chrome-mv3-prod.zip
+                      build/firefox-mv2-prod.zip
+                      build/edge-mv3-prod.zip
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Browser Platform Publish
-      #   uses: PlasmoHQ/bpp@v3
-      #   with:
-      #     keys: ${{ secrets.SUBMIT_KEYS }}
-      #     artifact: build/chrome-mv3-prod.zip
+            # - name: Browser Platform Publish
+            #   uses: PlasmoHQ/bpp@v3
+            #   with:
+            #     keys: ${{ secrets.SUBMIT_KEYS }}
+            #     artifact: build/chrome-mv3-prod.zip

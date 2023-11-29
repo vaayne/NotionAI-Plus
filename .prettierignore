@@ -1,0 +1,9 @@
+# Ignore artifacts:
+build
+coverage
+
+**/.plasmo
+**/.vscode
+**/build
+
+**/node_modules

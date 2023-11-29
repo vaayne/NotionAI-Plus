@@ -1,266 +1,178 @@
 import cssText from "data-text:~style.css"
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
 import Draggable from "react-draggable"
-
 import { useMessage } from "@plasmohq/messaging/hook"
-import { useStorage } from "@plasmohq/storage/hook"
-
+import {
+	contextAtom,
+	isLoadingAtom,
+	isShowElementAtom,
+	isShowIconAtom,
+	isShowToastAtom,
+	notificationAtom,
+	responseMessageAtom,
+	selectedElementAtom,
+} from "~/lib/state"
 import ComboxComponent from "~components/combobox"
+import DropdownMenuComponent from "~components/dropdown"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
-import DividerComponent from "~components/toolbar"
-import { InputContext, OutputContext, ToolbarContext } from "~lib/context"
-import {
-  ConstEnum,
-  ProcessTypeEnum,
-  PromptType,
-  PromptTypeEnum,
-  newPromptType
-} from "~lib/enums"
-import type { MessageBody } from "~lib/model"
-import { storage } from "~lib/storage"
+import { ToolsComponent } from "~components/tools"
+import { streamPort } from "~lib/runtime"
 
 export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"],
-  all_frames: true
+	matches: ["<all_urls>"],
+	all_frames: false,
 }
 
 export const getStyle = () => {
-  const style = document.createElement("style")
-  style.textContent = cssText
-  return style
+	const style = document.createElement("style")
+	style.textContent = cssText
+	return style
 }
 
-const getDefaultEngine = async () => {
-  return await storage.get(ConstEnum.DEFAULT_ENGINE)
-}
+const positionAtom = atom<{ x: number; y: number } | null>(null)
 
 const Index = () => {
-  const [engine, setEngine] = useState<string>()
-  const [processType, setProcessType] = useState<string>(ProcessTypeEnum.Text)
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptType>()
-  const [context, setContext] = useState<string>("")
-  const [prompt, setPrompt] = useState<string>("")
-  const [responseMessage, setResponseMessage] = useState<string>("")
-  const [notionSpaceId] = useStorage<string>({
-    key: ConstEnum.NOTION_SPACE_ID,
-    instance: storage
-  })
-  const [chatGPTAPIKey] = useStorage<string>({
-    key: ConstEnum.CHATGPT_API_KEY,
-    instance: storage
-  })
-  const [chatGPTAPIHost] = useStorage<string>({
-    key: ConstEnum.CHATGPT_API_HOST,
-    instance: storage
-  })
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [isShowElement, setIsShowElement] = useState(false)
-  const [notification, setNotification] = useState<string>("")
-  const [isFullMode, setIsFullMode] = useState<boolean>(false)
-  const [selectedElement, setSelectedElement] = useState<HTMLElement>()
-  const [isShowToast, setIsShowToast] = useState<boolean>(false)
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+	const setContext = useSetAtom(contextAtom)
+	const setResponseMessage = useSetAtom(responseMessageAtom)
+	const setIsLoading = useSetAtom(isLoadingAtom)
+	const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
+	const [isShowIcon, setIsShowIcon] = useAtom(isShowIconAtom)
+	const notification = useAtomValue(notificationAtom)
+	const setSelectedElement = useSetAtom(selectedElementAtom)
+	const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
+	const [iconPosition, setIconPosition] = useAtom(positionAtom)
 
-  const streamPort = chrome.runtime.connect({ name: "stream" })
+	// when press ESC will hidden the  window
+	const handleEscape = (event: any) => {
+		if (event.key === "Escape") {
+			setIsShowElement(false)
+			setIconPosition(null)
+			setIsShowIcon(false)
+		}
+		// const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot;
+		// if (shadowRoot?.activeElement?.id == "notionai-plus-context") {
+		// 	if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
+		// 		event.preventDefault();
+		// 	}
+		// }
+	}
 
-  // when press ESC will hidden the  window
-  const handleEscape = (event: any) => {
-    if (event.key === "Escape") {
-      setIsShowElement(false)
-    }
-  }
+	streamPort.onMessage.addListener(function (msg) {
+		if (msg === "[DONE]") {
+			setIsLoading(false)
+		} else {
+			setResponseMessage(msg)
+		}
+	})
 
-  streamPort.onMessage.addListener(function (msg) {
-    if (msg === "[DONE]") {
-      setIsLoading(false)
-    } else {
-      setResponseMessage(msg)
-    }
-  })
+	const handleMouseUp = event => {
+		// do not update on shadowRoot
+		const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot
+		if (shadowRoot?.activeElement != null) {
+			return
+		}
+		const selection = window.getSelection()
+		if (selection && selection.rangeCount > 0) {
+			const rect = selection
+				.getRangeAt(0)
+				.cloneRange()
+				?.getBoundingClientRect()
+			// console.log(
+			// 	`x: ${rect.x}, y: ${rect.y}, w: ${rect.width}, h: ${rect.height}`
+			// )
+			if (rect?.width > 10 && rect?.height > 10) {
+				// console.log("set icon position")
+				setIconPosition({
+					x: rect.right,
+					y: rect.bottom + 5,
+				})
+				setSelectedElement(selection)
+				setContext(selection.toString())
+				setIsShowIcon(true)
+				setIsShowElement(false)
+			} else {
+				// console.log("hidden icon")
+				setIsShowIcon(false)
+			}
+		}
+	}
 
-  // init on page load
-  useEffect(() => {
-    // set default engine
-    getDefaultEngine().then((engine) => {
-      setEngine(engine)
-    })
+	// init on page load
+	useEffect(() => {
+		const handleResize = () => {
+			setScreenWidth(window.innerWidth)
+		}
 
-    document.addEventListener("keydown", handleEscape)
-    return () => {
-      document.removeEventListener("keydown", handleEscape)
-    }
-  }, [])
+		window.addEventListener("resize", handleResize)
 
-  // show panel using shortcut
-  useMessage<string, string>(async (req, res) => {
-    if (req.name === "activate") {
-      // if not select text, then get context from Webpage
-      if (!isShowElement && window.getSelection().toString() !== "") {
-        const selection = window.getSelection().toString()
-        setContext(selection)
-      }
-      if (req.body) {
-        const msg = JSON.parse(req.body) as MessageBody
-        setContext(msg.text)
-        setSelectedPrompt(newPromptType(msg.prompt))
-      } else {
-        handlerSelectText()
-      }
+		document.addEventListener("keydown", handleEscape)
+		document.addEventListener("mouseup", handleMouseUp)
+		return () => {
+			document.removeEventListener("keydown", handleEscape)
+			document.removeEventListener("mouseup", handleMouseUp)
+			window.removeEventListener("resize", handleResize)
+		}
+	}, [])
 
-      setIsShowElement(true)
-    }
-  })
+	useMessage<string, string>(async (req, res) => {
+		console.log(`plasmo message: ${JSON.stringify(req)}`)
+		if (req.name === "activate") {
+			setIsShowElement(true)
+		}
+	})
 
-  const handlerSelectText = () => {
-    if (
-      document.activeElement &&
-      (document.activeElement.isContentEditable ||
-        document.activeElement.nodeName.toUpperCase() === "TEXTAREA" ||
-        document.activeElement.nodeName.toUpperCase() === "INPUT")
-    ) {
-      // console.log("select text from input")
-      // Set as original for later
-      setSelectedElement(document.activeElement as HTMLElement)
-    }
-  }
+	return (
+		<>
+			{isShowElement && (
+				<Draggable handle=".draggable" cancel=".non-draggable">
+					<div
+						id="notionai-plus"
+						className="flex flex-col justify-between rounded-lg draggable min-w-48 bg-slate-200"
+						style={{
+							position: "fixed",
+							top: iconPosition?.y || "50%",
+							left: Math.max(
+								(iconPosition?.x || screenWidth) - 210,
+								10
+							),
+						}}
+					>
+						<ComboxComponent />
+						<OutputComponent />
+						<ToolsComponent />
+					</div>
+				</Draggable>
+			)}
+			{iconPosition && isShowIcon && !isShowElement && (
+				<Draggable handle="#notionai-plus-dropdown-menu">
+					<div
+						id="notionai-plus-dropdown-menu"
+						className="fixed p-1 rounded-md bg-slate-200 top-16"
+						style={{
+							position: "fixed",
+							top: iconPosition.y,
+							left: Math.max(
+								(iconPosition?.x || screenWidth) - 128,
+								10
+							),
+						}}
+					>
+						<DropdownMenuComponent />
+					</div>
+				</Draggable>
+			)}
 
-  const handleMessage = async () => {
-    if (!engine) {
-      handleToast("Please select an engine")
-      return
-    }
-    if (!context) {
-      handleToast("Please input context")
-      return
-    }
-    if (isLoading) {
-      handleToast("AI is processing, please wait")
-      return
-    }
-    setIsLoading(true)
-
-    let lprompt: string = ""
-    let language: string = ""
-    let tone: string = ""
-
-    const prompts = selectedPrompt.value.split("-")
-    let promptType = prompts[0]
-    if (promptType === PromptTypeEnum.Translate) {
-      language = prompts[1]
-    } else if (promptType === PromptTypeEnum.ChangeTone) {
-      tone = prompts[1]
-    } else if (promptType === PromptTypeEnum.TopicWriting) {
-      setPrompt(prompts[1])
-      lprompt = prompts[1]
-    } else if (promptType === PromptTypeEnum.AskAI) {
-      lprompt = PromptTypeEnum.AskAI
-    }
-
-    setResponseMessage("Waitting for AI response ...")
-
-    const body = {
-      engine: engine,
-      processType: processType,
-      builtinPrompt: promptType,
-      customPromot: lprompt,
-      context: context,
-      language: language,
-      tone: tone,
-      notionSpaceId: notionSpaceId,
-      chatGPTAPIKey: chatGPTAPIKey,
-      chatGPTAPIHost: chatGPTAPIHost
-    }
-
-    streamPort.postMessage(body)
-    // // wait 3 seconds
-    // await new Promise((resolve) => setTimeout(resolve, 5000))
-    // setIsLoading(false)
-  }
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(responseMessage)
-    handleToast("Copied to clipboard")
-  }
-
-  const handleToast = (message: string) => {
-    setNotification(message)
-    setIsShowToast(true)
-  }
-
-  const handleClear = () => {
-    setResponseMessage("")
-    handleToast("Cleared")
-  }
-
-  const handleInsertClick = () => {
-    if (selectedElement) {
-      selectedElement.value = `${selectedElement.value}\n\n${responseMessage}`
-    }
-  }
-
-  const handleReplaceClick = () => {
-    if (selectedElement) {
-      selectedElement.value = responseMessage
-    }
-  }
-
-  if (isShowElement) {
-    return (
-      <>
-        <Draggable handle="#dragable">
-          <div
-            id="notionai-plus"
-            className={`fixed  ${
-              isFullMode
-                ? " h-5/6 w-11/12 top-10 left-10"
-                : "top-1/3 right-10 w-1/3 h-1/2"
-            } overflow-hidden rounded-lg flex flex-col bg-slate-200 dark:bg-slate-700`}>
-            <InputContext.Provider
-              value={{
-                engine,
-                setEngine,
-                isFullMode,
-                setIsFullMode,
-                selectedPrompt,
-                setSelectedPrompt,
-                context,
-                setContext,
-                prompt,
-                setPrompt,
-                handleMessage,
-                isLoading
-              }}>
-              <ComboxComponent />
-            </InputContext.Provider>
-
-            <ToolbarContext.Provider
-              value={{
-                handleClear,
-                handleCopy,
-                handleInsertClick,
-                handleReplaceClick
-              }}>
-              {responseMessage && <DividerComponent />}
-            </ToolbarContext.Provider>
-
-            <OutputContext.Provider
-              value={{
-                isFullMode,
-                responseMessage
-              }}>
-              {responseMessage && <OutputComponent />}
-            </OutputContext.Provider>
-          </div>
-        </Draggable>
-        <NotificationComponent
-          isShow={isShowToast}
-          setIsShow={setIsShowToast}
-          title={notification}
-        />
-      </>
-    )
-  }
+			<NotificationComponent
+				isShow={isShowToast}
+				setIsShow={setIsShowToast}
+				title={notification}
+			/>
+		</>
+	)
 }
 
 export default Index

@@ -1,4 +1,3 @@
-
 <p align="center">
     <img src="./assets/icon.png" width="250">
 </p>
@@ -7,8 +6,8 @@
 
 NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
-- [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
-- [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
+-   [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
+-   [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
 
 **Latest changes: [CHANGELOG.md](./CHANGELOG.md)**
 
@@ -20,25 +19,35 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
 
 #### Screen Capture
 
-|            Screen Capture 1            |            Screen Capture 2            |            Screen Capture 3            |            Screen Capture 4            |            Screen Capture 5            |
-| :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
-| ![](./docs/images/notionai-plus-1.png) | ![](./docs/images/notionai-plus-2.png) | ![](./docs/images/notionai-plus-3.png) | ![](./docs/images/notionai-plus-4.png) | ![](./docs/images/notionai-plus-5.png) |
+<details>
+  <summary>Click to see</summary>
+  
+  ![Context Meny](./docs/images/SCR-20231129-pfbc.png)
+
+![Mian Window](./docs/images/SCR-20231129-pgdx.png)
+
+![Mian Window without context](./docs/images/SCR-20231129-pghp.png)
+
+![Setting Page](./docs/images/SCR-20231129-phbn.png)
+
+</details>
 
 ## Features
 
-- Analyze text, generate summaries, and perform sentiment analysis on any webpage using NotionAI's powerful features
-- Support multiple engines:
-  - **Free**:
-    - [ChatGPT Web](https://chat.openai.com/)
-    - [New Bing](https://www.bing.com/new)
-    - [Brad](https://bard.google.com/)
-    - [Claude](https://claude.ai/)
-  - **Paid**:
-    - [NotionAI](https://www.notion.so/product/ai)
-    - [ChatGPT API](https://platform.openai.com/docs/api-reference/chat/create)
+-   Analyze text, generate summaries, and perform sentiment analysis on any webpage using NotionAI's powerful features
+-   Support multiple engines:
 
-- Support for all NotionAI built-in prompts
-- Support for using custom prompts
+    -   **Free**:
+        -   [ChatGPT Web](https://chat.openai.com/)
+        -   [New Bing](https://www.bing.com/new)
+        -   [Brad](https://bard.google.com/)
+        -   [Claude](https://claude.ai/)
+    -   **Paid**:
+        -   [NotionAI](https://www.notion.so/product/ai)
+        -   [ChatGPT API](https://platform.openai.com/docs/api-reference/chat/create)
+
+-   Support for all NotionAI built-in prompts
+-   Support for using custom prompts
 
 ## Usage
 
