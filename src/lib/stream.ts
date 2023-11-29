@@ -13,7 +13,10 @@ import {
 
 import { ClaudeChat } from "./api/claude"
 
-export default async function handleStream(body: RequestBody, port: browser.runtime.Port) {
+export default async function handleStream(
+	body: RequestBody,
+	port: browser.runtime.Port
+) {
 	const instruction: string = buildChatGPTinstruction(body)
 	const prompt: string = buildChatGPTPrompt(body)
 

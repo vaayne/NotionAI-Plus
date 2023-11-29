@@ -24,14 +24,13 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
   
   ![Context Meny](./docs/images/SCR-20231129-pfbc.png)
 
-  ![Mian Window](./docs/images/SCR-20231129-pgdx.png)
+![Mian Window](./docs/images/SCR-20231129-pgdx.png)
 
-  ![Mian Window without context](./docs/images/SCR-20231129-pghp.png)
+![Mian Window without context](./docs/images/SCR-20231129-pghp.png)
 
-  ![Setting Page](./docs/images/SCR-20231129-phbn.png)
-  
+![Setting Page](./docs/images/SCR-20231129-phbn.png)
+
 </details>
-
 
 ## Features
 
