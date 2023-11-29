@@ -1,21 +1,24 @@
 import cssText from "data-text:~style.css"
-import type { PlasmoCSConfig } from "plasmo"
-import { useEffect } from "react"
-import Draggable from "react-draggable"
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai"
+import type { PlasmoCSConfig } from "plasmo"
+import { useEffect, useState } from "react"
+import Draggable from "react-draggable"
+import { useMessage } from "@plasmohq/messaging/hook"
 import {
 	contextAtom,
 	isLoadingAtom,
 	isShowElementAtom,
+	isShowIconAtom,
 	isShowToastAtom,
 	notificationAtom,
 	responseMessageAtom,
 	selectedElementAtom,
 } from "~/lib/state"
 import ComboxComponent from "~components/combobox"
+import DropdownMenuComponent from "~components/dropdown"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
-import ContextMenuComponent from "~components/context_menu"
+import { ToolsComponent } from "~components/tools"
 import { streamPort } from "~lib/port"
 
 export const config: PlasmoCSConfig = {
@@ -32,10 +35,12 @@ export const getStyle = () => {
 const positionAtom = atom<{ x: number; y: number } | null>(null)
 
 const Index = () => {
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth)
 	const setContext = useSetAtom(contextAtom)
 	const setResponseMessage = useSetAtom(responseMessageAtom)
 	const setIsLoading = useSetAtom(isLoadingAtom)
 	const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
+	const [isShowIcon, setIsShowIcon] = useAtom(isShowIconAtom)
 	const notification = useAtomValue(notificationAtom)
 	const setSelectedElement = useSetAtom(selectedElementAtom)
 	const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
@@ -46,7 +51,14 @@ const Index = () => {
 		if (event.key === "Escape") {
 			setIsShowElement(false)
 			setIconPosition(null)
+			setIsShowIcon(false)
 		}
+		// const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot;
+		// if (shadowRoot?.activeElement?.id == "notionai-plus-context") {
+		// 	if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
+		// 		event.preventDefault();
+		// 	}
+		// }
 	}
 
 	streamPort.onMessage.addListener(function (msg) {
@@ -57,64 +69,103 @@ const Index = () => {
 		}
 	})
 
-	const handleMouseUp = () => {
+	const handleMouseUp = event => {
+		// do not update on shadowRoot
+		const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot
+		if (shadowRoot?.activeElement != null) {
+			return
+		}
 		const selection = window.getSelection()
 		if (selection && selection.rangeCount > 0) {
 			const rect = selection
 				.getRangeAt(0)
 				.cloneRange()
 				?.getBoundingClientRect()
-			if (rect?.width > 0 && rect?.height > 0) {
+			// console.log(
+			// 	`x: ${rect.x}, y: ${rect.y}, w: ${rect.width}, h: ${rect.height}`
+			// )
+			if (rect?.width > 10 && rect?.height > 10) {
+				// console.log("set icon position")
 				setIconPosition({
-					x: rect.right + 5,
+					x: rect.right,
 					y: rect.bottom + 5,
 				})
 				setSelectedElement(selection)
 				setContext(selection.toString())
-			} // setIconPosition(null)
+				setIsShowIcon(true)
+				setIsShowElement(false)
+			} else {
+				// console.log("hidden icon")
+				setIsShowIcon(false)
+			}
 		}
 	}
 
 	// init on page load
 	useEffect(() => {
+		const handleResize = () => {
+			setScreenWidth(window.innerWidth)
+		}
+
+		window.addEventListener("resize", handleResize)
+
 		document.addEventListener("keydown", handleEscape)
 		document.addEventListener("mouseup", handleMouseUp)
 		return () => {
 			document.removeEventListener("keydown", handleEscape)
 			document.removeEventListener("mouseup", handleMouseUp)
+			window.removeEventListener("resize", handleResize)
 		}
 	}, [])
+
+	useMessage<string, string>(async (req, res) => {
+		console.log(`plasmo message: ${JSON.stringify(req)}`)
+		if (req.name === "activate") {
+			setIsShowElement(true)
+		}
+	})
 
 	return (
 		<>
 			{isShowElement && (
-				<Draggable handle="#dragable">
+				<Draggable handle=".draggable" cancel=".non-draggable">
 					<div
 						id="notionai-plus"
-						className={`flex flex-col rounded-lg w-96 bg-slate-200 justify-between`}
+						className="flex flex-col justify-between rounded-lg draggable min-w-48 bg-slate-200"
 						style={{
 							position: "fixed",
-							top: iconPosition?.y || "33.33%",
-							left: iconPosition?.x || "33.33",
+							top: iconPosition?.y || "50%",
+							left: Math.max(
+								(iconPosition?.x || screenWidth) - 210,
+								10
+							),
 						}}
 					>
 						<ComboxComponent />
 						<OutputComponent />
+						<ToolsComponent />
 					</div>
 				</Draggable>
 			)}
-			{iconPosition && !isShowElement && (
-				<div
-					className="fixed p-1 bg-gray-200 rounded-md top-16 w-72"
-					style={{
-						position: "fixed",
-						top: iconPosition.y,
-						left: iconPosition.x,
-					}}
-				>
-					<ContextMenuComponent />
-				</div>
+			{iconPosition && isShowIcon && !isShowElement && (
+				<Draggable handle="#notionai-plus-dropdown-menu">
+					<div
+						id="notionai-plus-dropdown-menu"
+						className="fixed p-1 rounded-md bg-slate-200 top-16"
+						style={{
+							position: "fixed",
+							top: iconPosition.y,
+							left: Math.max(
+								(iconPosition?.x || screenWidth) - 128,
+								10
+							),
+						}}
+					>
+						<DropdownMenuComponent />
+					</div>
+				</Draggable>
 			)}
+
 			<NotificationComponent
 				isShow={isShowToast}
 				setIsShow={setIsShowToast}

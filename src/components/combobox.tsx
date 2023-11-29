@@ -1,10 +1,12 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
-import { ChevronDown, ChevronUp, Send, StopCircle } from "lucide-react"
+import { ChevronDown, ChevronUp, Send, StopCircle, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import {
 	contextAtom,
 	engineAtom,
 	isLoadingAtom,
+	isShowElementAtom,
+	isShowIconAtom,
 	isShowToastAtom,
 	notificationAtom,
 	notionSpaceIdAtom,
@@ -15,38 +17,9 @@ import {
 	responseMessageAtom,
 	selectedPromptAtom,
 } from "~/lib/state"
-import {
-	LanguageOptions,
-	PromptType,
-	PromptTypeEnum,
-	PromptTypeOptions,
-	ToneOptions,
-	TopicOptions,
-} from "~lib/enums"
+import { PromptTypeEnum } from "~lib/enums"
 import ContextMenuComponent from "./context_menu"
 import { streamPort } from "~lib/port"
-
-export const Options: PromptType[] = [
-	...PromptTypeOptions.filter(option => {
-		return (
-			option.value !== PromptTypeEnum.ChangeTone &&
-			option.value !== PromptTypeEnum.Translate &&
-			option.value !== PromptTypeEnum.TopicWriting
-		)
-	}),
-	...ToneOptions.map(option => {
-		option.label = `🎭 Change Tone - ${option.label}`
-		return option
-	}),
-	...TopicOptions.map(option => {
-		option.label = `📝 Topic - ${option.label}`
-		return option
-	}),
-	...LanguageOptions.map(option => {
-		option.label = `🌐 Translate - ${option.label}`
-		return option
-	}),
-]
 
 export default function ComboxComponent() {
 	const notionSpaceId = useAtomValue(notionSpaceIdAtom)
@@ -62,6 +35,9 @@ export default function ComboxComponent() {
 	const setResponseMessage = useSetAtom(responseMessageAtom)
 	const processType = useAtomValue(processTypeAtom)
 	const [isShowContext, setIsShowContext] = useState(false)
+	const setIsShowElement = useSetAtom(isShowElementAtom)
+	// const [isPinElement, setIsPinElement] = useAtom(isPinElementAtom)
+	const setIsShowIcon = useSetAtom(isShowIconAtom)
 
 	const handleToast = (message: string) => {
 		setNotification(message)
@@ -70,11 +46,11 @@ export default function ComboxComponent() {
 
 	useEffect(() => {
 		if (selectedPrompt && context) {
-			handleMessage()
+			handleMessage(false)
 		}
 	}, [selectedPrompt])
 
-	const handleMessage = async () => {
+	const handleMessage = async (fouce: boolean) => {
 		if (!engine) {
 			handleToast("Please select an engine")
 			return
@@ -87,13 +63,20 @@ export default function ComboxComponent() {
 			handleToast("AI is processing, please wait")
 			return
 		}
+
+		if (!fouce && selectedPrompt == PromptTypeEnum.AskAI.toString()) {
+			setIsShowContext(true)
+			return
+		}
+
 		setIsLoading(true)
+		setIsShowContext(false)
 
 		let lprompt: string = ""
 		let language: string = ""
 		let tone: string = ""
 
-		const prompts = selectedPrompt?.value.split("-")
+		const prompts = selectedPrompt.split("-")
 		let promptType = prompts[0]
 		if (promptType === PromptTypeEnum.Translate) {
 			language = prompts[1]
@@ -120,48 +103,62 @@ export default function ComboxComponent() {
 			chatGPTAPIKey: openAIAPIKey,
 			chatGPTAPIHost: openAIAPIHost,
 		}
+
+		console.log(body)
+
 		streamPort.postMessage(body)
 	}
 
 	return (
 		<div className="relative flex flex-col m-2">
-			<div
-				className="flex flex-row items-center justify-center gap-2"
-				id="dragable"
-			>
+			<div className="flex flex-row items-center justify-between gap-4">
 				<ContextMenuComponent />
-				<button
-					className="p-1 bg-blue-200 rounded-lg"
-					onClick={() => setIsShowContext(!isShowContext)}
-				>
-					{isShowContext ? (
-						<ChevronUp size={18} />
+				<div className="flex flex-row items-center gap-1">
+					<button
+						className="p-1 bg-blue-200 rounded-lg"
+						onClick={() => setIsShowContext(!isShowContext)}
+					>
+						{isShowContext ? (
+							<ChevronUp size={12} />
+						) : (
+							<ChevronDown size={12} />
+						)}
+					</button>
+					{isLoading ? (
+						<button
+							onClick={() => setIsLoading(false)}
+							className="p-1 bg-blue-200 rounded-lg"
+						>
+							<StopCircle size={12} className="animate-spin" />
+						</button>
 					) : (
-						<ChevronDown size={18} />
+						<button
+							onClick={() => handleMessage(true)}
+							className="p-1 bg-blue-200 rounded-lg"
+						>
+							<Send size={12} />
+						</button>
 					)}
-				</button>
-				{isLoading ? (
 					<button
-						onClick={() => setIsLoading(false)}
+						onClick={() => {
+							setIsShowElement(false)
+							setIsShowIcon(false)
+						}}
 						className="p-1 bg-blue-200 rounded-lg"
 					>
-						<StopCircle size={18} className="animate-spin" />
+						<X size={12} />
 					</button>
-				) : (
-					<button
-						onClick={handleMessage}
-						className="p-1 bg-blue-200 rounded-lg"
-					>
-						<Send size={18} />
-					</button>
-				)}
+				</div>
 			</div>
 
 			{isShowContext && (
 				<textarea
-					className="w-full mt-2 rounded-lg"
+					id="notionai-plus-context"
+					className="w-full mt-2 text-sm rounded-lg non-draggable"
 					value={context}
-					onChange={e => setContext(e.target.value)}
+					onChange={e => {
+						setContext(e.target.value)
+					}}
 				></textarea>
 			)}
 		</div>

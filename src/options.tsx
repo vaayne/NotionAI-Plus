@@ -162,7 +162,10 @@ function Options() {
 							defaultValue={DEFAULT_OPENAI_API_URL}
 							value={openAIAPIHost}
 							onChange={e =>
-								saveToStorage(ConstEnum.OPENAI_API_HOST, e.target.value)
+								saveToStorage(
+									ConstEnum.OPENAI_API_HOST,
+									e.target.value
+								)
 							}
 						/>
 					</TextField.Root>
@@ -176,10 +179,12 @@ function Options() {
 							placeholder="Please enter the API key"
 							type="password"
 							value={openAIAPIKey}
-							onChange={e =>
-								{saveToStorage(ConstEnum.OPENAI_API_KEY, e.target.value)
-								}
-							}
+							onChange={e => {
+								saveToStorage(
+									ConstEnum.OPENAI_API_KEY,
+									e.target.value
+								)
+							}}
 						/>
 					</TextField.Root>
 				</div>
@@ -190,10 +195,9 @@ function Options() {
 					<Select.Root
 						value={openAIAPIModel}
 						defaultValue="gpt-3dot5-turbo"
-						onValueChange={e =>
-							{saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
-							}
-						}
+						onValueChange={e => {
+							saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
+						}}
 					>
 						<Select.Trigger className="max-w-lg grow" />
 						<Select.Content>

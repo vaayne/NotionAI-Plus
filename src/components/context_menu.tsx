@@ -2,58 +2,30 @@ import { Combobox } from "@headlessui/react"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import { useAtom, useSetAtom } from "jotai"
 import {
-
 	isShowElementAtom,
-
 	queryTextAtom,
 	selectedPromptAtom,
 } from "~/lib/state"
 
 import {
-	PromptTypeOptions,
 	type PromptType,
-	ToneOptions,
-	TopicOptions,
-	LanguageOptions,
-	PromptTypeEnum,
+	PromptOptions,
+	PromptTypeMappings,
+	getPromptTypeLabel,
 } from "~lib/enums"
-import { startTransition } from "react"
 
 function classNames(...classes: any[]) {
 	return classes.filter(Boolean).join(" ")
 }
 
-const Options: PromptType[] = [
-	...PromptTypeOptions.filter(option => {
-		return (
-			option.value !== PromptTypeEnum.ChangeTone &&
-			option.value !== PromptTypeEnum.Translate &&
-			option.value !== PromptTypeEnum.TopicWriting
-		)
-	}),
-	...ToneOptions.map(option => {
-		option.label = `🎭 Change Tone - ${option.label}`
-		return option
-	}),
-	...TopicOptions.map(option => {
-		option.label = `📝 Topic - ${option.label}`
-		return option
-	}),
-	...LanguageOptions.map(option => {
-		option.label = `🌐 Translate - ${option.label}`
-		return option
-	}),
-]
-
 export default function ContextMenuComponent() {
 	const [query, setQuery] = useAtom(queryTextAtom)
 	const [selectedPrompt, setSelectedPrompt] = useAtom(selectedPromptAtom)
-	const setIsShowElement = useSetAtom(isShowElementAtom)
 
 	const filteredOptions =
 		query === ""
-			? Options
-			: Options.filter(option => {
+			? PromptOptions
+			: PromptOptions.filter(option => {
 					return option.label
 						.toLowerCase()
 						.includes(query.toLowerCase())
@@ -62,12 +34,9 @@ export default function ContextMenuComponent() {
 	return (
 		<Combobox
 			as="button"
-			value={selectedPrompt}
+			value={PromptTypeMappings.get(selectedPrompt)}
 			onChange={e => {
-				startTransition(() => {
-					setIsShowElement(true)
-					setSelectedPrompt(e)
-				})
+				setSelectedPrompt(e.value)
 			}}
 			className="w-full"
 		>
@@ -78,14 +47,12 @@ export default function ContextMenuComponent() {
 						className="relative items-center flex-1"
 					>
 						<Combobox.Input
-							className="w-full h-8 py-[6px] text-sm pl-3 pr-10 bg-white border-0 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-							onChange={event =>
-								startTransition(() =>
-									setQuery(event.target.value)
-								)
-							}
+							className="w-full h-8 py-[6px] text-sm pl-3 pr-10 bg-white border-0 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+							onChange={event => setQuery(event.target.value)}
 							placeholder="What do you want to write?"
-							displayValue={(option: PromptType) => option?.label}
+							displayValue={(option: PromptType) =>
+								getPromptTypeLabel(option)
+							}
 						/>
 						<span className="absolute right-2 bottom-2">
 							<ChevronUpDownIcon className="w-3 h-3 text-gray-400 origin-center stroke-current" />
@@ -94,7 +61,7 @@ export default function ContextMenuComponent() {
 				</div>
 
 				{filteredOptions.length > 0 && (
-					<Combobox.Options className="box-border absolute z-10 w-full py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+					<Combobox.Options className="box-border absolute z-10 py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg min-w-64 max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none">
 						{filteredOptions.map(option => (
 							<Combobox.Option
 								key={option.value}
@@ -113,11 +80,11 @@ export default function ContextMenuComponent() {
 										<div className="flex items-center">
 											<span
 												className={classNames(
-													"ml-3 truncate",
+													"ml-1 truncate",
 													selected && "font-semibold"
 												)}
 											>
-												{option.label}
+												{getPromptTypeLabel(option)}
 											</span>
 										</div>
 
