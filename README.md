@@ -19,9 +19,19 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
 
 #### Screen Capture
 
-|            Screen Capture 1            |            Screen Capture 2            |            Screen Capture 3            |            Screen Capture 4            |            Screen Capture 5            |
-| :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
-| ![](./docs/images/notionai-plus-1.png) | ![](./docs/images/notionai-plus-2.png) | ![](./docs/images/notionai-plus-3.png) | ![](./docs/images/notionai-plus-4.png) | ![](./docs/images/notionai-plus-5.png) |
+<details>
+  <summary>Click to see</summary>
+  
+  ![Context Meny](./docs/images/SCR-20231129-pfbc.png)
+
+  ![Mian Window](./docs/images/SCR-20231129-pgdx.png)
+
+  ![Mian Window without context](./docs/images/SCR-20231129-pghp.png)
+
+  ![Setting Page](./docs/images/SCR-20231129-phbn.png)
+  
+</details>
+
 
 ## Features
 

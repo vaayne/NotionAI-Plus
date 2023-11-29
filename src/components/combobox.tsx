@@ -1,5 +1,12 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
-import { ChevronDown, ChevronUp, Send, StopCircle, X } from "lucide-react"
+import {
+	ChevronDown,
+	ChevronUp,
+	Send,
+	Settings,
+	StopCircle,
+	X,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 import {
 	contextAtom,
@@ -19,7 +26,8 @@ import {
 } from "~/lib/state"
 import { PromptTypeEnum } from "~lib/enums"
 import ContextMenuComponent from "./context_menu"
-import { streamPort } from "~lib/port"
+import { streamPort } from "~lib/runtime"
+import browser from "webextension-polyfill"
 
 export default function ComboxComponent() {
 	const notionSpaceId = useAtomValue(notionSpaceIdAtom)
@@ -139,6 +147,16 @@ export default function ComboxComponent() {
 							<Send size={12} />
 						</button>
 					)}
+					<button
+						onClick={() => {
+							browser.runtime.sendMessage({
+								action: "openOptionsPage",
+							})
+						}}
+						className="p-1 bg-blue-200 rounded-lg"
+					>
+						<Settings size={12} />
+					</button>
 					<button
 						onClick={() => {
 							setIsShowElement(false)

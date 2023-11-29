@@ -19,7 +19,7 @@ import DropdownMenuComponent from "~components/dropdown"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
 import { ToolsComponent } from "~components/tools"
-import { streamPort } from "~lib/port"
+import { streamPort } from "~lib/runtime"
 
 export const config: PlasmoCSConfig = {
 	matches: ["<all_urls>"],

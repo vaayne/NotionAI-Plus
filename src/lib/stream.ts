@@ -4,6 +4,7 @@ import { ChatGPTApiChat } from "~lib/api/chatgpt-api"
 import { ChatGPTWebChat } from "~lib/api/chatgpt-web"
 import { NotionCompletion } from "~lib/api/notion-completion"
 import { EngineEnum } from "~lib/enums"
+import browser from "webextension-polyfill"
 import {
 	RequestBody,
 	buildChatGPTPrompt,
@@ -12,10 +13,7 @@ import {
 
 import { ClaudeChat } from "./api/claude"
 
-export default async function handleStream(
-	body: RequestBody,
-	port: chrome.runtime.Port
-) {
+export default async function handleStream(body: RequestBody, port: browser.runtime.Port) {
 	const instruction: string = buildChatGPTinstruction(body)
 	const prompt: string = buildChatGPTPrompt(body)
 

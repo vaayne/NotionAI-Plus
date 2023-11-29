@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.0 - 2023-11-29
+
+### Added
+
+- Support Dropdown Menu
+- Better UI
+- jotai for state manage
+- radix-theme for theme
+- remove unused packages
+- refactor code
+
+
 ## v0.0.25 - 2023-11-11
 
 ### Fixed
