@@ -109,14 +109,18 @@ function Options() {
 				>
 					<Select.Trigger className="max-w-lg grow" />
 					<Select.Content>
-						{JSON.parse(notionSpaces)?.map((space: any) => {
-							space = space as NotionSpace
-							return (
-								<Select.Item value={space.id} key={space.id}>
-									{space.name}
-								</Select.Item>
-							)
-						})}
+						{notionSpaces &&
+							JSON.parse(notionSpaces).map((space: any) => {
+								space = space as NotionSpace
+								return (
+									<Select.Item
+										value={space.id}
+										key={space.id}
+									>
+										{space.name}
+									</Select.Item>
+								)
+							})}
 					</Select.Content>
 				</Select.Root>
 				<Button onClick={async () => handleGetNotionSpaces()}>
@@ -131,7 +135,7 @@ function Options() {
 			<div className="flex flex-row items-center justify-between gap-4 mx-2">
 				<Text as="span">ChatGPT Model:</Text>
 				<Select.Root
-					defaultValue="text-davinci-002-render-sha"
+					// defaultValue="text-davinci-002-render-sha"
 					value={chatGPTModel}
 					onValueChange={e =>
 						saveToStorage(ConstEnum.CHATGPT_MODEL, e)
@@ -159,7 +163,7 @@ function Options() {
 					<TextField.Root className="max-w-lg grow">
 						<TextField.Input
 							placeholder={`OpenAI API URL, default: ${DEFAULT_OPENAI_API_URL}`}
-							defaultValue={DEFAULT_OPENAI_API_URL}
+							// defaultValue={DEFAULT_OPENAI_API_URL}
 							value={openAIAPIHost}
 							onChange={e =>
 								saveToStorage(
@@ -194,7 +198,7 @@ function Options() {
 					</Text>
 					<Select.Root
 						value={openAIAPIModel}
-						defaultValue="gpt-3dot5-turbo"
+						// defaultValue="gpt-3dot5-turbo"
 						onValueChange={e => {
 							saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
 						}}
