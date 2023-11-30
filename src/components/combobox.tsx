@@ -26,7 +26,6 @@ import {
 } from "~/lib/state"
 import { PromptTypeEnum } from "~lib/enums"
 import ContextMenuComponent from "./context_menu"
-import { streamPort } from "~lib/runtime"
 import browser from "webextension-polyfill"
 
 export default function ComboxComponent() {
@@ -57,6 +56,16 @@ export default function ComboxComponent() {
 			handleMessage(false)
 		}
 	}, [selectedPrompt])
+
+	const streamPort = browser.runtime.connect({ name: "stream" })
+
+	streamPort.onMessage.addListener(function (msg) {
+		if (msg === "[DONE]") {
+			setIsLoading(false)
+		} else {
+			setResponseMessage(msg)
+		}
+	})
 
 	const handleMessage = async (fouce: boolean) => {
 		if (!engine) {

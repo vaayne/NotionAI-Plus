@@ -13,9 +13,16 @@ browser.commands.onCommand.addListener(function (command) {
 })
 
 browser.runtime.onConnect.addListener(function (port) {
-	port.onMessage.addListener(function (msg) {
-		handleStream(msg, port)
-	})
+	if (port.name === "stream") {
+		// console.log("Connected to the content script")
+		port.onMessage.addListener(function (msg) {
+			handleStream(msg, port)
+		})
+
+		// port.onDisconnect.addListener(() => {
+		// 	console.log("Content script disconnected")
+		// })
+	}
 })
 
 browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {

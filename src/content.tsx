@@ -6,12 +6,10 @@ import Draggable from "react-draggable"
 import { useMessage } from "@plasmohq/messaging/hook"
 import {
 	contextAtom,
-	isLoadingAtom,
 	isShowElementAtom,
 	isShowIconAtom,
 	isShowToastAtom,
 	notificationAtom,
-	responseMessageAtom,
 	selectedElementAtom,
 } from "~/lib/state"
 import ComboxComponent from "~components/combobox"
@@ -19,8 +17,6 @@ import DropdownMenuComponent from "~components/dropdown"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
 import { ToolsComponent } from "~components/tools"
-import { streamPort } from "~lib/runtime"
-
 export const config: PlasmoCSConfig = {
 	matches: ["<all_urls>"],
 	all_frames: false,
@@ -37,8 +33,6 @@ const positionAtom = atom<{ x: number; y: number } | null>(null)
 const Index = () => {
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth)
 	const setContext = useSetAtom(contextAtom)
-	const setResponseMessage = useSetAtom(responseMessageAtom)
-	const setIsLoading = useSetAtom(isLoadingAtom)
 	const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
 	const [isShowIcon, setIsShowIcon] = useAtom(isShowIconAtom)
 	const notification = useAtomValue(notificationAtom)
@@ -60,14 +54,6 @@ const Index = () => {
 		// 	}
 		// }
 	}
-
-	streamPort.onMessage.addListener(function (msg) {
-		if (msg === "[DONE]") {
-			setIsLoading(false)
-		} else {
-			setResponseMessage(msg)
-		}
-	})
 
 	const handleMouseUp = event => {
 		// do not update on shadowRoot
