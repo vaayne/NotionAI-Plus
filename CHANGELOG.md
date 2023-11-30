@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.1 - 2023-11-30
+
+### Fixed
+- fix port message connection issue
+
 ## v0.1.0 - 2023-11-29
 
 ### Added
