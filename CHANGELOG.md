@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2 - 2023-12-01
+
+### Fixed
+- Fix contexnt menu and main window position issue
+
 ## v0.1.1 - 2023-11-30
 
 ### Fixed
