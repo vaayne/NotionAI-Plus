@@ -55,55 +55,71 @@ const Index = () => {
 		// 	}
 		// }
 	}
-
+	// Define a function to handle mouse up events
 	const handleMouseUp = event => {
-		// do not update on shadowRoot
+		// Do not update if the event is triggered from a shadowRoot
 		const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot
 		if (shadowRoot?.activeElement != null) {
 			return
 		}
+		// Get the current selection
 		const selection = window.getSelection()
+		// If there is a selection and it has at least one range
 		if (selection && selection.rangeCount > 0) {
+			// Get the bounding rectangle of the first range in the selection
 			const rect = selection
 				.getRangeAt(0)
 				.cloneRange()
 				?.getBoundingClientRect()
+			// If the rectangle has a width and height greater than 10
 			if (rect?.width > 10 && rect?.height > 10) {
+				// Get the right and bottom coordinates of the rectangle
 				let x = rect.right
 				let y = rect.bottom
 
+				// If the x coordinate is too close to the right edge of the window, adjust it and set the icon position direction
 				if (x > window.innerWidth - 128) {
 					x = window.innerWidth - 128
 					setIconPositionDirection("right-full")
-				} else if (x < 128) {
+				}
+				// If the x coordinate is too close to the left edge of the window, adjust it and set the icon position direction
+				else if (x < 128) {
 					setIconPositionDirection("left-full")
 				}
 
+				// If the y coordinate is too close to the bottom edge of the window, adjust it and set the icon position direction
 				if (y > window.innerHeight - 128) {
 					y = Math.min(y, window.innerHeight - 64)
 					setIconPositionDirection("bottom-full")
-				} else if (y < 128) {
+				}
+				// If the y coordinate is too close to the top edge of the window, adjust it and set the icon position direction
+				else if (y < 128) {
 					setIconPositionDirection("top-full")
 				}
+				// Set the icon position
 				setIconPosition({
 					x: x,
 					y: y,
 				})
+				// Set the element position
 				setElePosition({
-					x: Math.min(x, window.innerWidth - 256),
+					x: Math.min(x, window.innerWidth - 384),
 					y: Math.min(y, window.innerHeight - 412),
 				})
+				// Set the selected element
 				setSelectedElement(selection)
+				// Set the context to the selected text
 				setContext(selection.toString())
+				// Show the icon
 				setIsShowIcon(true)
+				// Hide the element
 				setIsShowElement(false)
 			} else {
-				// console.log("hidden icon")
+				// If the rectangle is too small, hide the icon
 				setIsShowIcon(false)
 			}
 		}
 	}
-
 	// init on page load
 	useEffect(() => {
 		document.addEventListener("keydown", handleEscape)
