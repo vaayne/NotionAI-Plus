@@ -38,3 +38,11 @@ export const isShowElementAtom = atom(false)
 export const isPinElementAtom = atom(false)
 export const isShowIconAtom = atom(false)
 export const queryTextAtom = atom("")
+
+export const iconPositionAtom = atom<{ x: number; y: number } | null>(null)
+export const elePositionAtom = atom<{ x: number | string; y: number | string }>(
+	{ x: "50%", y: "50%" }
+)
+// iconPositionDirectionAtom is used to determine the direction of the icon
+// https://tailwindcss.com/docs/position
+export const iconPositionDirectionAtom = atom("")

@@ -1,7 +1,7 @@
 import cssText from "data-text:~style.css"
-import { atom, useAtom, useAtomValue, useSetAtom } from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import type { PlasmoCSConfig } from "plasmo"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Draggable from "react-draggable"
 import { useMessage } from "@plasmohq/messaging/hook"
 import {
@@ -10,7 +10,10 @@ import {
 	isShowIconAtom,
 	isShowToastAtom,
 	notificationAtom,
+	iconPositionAtom,
 	selectedElementAtom,
+	iconPositionDirectionAtom,
+	elePositionAtom,
 } from "~/lib/state"
 import ComboxComponent from "~components/combobox"
 import DropdownMenuComponent from "~components/dropdown"
@@ -28,18 +31,16 @@ export const getStyle = () => {
 	return style
 }
 
-const positionAtom = atom<{ x: number; y: number } | null>(null)
-
 const Index = () => {
-	const [screenWidth, setScreenWidth] = useState(window.innerWidth)
 	const setContext = useSetAtom(contextAtom)
 	const [isShowElement, setIsShowElement] = useAtom(isShowElementAtom)
 	const [isShowIcon, setIsShowIcon] = useAtom(isShowIconAtom)
 	const notification = useAtomValue(notificationAtom)
 	const setSelectedElement = useSetAtom(selectedElementAtom)
 	const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
-	const [iconPosition, setIconPosition] = useAtom(positionAtom)
-
+	const [iconPosition, setIconPosition] = useAtom(iconPositionAtom)
+	const [elePosition, setElePosition] = useAtom(elePositionAtom)
+	const setIconPositionDirection = useSetAtom(iconPositionDirectionAtom)
 	// when press ESC will hidden the  window
 	const handleEscape = (event: any) => {
 		if (event.key === "Escape") {
@@ -67,14 +68,30 @@ const Index = () => {
 				.getRangeAt(0)
 				.cloneRange()
 				?.getBoundingClientRect()
-			// console.log(
-			// 	`x: ${rect.x}, y: ${rect.y}, w: ${rect.width}, h: ${rect.height}`
-			// )
 			if (rect?.width > 10 && rect?.height > 10) {
-				// console.log("set icon position")
+				let x = rect.right
+				let y = rect.bottom
+
+				if (x > window.innerWidth - 128) {
+					x = window.innerWidth - 128
+					setIconPositionDirection("right-full")
+				} else if (x < 128) {
+					setIconPositionDirection("left-full")
+				}
+
+				if (y > window.innerHeight - 128) {
+					y = Math.min(y, window.innerHeight - 64)
+					setIconPositionDirection("bottom-full")
+				} else if (y < 128) {
+					setIconPositionDirection("top-full")
+				}
 				setIconPosition({
-					x: rect.right,
-					y: rect.bottom + 5,
+					x: x,
+					y: y,
+				})
+				setElePosition({
+					x: Math.min(x, window.innerWidth - 256),
+					y: Math.min(y, window.innerHeight - 412),
 				})
 				setSelectedElement(selection)
 				setContext(selection.toString())
@@ -89,18 +106,11 @@ const Index = () => {
 
 	// init on page load
 	useEffect(() => {
-		const handleResize = () => {
-			setScreenWidth(window.innerWidth)
-		}
-
-		window.addEventListener("resize", handleResize)
-
 		document.addEventListener("keydown", handleEscape)
 		document.addEventListener("mouseup", handleMouseUp)
 		return () => {
 			document.removeEventListener("keydown", handleEscape)
 			document.removeEventListener("mouseup", handleMouseUp)
-			window.removeEventListener("resize", handleResize)
 		}
 	}, [])
 
@@ -117,14 +127,11 @@ const Index = () => {
 				<Draggable handle=".draggable" cancel=".non-draggable">
 					<div
 						id="notionai-plus"
-						className="flex flex-col justify-between rounded-lg draggable min-w-48 bg-slate-200"
+						className="flex-col justify-between rounded-lg draggable min-w-48 bg-slate-200"
 						style={{
 							position: "fixed",
-							top: iconPosition?.y || "50%",
-							left: Math.max(
-								(iconPosition?.x || screenWidth) - 210,
-								10
-							),
+							top: elePosition.y,
+							left: elePosition.x,
 						}}
 					>
 						<ComboxComponent />
@@ -137,21 +144,17 @@ const Index = () => {
 				<Draggable handle="#notionai-plus-dropdown-menu">
 					<div
 						id="notionai-plus-dropdown-menu"
-						className="fixed p-1 rounded-md bg-slate-200 top-16"
+						className={`p-1 rounded-md bg-slate-200`}
 						style={{
 							position: "fixed",
 							top: iconPosition.y,
-							left: Math.max(
-								(iconPosition?.x || screenWidth) - 128,
-								10
-							),
+							left: iconPosition.x,
 						}}
 					>
 						<DropdownMenuComponent />
 					</div>
 				</Draggable>
 			)}
-
 			<NotificationComponent
 				isShow={isShowToast}
 				setIsShow={setIsShowToast}
