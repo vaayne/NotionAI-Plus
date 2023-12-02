@@ -2,7 +2,7 @@ import type { PlasmoMessaging } from "@plasmohq/messaging"
 
 import { GetSpaces } from "~lib/api/notion-space"
 import { ConstEnum } from "~lib/enums"
-import { storage } from "~lib/state"
+import { storage } from "~lib/atoms"
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 	const spaces = await GetSpaces()

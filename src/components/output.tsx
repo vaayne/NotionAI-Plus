@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai"
-import { responseMessageAtom } from "~lib/state"
+import { responseMessageAtom } from "~lib/atoms"
 import { MarkdownComponent } from "./makrdown"
 
 export function OutputComponent() {

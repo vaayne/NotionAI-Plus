@@ -7,7 +7,7 @@ import {
 	iconPositionDirectionAtom,
 	isShowElementAtom,
 	selectedPromptAtom,
-} from "~lib/state"
+} from "~lib/atoms"
 
 export default function DropdownMenuComponent() {
 	const [subPrompt, setSubPrompt] = useState<string | null>("")

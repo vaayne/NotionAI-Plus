@@ -4,7 +4,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
 import Draggable from "react-draggable"
 import { useMessage } from "@plasmohq/messaging/hook"
-import {
+import InitAtomComponent, {
 	contextAtom,
 	isShowElementAtom,
 	isShowIconAtom,
@@ -16,7 +16,7 @@ import {
 	elePositionAtom,
 	selectedPromptAtom,
 	isEnableContextMenuAtom,
-} from "~/lib/state"
+} from "~lib/atoms"
 import ComboxComponent from "~components/combobox"
 import DropdownMenuComponent from "~components/dropdown"
 import NotificationComponent from "~components/notification"
@@ -129,11 +129,6 @@ const Index = () => {
 	useEffect(() => {
 		document.addEventListener("keydown", handleEscape)
 		document.addEventListener("mouseup", handleMouseUp)
-		console.log(
-			`isEnableContextMenu: ${isEnableContextMenu}, boolean: ${
-				isEnableContextMenu == "true"
-			}`
-		)
 		return () => {
 			document.removeEventListener("keydown", handleEscape)
 			document.removeEventListener("mouseup", handleMouseUp)
@@ -158,6 +153,7 @@ const Index = () => {
 
 	return (
 		<>
+			<InitAtomComponent />
 			{isShowElement && (
 				<Draggable handle=".draggable" cancel=".non-draggable">
 					<div
@@ -175,7 +171,7 @@ const Index = () => {
 					</div>
 				</Draggable>
 			)}
-			{isEnableContextMenu == "true" &&
+			{isEnableContextMenu &&
 				iconPosition &&
 				isShowIcon &&
 				!isShowElement && (

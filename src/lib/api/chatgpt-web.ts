@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 
-import { storage } from "~lib/state"
+import { storage } from "~lib/atoms"
 import { parseSSEResponse } from "~lib/utils/sse"
 
 const CHATGPT_HOST = "https://chat.openai.com"

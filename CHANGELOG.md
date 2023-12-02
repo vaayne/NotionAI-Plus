@@ -3,18 +3,25 @@
 ## v0.1.3 - 2023-12-02
 
 ### Added
-- Add context menu for input box
-- OpenAI API settings support set url and model
+
+-   Add context menu for input box
+-   OpenAI API settings support set url and model
+
+### Fixed
+
+- fix init atom value issue
 
 ## v0.1.2 - 2023-12-01
 
 ### Fixed
-- Fix contexnt menu and main window position issue
+
+-   Fix contexnt menu and main window position issue
 
 ## v0.1.1 - 2023-11-30
 
 ### Fixed
-- fix port message connection issue
+
+-   fix port message connection issue
 
 ## v0.1.0 - 2023-11-29
 

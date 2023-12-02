@@ -26,7 +26,7 @@ import {
 	promptAtom,
 	responseMessageAtom,
 	selectedPromptAtom,
-} from "~/lib/state"
+} from "~lib/atoms"
 import { PromptTypeEnum } from "~lib/enums"
 import ContextMenuComponent from "./context_menu"
 import browser from "webextension-polyfill"

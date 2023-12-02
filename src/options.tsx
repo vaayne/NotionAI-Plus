@@ -11,13 +11,15 @@ import {
 	TextField,
 	Theme,
 } from "@radix-ui/themes"
-import "~style.css"
 import "@radix-ui/themes/styles.css"
 import { useAtom } from "jotai"
 import { Github, Twitter } from "lucide-react"
 import type { NotionSpace } from "~lib/api/notion-space"
-import { ConstEnum, EngineEnum, EngineMappings } from "~lib/enums"
 import {
+	DEFAULT_CHATGPT_MODEL,
+	DEFAULT_OPENAI_API_MODEL,
+	DEFAULT_OPENAI_API_URL,
+	InitAtomComponent,
 	chatGPTModelAtom,
 	engineAtom,
 	isEnableContextMenuAtom,
@@ -27,14 +29,13 @@ import {
 	openAIAPIKeyAtom,
 	openAIAPIModelAtom,
 	storage,
-} from "~lib/state"
+} from "~lib/atoms"
+import { ConstEnum, EngineEnum, EngineMappings } from "~lib/enums"
+import "~style.css"
 
 const GITHUB_URL = "https://github.com/Vaayne/NotionAI-Plus"
 const TWITTER_URL = "https://twitter.com/LiuVaayne"
-const DEFAULT_OPENAI_API_URL = "https://api.openai.com/v1/chat/completion"
-const DEFAULT_OPENAI_API_MODEL = "gpt-3.5-turbo"
 const CHATGPT_URL = "https://chat.openai.com"
-const DEFAULT_CHATGPT_MODEL = "text-davinci-002-render-sha"
 const NOTION_URL = "https://www.notion.so"
 const GOOGLE_BARD_URL = "https://bard.google.com"
 const CLAUDE_AI_URL = "https://claude.ai/chats"
@@ -137,10 +138,7 @@ function Options() {
 					// defaultValue="text-davinci-002-render-sha"
 					value={chatGPTModel}
 					onValueChange={e =>
-						saveToStorage(
-							ConstEnum.CHATGPT_MODEL,
-							e || DEFAULT_CHATGPT_MODEL
-						)
+						saveToStorage(ConstEnum.CHATGPT_MODEL, e)
 					}
 				>
 					<Select.Trigger className="max-w-lg grow" />
@@ -169,7 +167,7 @@ function Options() {
 							onChange={e =>
 								saveToStorage(
 									ConstEnum.OPENAI_API_HOST,
-									e.target.value || DEFAULT_OPENAI_API_URL
+									e.target.value
 								)
 							}
 						/>
@@ -200,10 +198,7 @@ function Options() {
 					<Select.Root
 						value={openAIAPIModel}
 						onValueChange={e => {
-							saveToStorage(
-								ConstEnum.OPENAI_API_MODEL,
-								e || DEFAULT_OPENAI_API_MODEL
-							)
+							saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
 						}}
 					>
 						<Select.Trigger className="max-w-lg grow" />
@@ -248,12 +243,9 @@ function Options() {
 				</div>
 				<Switch
 					defaultChecked
-					value={isEnableContextMenu}
+					value={isEnableContextMenu ? "true" : "false"}
 					onCheckedChange={e => {
-						saveToStorage(
-							ConstEnum.IS_ENABLE_CONTEXT_MENU,
-							e ? "true" : "false"
-						)
+						saveToStorage(ConstEnum.IS_ENABLE_CONTEXT_MENU, e)
 					}}
 				/>
 			</div>
@@ -266,10 +258,7 @@ function Options() {
 				<RadioGroup.Root
 					value={engine}
 					onValueChange={e => {
-						saveToStorage(
-							ConstEnum.DEFAULT_ENGINE,
-							e || EngineEnum.OpenAIAPI
-						)
+						saveToStorage(ConstEnum.DEFAULT_ENGINE, e)
 					}}
 				>
 					<div className="flex flex-col gap-6">
@@ -345,6 +334,7 @@ function Options() {
 
 	return (
 		<Theme>
+			<InitAtomComponent />
 			<div className="container flex flex-col justify-center flex-grow max-w-2xl p-4 m-4 mx-auto align-top bg-gray-200 rounded-lg">
 				<Heading as="h1" size="8" m="3">
 					Settings

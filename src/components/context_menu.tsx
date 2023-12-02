@@ -5,7 +5,7 @@ import {
 	isShowElementAtom,
 	queryTextAtom,
 	selectedPromptAtom,
-} from "~/lib/state"
+} from "~lib/atoms"
 
 import {
 	type PromptType,

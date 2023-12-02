@@ -4,7 +4,7 @@ import {
 	notificationAtom,
 	responseMessageAtom,
 	selectedElementAtom,
-} from "~lib/state"
+} from "~lib/atoms"
 import { ClipboardCopy, Eraser } from "lucide-react"
 
 export function ToolsComponent() {

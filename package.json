@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "plasmo dev",
 		"build": "plasmo build",
-		"package": "plasmo package"
+		"package": "plasmo package",
+		"static": "npx prettier . --write"
 	},
 	"dependencies": {
 		"@headlessui/react": "^1.7.17",
