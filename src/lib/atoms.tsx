@@ -8,8 +8,7 @@ export const storage = new Storage({
 	area: "local",
 })
 
-export const DEFAULT_OPENAI_API_URL =
-	"https://api.openai.com/v1/chat/completion"
+export const DEFAULT_OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
 export const DEFAULT_OPENAI_API_MODEL = "gpt-3.5-turbo"
 export const DEFAULT_CHATGPT_MODEL = "text-davinci-002-render-sha"
 
@@ -20,7 +19,7 @@ export const openAIAPIKeyAtom = atom<string>("")
 export const openAIAPIHostAtom = atom<string>(DEFAULT_OPENAI_API_URL)
 export const openAIAPIModelAtom = atom<string>(DEFAULT_OPENAI_API_MODEL)
 export const chatGPTModelAtom = atom<string>(DEFAULT_CHATGPT_MODEL)
-export const isEnableContextMenuAtom = atom(false)
+export const isEnableContextMenuAtom = atom(true)
 
 export const processTypeAtom = atom(ProcessTypeEnum.Text)
 export const selectedPromptAtom = atom("")
@@ -46,6 +45,17 @@ export const elePositionAtom = atom<{ x: number | string; y: number | string }>(
 // https://tailwindcss.com/docs/position
 export const iconPositionDirectionAtom = atom("")
 
+// Helper function
+const fetchAndSetData = async (
+	key: string,
+	setAtom: (value: string) => void
+) => {
+	const data = await storage.get(key)
+	if (data) {
+		setAtom(data)
+	}
+}
+
 export const InitAtomComponent = () => {
 	const setEngine = useSetAtom(engineAtom)
 	const setNotionSpaceId = useSetAtom(notionSpaceIdAtom)
@@ -57,41 +67,22 @@ export const InitAtomComponent = () => {
 	const setIsEnableContextMenu = useSetAtom(isEnableContextMenuAtom)
 
 	useEffect(() => {
-		const fetchAndSetData = async () => {
-			const engine = await storage.get(ConstEnum.DEFAULT_ENGINE)
-			if (engine) {
-				setEngine(engine)
-			}
-			const openAIAPIKey = await storage.get(ConstEnum.OPENAI_API_KEY)
-			if (openAIAPIKey) {
-				setOpenAIAPIKey(openAIAPIKey)
-			}
-			const openAIAPIHost = await storage.get(ConstEnum.OPENAI_API_HOST)
-			if (openAIAPIHost) {
-				setOpenAIAPIHost(openAIAPIHost)
-			}
-			const openAIAPIModel = await storage.get(ConstEnum.OPENAI_API_MODEL)
-			if (openAIAPIModel) {
-				setOpenAIAPIModel(openAIAPIModel)
-			}
-			const notionSpaceId = await storage.get(ConstEnum.NOTION_SPACE_ID)
-			if (notionSpaceId) {
-				setNotionSpaceId(notionSpaceId)
-			}
-			const notionSpaces = await storage.get(ConstEnum.NOTION_SPACES)
-			if (notionSpaces) {
-				setNotionSpaces(notionSpaces)
-			}
-			const chatGPTModel = await storage.get(ConstEnum.CHATGPT_MODEL)
-			if (chatGPTModel) {
-				setChatGPTModel(chatGPTModel)
-			}
+		const fetchAndSetAllData = async () => {
+			await fetchAndSetData(ConstEnum.DEFAULT_ENGINE, setEngine)
+			await fetchAndSetData(ConstEnum.OPENAI_API_KEY, setOpenAIAPIKey)
+			await fetchAndSetData(ConstEnum.OPENAI_API_HOST, setOpenAIAPIHost)
+			await fetchAndSetData(ConstEnum.OPENAI_API_MODEL, setOpenAIAPIModel)
+			await fetchAndSetData(ConstEnum.NOTION_SPACE_ID, setNotionSpaceId)
+			await fetchAndSetData(ConstEnum.NOTION_SPACES, setNotionSpaces)
+			await fetchAndSetData(ConstEnum.CHATGPT_MODEL, setChatGPTModel)
 			const isEnableContext = await storage.get(
 				ConstEnum.IS_ENABLE_CONTEXT_MENU
 			)
-			setIsEnableContextMenu(isEnableContext == "true" ? true : false)
+			if (!(isEnableContext == null)) {
+				setIsEnableContextMenu(isEnableContext)
+			}
 		}
-		fetchAndSetData()
+		fetchAndSetAllData()
 	}, [])
 	return <></>
 }

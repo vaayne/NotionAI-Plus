@@ -10,6 +10,7 @@
 ### Fixed
 
 -   fix init atom value issue
+-   fix input box shortcut issue
 
 ## v0.1.2 - 2023-12-01
 

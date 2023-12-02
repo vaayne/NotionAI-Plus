@@ -242,8 +242,8 @@ function Options() {
 					</Text>
 				</div>
 				<Switch
-					defaultChecked
-					value={isEnableContextMenu ? "true" : "false"}
+					checked={isEnableContextMenu}
+					defaultChecked={true}
 					onCheckedChange={e => {
 						saveToStorage(ConstEnum.IS_ENABLE_CONTEXT_MENU, e)
 					}}

@@ -48,21 +48,19 @@ const Index = () => {
 	const setIconPositionDirection = useSetAtom(iconPositionDirectionAtom)
 	const isEnableContextMenu = useAtomValue(isEnableContextMenuAtom)
 	// when press ESC will hidden the  window
-	const handleEscape = (event: any) => {
+	const handleKeyDown = (event: KeyboardEvent) => {
 		if (event.key === "Escape") {
 			setIsShowElement(false)
 			setIconPosition(null)
 			setIsShowIcon(false)
 		}
-		// const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot;
-		// if (shadowRoot?.activeElement?.id == "notionai-plus-context") {
-		// 	if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
-		// 		event.preventDefault();
-		// 	}
-		// }
+		const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot
+		if (shadowRoot?.activeElement?.id == "notionai-plus-context") {
+			event.stopPropagation()
+		}
 	}
 	// Define a function to handle mouse up events
-	const handleMouseUp = event => {
+	const handleMouseUp = (e: MouseEvent) => {
 		// Do not update if the event is triggered from a shadowRoot
 		const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot
 		if (shadowRoot?.activeElement != null) {
@@ -126,12 +124,13 @@ const Index = () => {
 			}
 		}
 	}
+
 	// init on page load
 	useEffect(() => {
-		document.addEventListener("keydown", handleEscape)
+		document.addEventListener("keydown", handleKeyDown, true)
 		document.addEventListener("mouseup", handleMouseUp)
 		return () => {
-			document.removeEventListener("keydown", handleEscape)
+			document.removeEventListener("keydown", handleKeyDown, true)
 			document.removeEventListener("mouseup", handleMouseUp)
 		}
 	}, [])
