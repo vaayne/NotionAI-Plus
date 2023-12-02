@@ -7,11 +7,12 @@ import {
 	StopCircle,
 	X,
 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import {
 	contextAtom,
 	engineAtom,
 	isLoadingAtom,
+	isShowContextAtom,
 	isShowElementAtom,
 	isShowIconAtom,
 	isShowToastAtom,
@@ -41,9 +42,8 @@ export default function ComboxComponent() {
 	const setPrompt = useSetAtom(promptAtom)
 	const setResponseMessage = useSetAtom(responseMessageAtom)
 	const processType = useAtomValue(processTypeAtom)
-	const [isShowContext, setIsShowContext] = useState(false)
+	const [isShowContext, setIsShowContext] = useAtom(isShowContextAtom)
 	const setIsShowElement = useSetAtom(isShowElementAtom)
-	// const [isPinElement, setIsPinElement] = useAtom(isPinElementAtom)
 	const setIsShowIcon = useSetAtom(isShowIconAtom)
 
 	const handleToast = (message: string) => {
@@ -52,6 +52,9 @@ export default function ComboxComponent() {
 	}
 
 	useEffect(() => {
+		if (selectedPrompt == PromptTypeEnum.AskAI.toString()) {
+			setIsShowContext(true)
+		}
 		if (selectedPrompt && context) {
 			handleMessage(false)
 		}
@@ -183,6 +186,7 @@ export default function ComboxComponent() {
 					id="notionai-plus-context"
 					className="w-full mt-2 text-sm rounded-lg non-draggable"
 					value={context}
+					placeholder="Input your prompt and context here..."
 					onChange={e => {
 						setContext(e.target.value)
 					}}

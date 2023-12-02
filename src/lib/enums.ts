@@ -12,6 +12,7 @@ export enum ConstEnum {
 	OPENAI_API_HOST = "openai-api-host",
 	OPENAI_API_MODEL = "openai-api-model",
 	CHATGPT_MODEL = "chatgpt-model",
+	IS_ENABLE_CONTEXT_MENU = "is-enable-context-menu",
 }
 
 export enum EngineEnum {

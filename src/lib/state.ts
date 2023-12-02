@@ -15,6 +15,8 @@ const openAIAPIModel = async () => await storage.get(ConstEnum.OPENAI_API_MODEL)
 const notionSpaceId = async () => await storage.get(ConstEnum.NOTION_SPACE_ID)
 const notionSpaces = async () => await storage.get(ConstEnum.NOTION_SPACES)
 const chatGPTModel = async () => await storage.get(ConstEnum.CHATGPT_MODEL)
+const isEnableContext = async () =>
+	await storage.get(ConstEnum.IS_ENABLE_CONTEXT_MENU)
 
 export const engineAtom = atom(engine())
 export const notionSpaceIdAtom = atom(notionSpaceId())
@@ -35,6 +37,7 @@ export const isFullModeAtom = atom(false)
 export const isShowToastAtom = atom(false)
 export const notificationAtom = atom("")
 export const isShowElementAtom = atom(false)
+export const isShowContextAtom = atom(false)
 export const isPinElementAtom = atom(false)
 export const isShowIconAtom = atom(false)
 export const queryTextAtom = atom("")
@@ -46,3 +49,5 @@ export const elePositionAtom = atom<{ x: number | string; y: number | string }>(
 // iconPositionDirectionAtom is used to determine the direction of the icon
 // https://tailwindcss.com/docs/position
 export const iconPositionDirectionAtom = atom("")
+
+export const isEnableContextMenuAtom = atom(isEnableContext())

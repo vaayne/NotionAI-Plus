@@ -1,5 +1,6 @@
 import { sendToContentScript } from "@plasmohq/messaging"
 import browser from "webextension-polyfill"
+import { PromptOptions } from "~lib/enums"
 
 import handleStream from "~lib/stream"
 
@@ -10,6 +11,44 @@ browser.commands.onCommand.addListener(function (command) {
 			name: "activate",
 		})
 	}
+})
+
+// Register a context menu
+browser.contextMenus.create(
+	{
+		id: "notionai-plus",
+		title: "NotionAI Plus",
+		contexts: ["selection", "page"],
+	},
+	() => {
+		browser.runtime.lastError
+	}
+)
+
+PromptOptions.forEach(option => {
+	browser.contextMenus.create(
+		{
+			id: option.value,
+			title: option.label,
+			contexts: ["selection"],
+			parentId: option.category == "" ? "notionai-plus" : option.category,
+		},
+		() => {
+			browser.runtime.lastError
+		}
+	)
+})
+
+// auto add selected text to context
+browser.contextMenus.onClicked.addListener(async (info, tab) => {
+	tab.id &&
+		sendToContentScript({
+			name: "activate-with-selection",
+			body: JSON.stringify({
+				prompt: info.menuItemId.toString(),
+				text: info.selectionText,
+			}),
+		})
 })
 
 browser.runtime.onConnect.addListener(function (port) {

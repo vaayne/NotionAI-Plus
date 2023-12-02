@@ -14,12 +14,15 @@ import {
 	selectedElementAtom,
 	iconPositionDirectionAtom,
 	elePositionAtom,
+	selectedPromptAtom,
+	isEnableContextMenuAtom,
 } from "~/lib/state"
 import ComboxComponent from "~components/combobox"
 import DropdownMenuComponent from "~components/dropdown"
 import NotificationComponent from "~components/notification"
 import { OutputComponent } from "~components/output"
 import { ToolsComponent } from "~components/tools"
+import { PromptTypeEnum } from "~lib/enums"
 export const config: PlasmoCSConfig = {
 	matches: ["<all_urls>"],
 	all_frames: false,
@@ -37,10 +40,12 @@ const Index = () => {
 	const [isShowIcon, setIsShowIcon] = useAtom(isShowIconAtom)
 	const notification = useAtomValue(notificationAtom)
 	const setSelectedElement = useSetAtom(selectedElementAtom)
+	const setSelectedPrompt = useSetAtom(selectedPromptAtom)
 	const [isShowToast, setIsShowToast] = useAtom(isShowToastAtom)
 	const [iconPosition, setIconPosition] = useAtom(iconPositionAtom)
 	const [elePosition, setElePosition] = useAtom(elePositionAtom)
 	const setIconPositionDirection = useSetAtom(iconPositionDirectionAtom)
+	const isEnableContextMenu = useAtomValue(isEnableContextMenuAtom)
 	// when press ESC will hidden the  window
 	const handleEscape = (event: any) => {
 		if (event.key === "Escape") {
@@ -124,6 +129,11 @@ const Index = () => {
 	useEffect(() => {
 		document.addEventListener("keydown", handleEscape)
 		document.addEventListener("mouseup", handleMouseUp)
+		console.log(
+			`isEnableContextMenu: ${isEnableContextMenu}, boolean: ${
+				isEnableContextMenu == "true"
+			}`
+		)
 		return () => {
 			document.removeEventListener("keydown", handleEscape)
 			document.removeEventListener("mouseup", handleMouseUp)
@@ -131,9 +141,18 @@ const Index = () => {
 	}, [])
 
 	useMessage<string, string>(async (req, res) => {
-		console.log(`plasmo message: ${JSON.stringify(req)}`)
 		if (req.name === "activate") {
 			setIsShowElement(true)
+		}
+		if (req.name === "activate-with-selection") {
+			const body = JSON.parse(req.body?.toString() || "{}")
+			setContext(body.text)
+			setIsShowElement(true)
+			if (body.prompt == "notionai-plus") {
+				setSelectedPrompt(PromptTypeEnum.AskAI.toString())
+			} else {
+				setSelectedPrompt(body.prompt)
+			}
 		}
 	})
 
@@ -156,21 +175,24 @@ const Index = () => {
 					</div>
 				</Draggable>
 			)}
-			{iconPosition && isShowIcon && !isShowElement && (
-				<Draggable handle="#notionai-plus-dropdown-menu">
-					<div
-						id="notionai-plus-dropdown-menu"
-						className={`p-1 rounded-md bg-slate-200`}
-						style={{
-							position: "fixed",
-							top: iconPosition.y,
-							left: iconPosition.x,
-						}}
-					>
-						<DropdownMenuComponent />
-					</div>
-				</Draggable>
-			)}
+			{isEnableContextMenu == "true" &&
+				iconPosition &&
+				isShowIcon &&
+				!isShowElement && (
+					<Draggable handle="#notionai-plus-dropdown-menu">
+						<div
+							id="notionai-plus-dropdown-menu"
+							className={`p-1 rounded-md bg-slate-200`}
+							style={{
+								position: "fixed",
+								top: iconPosition.y,
+								left: iconPosition.x,
+							}}
+						>
+							<DropdownMenuComponent />
+						</div>
+					</Draggable>
+				)}
 			<NotificationComponent
 				isShow={isShowToast}
 				setIsShow={setIsShowToast}
