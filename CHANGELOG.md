@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.3 - 2023-12-02
+
+### Added
+- Add context menu for input box
+- OpenAI API settings support set url and model
+
 ## v0.1.2 - 2023-12-01
 
 ### Fixed
