@@ -4,7 +4,8 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
 import Draggable from "react-draggable"
 import { useMessage } from "@plasmohq/messaging/hook"
-import InitAtomComponent, {
+import {
+	InitAtomComponent,
 	contextAtom,
 	isShowElementAtom,
 	isShowIconAtom,

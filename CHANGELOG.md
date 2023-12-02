@@ -9,7 +9,7 @@
 
 ### Fixed
 
-- fix init atom value issue
+-   fix init atom value issue
 
 ## v0.1.2 - 2023-12-01
 
