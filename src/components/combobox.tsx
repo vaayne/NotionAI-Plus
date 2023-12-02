@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 import { useEffect } from "react"
 import {
+	chatGPTModelAtom,
 	contextAtom,
 	engineAtom,
 	isLoadingAtom,
@@ -20,6 +21,7 @@ import {
 	notionSpaceIdAtom,
 	openAIAPIHostAtom,
 	openAIAPIKeyAtom,
+	openAIAPIModelAtom,
 	processTypeAtom,
 	promptAtom,
 	responseMessageAtom,
@@ -28,11 +30,14 @@ import {
 import { PromptTypeEnum } from "~lib/enums"
 import ContextMenuComponent from "./context_menu"
 import browser from "webextension-polyfill"
+import type { RequestBody } from "~lib/utils/prompt"
 
 export default function ComboxComponent() {
 	const notionSpaceId = useAtomValue(notionSpaceIdAtom)
 	const openAIAPIKey = useAtomValue(openAIAPIKeyAtom)
 	const openAIAPIHost = useAtomValue(openAIAPIHostAtom)
+	const openAIAPIModel = useAtomValue(openAIAPIModelAtom)
+	const chatGPTModel = useAtomValue(chatGPTModelAtom)
 	const engine = useAtomValue(engineAtom)
 	const selectedPrompt = useAtomValue(selectedPromptAtom)
 	const [context, setContext] = useAtom(contextAtom)
@@ -120,9 +125,11 @@ export default function ComboxComponent() {
 			language: language,
 			tone: tone,
 			notionSpaceId: notionSpaceId,
-			chatGPTAPIKey: openAIAPIKey,
-			chatGPTAPIHost: openAIAPIHost,
-		}
+			chatGPTModel: chatGPTModel,
+			openAIAPIURL: openAIAPIHost,
+			openAIAPIKey: openAIAPIKey,
+			openAIAPIModel: openAIAPIModel,
+		} as RequestBody
 
 		console.log(body)
 

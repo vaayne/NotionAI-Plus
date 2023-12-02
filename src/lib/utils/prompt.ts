@@ -14,7 +14,7 @@ import {
 	TranslateTemplate,
 } from "~lib/prompt-enums"
 
-export type RequestBody = {
+export interface RequestBody {
 	engine: string
 	processType: string
 	builtinPrompt: string
@@ -23,8 +23,10 @@ export type RequestBody = {
 	language: string
 	tone: string
 	notionSpaceId: string
-	chatGPTAPIHost: string
-	chatGPTAPIKey: string
+	chatGPTModel: string
+	openAIAPIURL: string
+	openAIAPIKey: string
+	openAIAPIModel: string
 }
 
 function buildChatGPTPrompt(body: RequestBody): string {

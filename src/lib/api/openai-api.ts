@@ -1,16 +1,15 @@
 import { parseSSEResponse } from "~lib/utils/sse"
 
-const MODEL = "gpt-3.5-turbo"
-
 async function chat(
 	url: string,
 	instraction: string,
 	prompt: string,
 	api_key: string,
+	model: string,
 	port: chrome.runtime.Port
 ) {
 	const data = {
-		model: MODEL,
+		model: model,
 		stream: true,
 		messages: [
 			{ role: "system", content: instraction },
@@ -28,7 +27,6 @@ async function chat(
 
 	if (!resp.ok) {
 		const errMsg = `ChatGPTAPI return error, status: ${resp.status}`
-		console.error(errMsg)
 		throw new Error(errMsg)
 	}
 
@@ -50,18 +48,17 @@ async function chat(
 				}
 			}
 		} catch (err) {
-			console.error(err)
-			port.postMessage(err.message)
-			return
+			throw new Error(`ChatGPTAPI return error: ${err.message}`)
 		}
 	})
 }
 
-async function ChatGPTApiChat(
-	host: string,
+async function OpenAIAPIChat(
+	url: string,
 	instraction: string,
 	prompt: string,
 	api_key: string,
+	model: string,
 	port: chrome.runtime.Port
 ) {
 	if (!api_key) {
@@ -72,19 +69,13 @@ async function ChatGPTApiChat(
 		port.postMessage("[DONE]")
 		return
 	}
-	let message = ""
-	for (let i = 0; i < 3; i++) {
-		try {
-			const url = `${host}/v1/chat/completions`
-			await chat(url, instraction, prompt, api_key, port)
-			return
-		} catch (err) {
-			console.error(err)
-			message = err.message
-		}
+	try {
+		await chat(url, instraction, prompt, api_key, model, port)
+	} catch (err) {
+		console.error(err)
+		port.postMessage(err.message)
 	}
-	port.postMessage(message)
 	port.postMessage("[DONE]")
 }
 
-export { ChatGPTApiChat }
+export default OpenAIAPIChat

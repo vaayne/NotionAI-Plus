@@ -32,7 +32,9 @@ import {
 const GITHUB_URL = "https://github.com/Vaayne/NotionAI-Plus"
 const TWITTER_URL = "https://twitter.com/LiuVaayne"
 const DEFAULT_OPENAI_API_URL = "https://api.openai.com/v1/chat/completion"
+const DEFAULT_OPENAI_API_MODEL = "gpt-3.5-turbo"
 const CHATGPT_URL = "https://chat.openai.com"
+const DEFAULT_CHATGPT_MODEL = "text-davinci-002-render-sha"
 const NOTION_URL = "https://www.notion.so"
 const GOOGLE_BARD_URL = "https://bard.google.com"
 const CLAUDE_AI_URL = "https://claude.ai/chats"
@@ -135,12 +137,15 @@ function Options() {
 					// defaultValue="text-davinci-002-render-sha"
 					value={chatGPTModel}
 					onValueChange={e =>
-						saveToStorage(ConstEnum.CHATGPT_MODEL, e)
+						saveToStorage(
+							ConstEnum.CHATGPT_MODEL,
+							e || DEFAULT_CHATGPT_MODEL
+						)
 					}
 				>
 					<Select.Trigger className="max-w-lg grow" />
 					<Select.Content>
-						<Select.Item value="text-davinci-002-render-sha">
+						<Select.Item value={DEFAULT_CHATGPT_MODEL}>
 							GPT-3.5
 						</Select.Item>
 						<Select.Item value="gpt-4">GPT-4</Select.Item>
@@ -160,12 +165,11 @@ function Options() {
 					<TextField.Root className="max-w-lg grow">
 						<TextField.Input
 							placeholder={`OpenAI API URL, default: ${DEFAULT_OPENAI_API_URL}`}
-							// defaultValue={DEFAULT_OPENAI_API_URL}
 							value={openAIAPIHost}
 							onChange={e =>
 								saveToStorage(
 									ConstEnum.OPENAI_API_HOST,
-									e.target.value
+									e.target.value || DEFAULT_OPENAI_API_URL
 								)
 							}
 						/>
@@ -195,19 +199,21 @@ function Options() {
 					</Text>
 					<Select.Root
 						value={openAIAPIModel}
-						// defaultValue="gpt-3dot5-turbo"
 						onValueChange={e => {
-							saveToStorage(ConstEnum.OPENAI_API_MODEL, e)
+							saveToStorage(
+								ConstEnum.OPENAI_API_MODEL,
+								e || DEFAULT_OPENAI_API_MODEL
+							)
 						}}
 					>
 						<Select.Trigger className="max-w-lg grow" />
 						<Select.Content>
 							<Select.Group>
 								<Select.Label>GPT-3.5</Select.Label>
-								<Select.Item value="gpt-3dot5-turbo">
+								<Select.Item value={DEFAULT_OPENAI_API_MODEL}>
 									GPT-3.5-Turbo
 								</Select.Item>
-								<Select.Item value="gpt-3dot5-16k">
+								<Select.Item value="gpt-3.5-turbo-16k">
 									GPT-3.5-16K
 								</Select.Item>
 							</Select.Group>
@@ -260,7 +266,10 @@ function Options() {
 				<RadioGroup.Root
 					value={engine}
 					onValueChange={e => {
-						saveToStorage(ConstEnum.DEFAULT_ENGINE, e)
+						saveToStorage(
+							ConstEnum.DEFAULT_ENGINE,
+							e || EngineEnum.OpenAIAPI
+						)
 					}}
 				>
 					<div className="flex flex-col gap-6">

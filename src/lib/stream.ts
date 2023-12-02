@@ -1,28 +1,31 @@
 import { BardChat } from "~lib/api/bard"
 import { BingChat } from "~lib/api/bing"
-import { ChatGPTApiChat } from "~lib/api/chatgpt-api"
+import OpenAIAPIChat from "~lib/api/openai-api"
 import { ChatGPTWebChat } from "~lib/api/chatgpt-web"
 import { NotionCompletion } from "~lib/api/notion-completion"
 import { EngineEnum } from "~lib/enums"
-import browser from "webextension-polyfill"
 import {
-	RequestBody,
 	buildChatGPTPrompt,
 	buildChatGPTinstruction,
+	type RequestBody,
 } from "~lib/utils/prompt"
 
 import { ClaudeChat } from "./api/claude"
 
 export default async function handleStream(
 	body: RequestBody,
-	port: browser.runtime.Port
+	port: chrome.runtime.Port
 ) {
 	const instruction: string = buildChatGPTinstruction(body)
 	const prompt: string = buildChatGPTPrompt(body)
 
 	switch (body.engine) {
 		case EngineEnum.ChatGPT:
-			await ChatGPTWebChat(`${instruction}\n\n${prompt}`, port)
+			await ChatGPTWebChat(
+				`${instruction}\n\n${prompt}`,
+				body.chatGPTModel,
+				port
+			)
 			break
 		case EngineEnum.Bing:
 			await BingChat(`${instruction}\n\n${prompt}`, port)
@@ -31,11 +34,12 @@ export default async function handleStream(
 			await ClaudeChat(`${instruction}\n\n${prompt}`, port)
 			break
 		case EngineEnum.OpenAIAPI:
-			await ChatGPTApiChat(
-				body.chatGPTAPIHost,
+			await OpenAIAPIChat(
+				body.openAIAPIURL,
 				instruction,
 				prompt,
-				body.chatGPTAPIKey,
+				body.openAIAPIKey,
+				body.openAIAPIModel,
 				port
 			)
 			break

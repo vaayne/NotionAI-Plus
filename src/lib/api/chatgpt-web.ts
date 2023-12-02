@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid"
 import { storage } from "~lib/state"
 import { parseSSEResponse } from "~lib/utils/sse"
 
-const CHATGPT_MODEL = "text-davinci-002-render-sha"
 const CHATGPT_HOST = "https://chat.openai.com"
 
 const CACHE_KEY_TOKEN = "chatgpt-token"
@@ -21,16 +20,20 @@ async function getAccessToken() {
 	throw new Error(`${resp.status}, Please login to https://chat.openai.com/`)
 }
 
-async function ChatGPTWebChat(prompt: string, port: chrome.runtime.Port) {
+async function ChatGPTWebChat(
+	prompt: string,
+	model: string,
+	port: chrome.runtime.Port
+) {
 	try {
-		return await chat(prompt, port)
+		return await chat(prompt, model, port)
 	} catch (err) {
 		console.error(err)
 		port.postMessage(err.message)
 	}
 }
 
-async function chat(prompt: string, port: chrome.runtime.Port) {
+async function chat(prompt: string, model: string, port: chrome.runtime.Port) {
 	const cacheConversationId = await storage.get(CACHE_KEY_CONVERSATION_ID)
 	if (!cacheConversationId) {
 		await storage.set(CACHE_KEY_CONVERSATION_ID, uuidv4())
@@ -48,7 +51,7 @@ async function chat(prompt: string, port: chrome.runtime.Port) {
 		],
 		conversation_id: null,
 		parent_message_id: cacheConversationId,
-		model: CHATGPT_MODEL,
+		model: model,
 		timezone_offset_min: -480,
 		suggestions: [],
 		history_and_training_disabled: false,
