@@ -13,6 +13,9 @@ export enum ConstEnum {
 	OPENAI_API_MODEL = "openai-api-model",
 	CHATGPT_MODEL = "chatgpt-model",
 	IS_ENABLE_CONTEXT_MENU = "is-enable-context-menu",
+	GOOGLE_AI_HOST = "google-ai-host",
+	GOOGLE_AI_KEY = "google-ai-key",
+	GOOGLE_AI_MODEL = "google-ai-model",
 }
 
 export enum EngineEnum {
@@ -20,6 +23,7 @@ export enum EngineEnum {
 	ChatGPT = "chatgpt",
 	OpenAIAPI = "openai-api",
 	GoogleBard = "google-bard",
+	GoogleAI = "google-ai",
 	Bing = "bing",
 	Claude = "claude",
 }
@@ -31,6 +35,7 @@ export const EngineMappings = {
 	[EngineEnum.GoogleBard]: "🎤 Google Bard",
 	[EngineEnum.Bing]: "🔎 Bing",
 	[EngineEnum.Claude]: "🤖 Claude",
+	[EngineEnum.GoogleAI]: "🤖 Google AI",
 }
 
 export const EngineOptions: PromptType[] = [
@@ -40,6 +45,7 @@ export const EngineOptions: PromptType[] = [
 	{ label: "🎤 Bard", value: EngineEnum.GoogleBard, category: "" },
 	{ label: "🔎 Bing", value: EngineEnum.Bing, category: "" },
 	{ label: "🤖 Claude", value: EngineEnum.Claude, category: "" },
+	{ label: "🤖 Google AI", value: EngineEnum.GoogleAI, category: "" },
 ]
 
 export enum OpenAIModelEnum {

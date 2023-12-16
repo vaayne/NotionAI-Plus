@@ -12,6 +12,9 @@ export const DEFAULT_OPENAI_API_URL = "https://api.openai.com/v1/chat/completion
 export const DEFAULT_OPENAI_API_MODEL = "gpt-3.5-turbo"
 export const DEFAULT_CHATGPT_MODEL = "text-davinci-002-render-sha"
 
+export const DEFAULT_GOOGLE_AI_HOST = "https://generativelanguage.googleapis.com"
+export const DEFAULT_GOOGLE_AI_MODEL = "gemini-pro"
+
 export const engineAtom = atom<string>(EngineEnum.OpenAIAPI)
 export const notionSpaceIdAtom = atom<string>("")
 export const notionSpacesAtom = atom<string>("")
@@ -19,6 +22,9 @@ export const openAIAPIKeyAtom = atom<string>("")
 export const openAIAPIHostAtom = atom<string>(DEFAULT_OPENAI_API_URL)
 export const openAIAPIModelAtom = atom<string>(DEFAULT_OPENAI_API_MODEL)
 export const chatGPTModelAtom = atom<string>(DEFAULT_CHATGPT_MODEL)
+export const googleAIModelAtom = atom<string>(DEFAULT_GOOGLE_AI_MODEL)
+export const googleAIHostAtom = atom<string>(DEFAULT_GOOGLE_AI_HOST)
+export const googleAIKeyAtom = atom<string>("")
 export const isEnableContextMenuAtom = atom(true)
 
 export const processTypeAtom = atom(ProcessTypeEnum.Text)
@@ -65,6 +71,9 @@ export const InitAtomComponent = () => {
 	const setOpenAIAPIModel = useSetAtom(openAIAPIModelAtom)
 	const setChatGPTModel = useSetAtom(chatGPTModelAtom)
 	const setIsEnableContextMenu = useSetAtom(isEnableContextMenuAtom)
+	const setGoogleAIModel = useSetAtom(googleAIModelAtom)
+	const setGoogleAIKey = useSetAtom(googleAIKeyAtom)
+	const setGoogleAIHost = useSetAtom(googleAIHostAtom)
 
 	useEffect(() => {
 		const fetchAndSetAllData = async () => {
@@ -75,6 +84,9 @@ export const InitAtomComponent = () => {
 			await fetchAndSetData(ConstEnum.NOTION_SPACE_ID, setNotionSpaceId)
 			await fetchAndSetData(ConstEnum.NOTION_SPACES, setNotionSpaces)
 			await fetchAndSetData(ConstEnum.CHATGPT_MODEL, setChatGPTModel)
+			await fetchAndSetData(ConstEnum.GOOGLE_AI_MODEL, setGoogleAIModel)
+			await fetchAndSetData(ConstEnum.GOOGLE_AI_KEY, setGoogleAIKey)
+			await fetchAndSetData(ConstEnum.GOOGLE_AI_HOST, setGoogleAIHost)
 			const isEnableContext = await storage.get(
 				ConstEnum.IS_ENABLE_CONTEXT_MENU
 			)

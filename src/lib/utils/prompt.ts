@@ -23,10 +23,9 @@ export interface RequestBody {
 	language: string
 	tone: string
 	notionSpaceId: string
-	chatGPTModel: string
-	openAIAPIURL: string
-	openAIAPIKey: string
-	openAIAPIModel: string
+	apiUrl: string
+	apiKey: string
+	apiModel: string
 }
 
 function buildChatGPTPrompt(body: RequestBody): string {

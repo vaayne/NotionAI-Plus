@@ -17,11 +17,15 @@ import { Github, Twitter } from "lucide-react"
 import type { NotionSpace } from "~lib/api/notion-space"
 import {
 	DEFAULT_CHATGPT_MODEL,
+	DEFAULT_GOOGLE_AI_MODEL,
 	DEFAULT_OPENAI_API_MODEL,
 	DEFAULT_OPENAI_API_URL,
 	InitAtomComponent,
 	chatGPTModelAtom,
 	engineAtom,
+	googleAIHostAtom,
+	googleAIKeyAtom,
+	googleAIModelAtom,
 	isEnableContextMenuAtom,
 	notionSpaceIdAtom,
 	notionSpacesAtom,
@@ -39,6 +43,7 @@ const CHATGPT_URL = "https://chat.openai.com"
 const NOTION_URL = "https://www.notion.so"
 const GOOGLE_BARD_URL = "https://bard.google.com"
 const CLAUDE_AI_URL = "https://claude.ai/chats"
+const GOOGLE_AI_URL = "https://ai.google.dev"
 
 const settingNameToIdComponent = (engineId: EngineEnum) => {
 	return (
@@ -71,6 +76,9 @@ function Options() {
 	const [isEnableContextMenu, setIsEnableContextMenu] = useAtom(
 		isEnableContextMenuAtom
 	)
+	const [googleAiHost, setGoogleAIHost] = useAtom(googleAIHostAtom)
+	const [googleAIKey, setGoogleAIKey] = useAtom(googleAIKeyAtom)
+	const [googleAIModel, setGoogleAIModel] = useAtom(googleAIModelAtom)
 
 	storage.watch({
 		[ConstEnum.DEFAULT_ENGINE]: c => setEngine(c.newValue),
@@ -80,6 +88,8 @@ function Options() {
 		[ConstEnum.OPENAI_API_KEY]: c => setOpenAIAPIKey(c.newValue),
 		[ConstEnum.OPENAI_API_MODEL]: c => setOpenAIAPIModel(c.newValue),
 		[ConstEnum.CHATGPT_MODEL]: c => setChatGPTModel(c.newValue),
+		[ConstEnum.GOOGLE_AI_KEY]: c => setGoogleAIKey(c.newValue),
+		[ConstEnum.GOOGLE_AI_MODEL]: c => setGoogleAIModel(c.newValue),
 		[ConstEnum.IS_ENABLE_CONTEXT_MENU]: c =>
 			setIsEnableContextMenu(c.newValue),
 	})
@@ -135,7 +145,6 @@ function Options() {
 			<div className="flex flex-row items-center justify-between gap-4 mx-2">
 				<Text as="span">ChatGPT Model:</Text>
 				<Select.Root
-					// defaultValue="text-davinci-002-render-sha"
 					value={chatGPTModel}
 					onValueChange={e =>
 						saveToStorage(ConstEnum.CHATGPT_MODEL, e)
@@ -153,6 +162,67 @@ function Options() {
 		)
 	}
 
+	const googleAISettings = () => {
+		return (
+			<div className="flex flex-col justify-between gap-3">
+				<div className="flex flex-row justify-between gap-4 mx-2">
+					<Text as="span" weight="medium">
+						API Host:
+					</Text>
+					<TextField.Root className="max-w-lg grow">
+						<TextField.Input
+							radius="large"
+							placeholder="Please enter the API host"
+							value={googleAiHost}
+							onChange={e => {
+								saveToStorage(
+									ConstEnum.GOOGLE_AI_HOST,
+									e.target.value
+								)
+							}}
+						/>
+					</TextField.Root>
+				</div>
+				<div className="flex flex-row justify-between gap-4 mx-2">
+					<Text as="span" weight="medium">
+						API Key:
+					</Text>
+					<TextField.Root className="max-w-lg grow">
+						<TextField.Input
+							radius="large"
+							placeholder="Please enter the API key"
+							value={googleAIKey}
+							onChange={e => {
+								saveToStorage(
+									ConstEnum.GOOGLE_AI_KEY,
+									e.target.value
+								)
+							}}
+						/>
+					</TextField.Root>
+				</div>
+				<div className="flex flex-row items-center justify-between gap-4 mx-2">
+					<Text as="span" weight="medium">
+						API Model:
+					</Text>
+					<Select.Root
+						value={googleAIModel}
+						onValueChange={e => {
+							saveToStorage(ConstEnum.GOOGLE_AI_MODEL, e)
+						}}
+					>
+						<Select.Trigger className="max-w-lg grow" />
+						<Select.Content>
+							<Select.Item value={DEFAULT_GOOGLE_AI_MODEL}>
+								Gemini Pro
+							</Select.Item>
+						</Select.Content>
+					</Select.Root>
+				</div>
+			</div>
+		)
+	}
+
 	const openaiAPISettings = () => {
 		return (
 			<div className="flex flex-col justify-between gap-3">
@@ -162,6 +232,7 @@ function Options() {
 					</Text>
 					<TextField.Root className="max-w-lg grow">
 						<TextField.Input
+							radius="large"
 							placeholder={`OpenAI API URL, default: ${DEFAULT_OPENAI_API_URL}`}
 							value={openAIAPIHost}
 							onChange={e =>
@@ -179,8 +250,8 @@ function Options() {
 					</Text>
 					<TextField.Root className="max-w-lg grow">
 						<TextField.Input
+							radius="large"
 							placeholder="Please enter the API key"
-							type="password"
 							value={openAIAPIKey}
 							onChange={e => {
 								saveToStorage(
@@ -290,6 +361,13 @@ function Options() {
 							EngineEnum.Claude,
 							CLAUDE_AI_URL
 						)}
+
+						{settingNameToIdComponent(EngineEnum.GoogleAI)}
+						{engineDescriptionComponent(
+							EngineEnum.GoogleAI,
+							GOOGLE_AI_URL
+						)}
+						{engine == EngineEnum.GoogleAI && googleAISettings()}
 					</div>
 				</RadioGroup.Root>
 			</div>

@@ -11,6 +11,7 @@ import {
 } from "~lib/utils/prompt"
 
 import { ClaudeChat } from "./api/claude"
+import GoogleAIChat from "./api/google-ai"
 
 export default async function handleStream(
 	body: RequestBody,
@@ -23,7 +24,7 @@ export default async function handleStream(
 		case EngineEnum.ChatGPT:
 			await ChatGPTWebChat(
 				`${instruction}\n\n${prompt}`,
-				body.chatGPTModel,
+				body.apiModel,
 				port
 			)
 			break
@@ -35,11 +36,20 @@ export default async function handleStream(
 			break
 		case EngineEnum.OpenAIAPI:
 			await OpenAIAPIChat(
-				body.openAIAPIURL,
+				body.apiUrl,
 				instruction,
 				prompt,
-				body.openAIAPIKey,
-				body.openAIAPIModel,
+				body.apiKey,
+				body.apiModel,
+				port
+			)
+			break
+		case EngineEnum.GoogleAI:
+			await GoogleAIChat(
+				`${instruction}\n\n${prompt}`,
+				body.apiUrl,
+				body.apiKey,
+				body.apiModel,
 				port
 			)
 			break

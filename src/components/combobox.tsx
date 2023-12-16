@@ -12,6 +12,9 @@ import {
 	chatGPTModelAtom,
 	contextAtom,
 	engineAtom,
+	googleAIHostAtom,
+	googleAIKeyAtom,
+	googleAIModelAtom,
 	isLoadingAtom,
 	isShowContextAtom,
 	isShowElementAtom,
@@ -27,7 +30,7 @@ import {
 	responseMessageAtom,
 	selectedPromptAtom,
 } from "~lib/atoms"
-import { PromptTypeEnum } from "~lib/enums"
+import { EngineEnum, PromptTypeEnum } from "~lib/enums"
 import ContextMenuComponent from "./context_menu"
 import browser from "webextension-polyfill"
 import type { RequestBody } from "~lib/utils/prompt"
@@ -38,6 +41,9 @@ export default function ComboxComponent() {
 	const openAIAPIHost = useAtomValue(openAIAPIHostAtom)
 	const openAIAPIModel = useAtomValue(openAIAPIModelAtom)
 	const chatGPTModel = useAtomValue(chatGPTModelAtom)
+	const googleAiHost = useAtomValue(googleAIHostAtom)
+	const googleAiKey = useAtomValue(googleAIKeyAtom)
+	const googleAiModel = useAtomValue(googleAIModelAtom)
 	const engine = useAtomValue(engineAtom)
 	const selectedPrompt = useAtomValue(selectedPromptAtom)
 	const [context, setContext] = useAtom(contextAtom)
@@ -125,11 +131,19 @@ export default function ComboxComponent() {
 			language: language,
 			tone: tone,
 			notionSpaceId: notionSpaceId,
-			chatGPTModel: chatGPTModel,
-			openAIAPIURL: openAIAPIHost,
-			openAIAPIKey: openAIAPIKey,
-			openAIAPIModel: openAIAPIModel,
 		} as RequestBody
+
+		if (engine === EngineEnum.ChatGPT) {
+			body.apiModel = chatGPTModel
+		} else if (engine === EngineEnum.OpenAIAPI) {
+			body.apiUrl = openAIAPIHost
+			body.apiKey = openAIAPIKey
+			body.apiModel = openAIAPIModel
+		} else if (engine === EngineEnum.GoogleAI) {
+			body.apiUrl = googleAiHost
+			body.apiKey = googleAiKey
+			body.apiModel = googleAiModel
+		}
 
 		console.log(body)
 
