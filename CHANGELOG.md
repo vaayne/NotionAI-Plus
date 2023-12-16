@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.4 - 2023-12-17
+
+### Added
+
+- Support [GoogleAI](https://ai.google.dev) as backend engine
+
 ## v0.1.3 - 2023-12-02
 
 ### Added

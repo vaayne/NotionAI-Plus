@@ -42,9 +42,10 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
         -   [New Bing](https://www.bing.com/new)
         -   [Brad](https://bard.google.com/)
         -   [Claude](https://claude.ai/)
+        -   [Google AI](https://ai.google.dev) (Free for 60 requests per minute)
     -   **Paid**:
         -   [NotionAI](https://www.notion.so/product/ai)
-        -   [ChatGPT API](https://platform.openai.com/docs/api-reference/chat/create)
+        -   [OpenAI API](https://platform.openai.com/docs/api-reference/chat/create)
 
 -   Support for all NotionAI built-in prompts
 -   Support for using custom prompts
