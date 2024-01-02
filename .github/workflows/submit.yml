@@ -42,7 +42,7 @@ jobs:
                   generate_release_notes: true
                   body: |
                       ## Changelog
-                      Please see the [changelog](https://github.com/Vaayne/NotionAI-Plus/blob/main/CHANGELOG.md)
+                      Please see the [changelog](https://github.com/Vaayne/aiplus/blob/main/CHANGELOG.md)
                   files: |
                       build/chrome-mv3-prod.zip
                       build/firefox-mv2-prod.zip

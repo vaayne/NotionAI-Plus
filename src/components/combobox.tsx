@@ -204,7 +204,7 @@ export default function ComboxComponent() {
 
 			{isShowContext && (
 				<textarea
-					id="notionai-plus-context"
+					id="aiplus-context"
 					className="w-full mt-2 text-sm rounded-lg non-draggable"
 					value={context}
 					placeholder="Input your prompt and context here..."

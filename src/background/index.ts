@@ -6,7 +6,7 @@ import handleStream from "~lib/stream"
 
 // Register a keyboard shortcut
 browser.commands.onCommand.addListener(function (command) {
-	if (command === "activate-notionai") {
+	if (command === "activate-aiplus") {
 		sendToContentScript({
 			name: "activate",
 		})
@@ -16,8 +16,8 @@ browser.commands.onCommand.addListener(function (command) {
 // Register a context menu
 browser.contextMenus.create(
 	{
-		id: "notionai-plus",
-		title: "NotionAI Plus",
+		id: "aiplus",
+		title: "AiPlus",
 		contexts: ["selection", "page"],
 	},
 	() => {
@@ -31,7 +31,7 @@ PromptOptions.forEach(option => {
 			id: option.value,
 			title: option.label,
 			contexts: ["selection"],
-			parentId: option.category == "" ? "notionai-plus" : option.category,
+			parentId: option.category == "" ? "aiplus" : option.category,
 		},
 		() => {
 			browser.runtime.lastError

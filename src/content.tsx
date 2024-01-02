@@ -55,7 +55,7 @@ const Index = () => {
 			setIsShowIcon(false)
 		}
 		const shadowRoot = document.querySelector("plasmo-csui")?.shadowRoot
-		if (shadowRoot?.activeElement?.id == "notionai-plus-context") {
+		if (shadowRoot?.activeElement?.id == "aiplus-context") {
 			event.stopPropagation()
 		}
 	}
@@ -143,7 +143,7 @@ const Index = () => {
 			const body = JSON.parse(req.body?.toString() || "{}")
 			setContext(body.text)
 			setIsShowElement(true)
-			if (body.prompt == "notionai-plus") {
+			if (body.prompt == "aiplus") {
 				setSelectedPrompt(PromptTypeEnum.AskAI.toString())
 			} else {
 				setSelectedPrompt(body.prompt)
@@ -157,7 +157,7 @@ const Index = () => {
 			{isShowElement && (
 				<Draggable handle=".draggable" cancel=".non-draggable">
 					<div
-						id="notionai-plus"
+						id="aiplus"
 						className="flex-col justify-between rounded-lg draggable min-w-48 bg-slate-200"
 						style={{
 							position: "fixed",
@@ -175,9 +175,9 @@ const Index = () => {
 				iconPosition &&
 				isShowIcon &&
 				!isShowElement && (
-					<Draggable handle="#notionai-plus-dropdown-menu">
+					<Draggable handle="#aiplus-dropdown-menu">
 						<div
-							id="notionai-plus-dropdown-menu"
+							id="aiplus-dropdown-menu"
 							className={`p-1 rounded-md bg-slate-200`}
 							style={{
 								position: "fixed",

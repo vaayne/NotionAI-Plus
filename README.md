@@ -2,12 +2,12 @@
     <img src="./assets/icon.png" width="250">
 </p>
 
-# NotionAI Plus
+# AiPlus
 
-NotionAI Plus is a browser extension that adds NotionAI's powerful features to any website you visit. With NotionAI Plus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
+AiPlus is a browser extension that adds AI's powerful features to any website you visit. With AiPlus, you can easily analyze text, generate summaries, and perform sentiment analysis on any webpage.
 
--   [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
--   [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
+-   [Chrome Web Store](https://chrome.google.com/webstore/detail/aiplus/ilgkcoockdhdpkikaakkjacblhpmdmeo)
+-   [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/aiplus/)
 
 **Latest changes: [CHANGELOG.md](./CHANGELOG.md)**
 
@@ -52,11 +52,11 @@ https://user-images.githubusercontent.com/10231735/221889423-17fe70e3-2be6-40b3-
 
 ## Usage
 
-1. Install NotionAI Plus from the [Chrome Web Store](https://chrome.google.com/webstore/detail/notionai-plus/ilgkcoockdhdpkikaakkjacblhpmdmeo) or [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/notionai-plus/)
+1. Install AiPlus from the [Chrome Web Store](https://chrome.google.com/webstore/detail/aiplus/ilgkcoockdhdpkikaakkjacblhpmdmeo) or [Firefox Addon](https://addons.mozilla.org/en-US/firefox/addon/aiplus/)
 2. Open the `options page` and set your `Notion space ID`
 3. Open any webpage and use the shortcut `alt+k` to activate the extension
 4. If you select some text and then use the shortcut `alt+k` to activate the extension, it will automatically fill the text in the input box.
 
 ## Contributing
 
-NotionAI Plus is an open-source project and welcomes contributions from the community. Feel free to submit issues, feature requests, or pull requests on the [GitHub repository](https://github.com/Vaayne/NotionAI-Plus).
+AiPlus is an open-source project and welcomes contributions from the community. Feel free to submit issues, feature requests, or pull requests on the [GitHub repository](https://github.com/Vaayne/aiplus).

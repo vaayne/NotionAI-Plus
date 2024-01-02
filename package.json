@@ -1,8 +1,8 @@
 {
-	"name": "notionai-plus",
-	"displayName": "NotionAI Plus",
+	"name": "aiplus",
+	"displayName": "AiPlus",
 	"version": "0.1.4",
-	"description": "NotionAI Plus is a browser extension that brings the power of NotionAI to any website you visit.",
+	"description": "AiPlus is a browser extension that brings the power of AI to any website you visit.",
 	"scripts": {
 		"dev": "plasmo dev",
 		"build": "plasmo build",
@@ -68,12 +68,12 @@
 			"contextMenus"
 		],
 		"commands": {
-			"activate-notionai": {
+			"activate-aiplus": {
 				"suggested_key": {
 					"default": "Ctrl+K",
 					"mac": "Command+K"
 				},
-				"description": "Activate NotionAI on page"
+				"description": "Activate AiPlus on page"
 			}
 		}
 	},

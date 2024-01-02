@@ -37,7 +37,7 @@ import {
 import { ConstEnum, EngineEnum, EngineMappings } from "~lib/enums"
 import "~style.css"
 
-const GITHUB_URL = "https://github.com/Vaayne/NotionAI-Plus"
+const GITHUB_URL = "https://github.com/Vaayne/aiplus"
 const TWITTER_URL = "https://twitter.com/LiuVaayne"
 const CHATGPT_URL = "https://chat.openai.com"
 const NOTION_URL = "https://www.notion.so"
