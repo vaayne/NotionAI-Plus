@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import { PromptTypeEnum } from "~lib/enums"
 import { processNdjsonResp } from "~lib/utils/ndjson"
 
-const MODEL = "openai-4"
+const MODEL = "default"
 const HOST = "https://www.notion.so"
 
 async function complation(
@@ -22,6 +22,11 @@ async function complation(
 		spaceId: notionSpaceId,
 		isSpacePermission: false,
 		context: {},
+		inferenceReason: "writer",
+		aiSessionId: uuidv4(),
+		metadata: {
+			blockId: uuidv4
+		}
 	}
 
 	if (promptType === PromptTypeEnum.Translate) {
@@ -77,7 +82,7 @@ async function complation(
 			fullMessage += msg.completion
 			port.postMessage(fullMessage)
 		} else {
-			port.postMessage(msg.completion)
+			port.postMessage(`NotionAI return error: ${msg.message}`)
 		}
 	}
 	await processNdjsonResp(resp, onMessage)
