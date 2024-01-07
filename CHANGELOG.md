@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.5 - 2024-01-07
+
+### Fixed
+
+- Fix NotionAI return 400 error [issue](https://arc.net/l/quote/cgkrtahy)
+
 ## v0.1.4 - 2023-12-17
 
 ### Added
